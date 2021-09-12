@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Go4Lunch</string>
+
+    <!-- Main Activity strings -->
+    <string name="txt_view_title">GO4LUNCH</string>
+    <string name="txt_view_subtitle">Find a nice restaurant and invite your co-workers for lunch!</string>
+    <string name="button_facebook_text">Sign in with Facebook</string>
+    <string name="button_google_text">Sign in with Google</string>
+
+    <!-- Facebook strings -->
+    <string name="facebook_application_id">917570229105855</string>
+    <string name="fb_login_protocol_scheme">fb917570229105855</string>
+
+    <!-- Bottom View strings -->
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_home">List View</string>
+    <string name="title_dashboard">WorkMates</string>
+    <string name="title_notifications">Card View</string>
+    <string name="list_view">List View</string>
+    <string name="workmates">WorkMates</string>
+    <string name="card_view">Card View</string>
+
+    <!-- Menu -->
+    <string name="menu_hamburger">menu hamburger</string>
+    <string name="sign_out">Déconnection</string>
+    <string name="search">Recherche</string>
+
+
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@+id/card_view">
+
+    <fragment
+        android:id="@+id/card_view"
+        android:name="com.safia.go4lunch.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/workmates" />
+
+    <fragment
+        android:id="@+id/list_view"
+        android:name="com.safia.go4lunch.ui.dashboard.DashboardFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/map_view" />
+
+    <fragment
+        android:id="@+id/workmates"
+        android:name="com.safia.go4lunch.ui.notifications.NotificationsFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/list_view" />
+</navigation>
