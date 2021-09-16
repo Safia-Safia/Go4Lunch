@@ -13,9 +13,9 @@
 
     <!-- Bottom View strings -->
     <string name="title_activity_home">HomeActivity</string>
-    <string name="title_home">List View</string>
-    <string name="title_dashboard">WorkMates</string>
-    <string name="title_notifications">Card View</string>
+    <string name="title_listview">List View</string>
+    <string name="title_workmates">WorkMates</string>
+    <string name="title_maps">Card View</string>
     <string name="list_view">List View</string>
     <string name="workmates">WorkMates</string>
     <string name="card_view">Card View</string>
@@ -25,5 +25,7 @@
     <string name="sign_out">Déconnection</string>
     <string name="search">Recherche</string>
 
-
+    <!-- Map -->
+    <string name="google_maps_key" templateMergeStrategy="preserve"
+        translatable="false">AIzaSyDho4ut-Xsxg7efCchEwhcJe7uKqJANJnM</string>
 </resources>

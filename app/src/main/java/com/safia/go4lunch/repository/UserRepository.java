@@ -1,7 +1,6 @@
 package com.safia.go4lunch.repository;
 
 import android.content.Context;
-import android.content.Intent;
 
 import androidx.annotation.Nullable;
 
@@ -12,7 +11,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.safia.go4lunch.controller.MainActivity;
 import com.safia.go4lunch.model.User;
 
 public class UserRepository {

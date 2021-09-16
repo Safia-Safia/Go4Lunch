@@ -1,4 +1,4 @@
-package com.safia.go4lunch.controller;
+package com.safia.go4lunch.activity;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -22,14 +22,8 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.card_view, R.id.list_view, R.id.workmates).build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-       // NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+        configureBottomView();
+
     }
 
     @Override
@@ -49,6 +43,15 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    //Configure BottomNavigationView Listener
+    public void configureBottomView() {
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.map, R.id.list_view, R.id.workmates).build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupWithNavController(navView, navController);
     }
 
 

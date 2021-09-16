@@ -1,13 +1,10 @@
 package com.safia.go4lunch.viewmodel;
 
 import android.content.Context;
-import android.content.Intent;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
-import com.safia.go4lunch.controller.HomeActivity;
-import com.safia.go4lunch.controller.MainActivity;
 import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.repository.UserRepository;
 
