@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.safia.go4lunch.R;
+import com.safia.go4lunch.ui.maps.MapsFragment;
 import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,13 +17,14 @@ import androidx.navigation.ui.NavigationUI;
 
 public class HomeActivity extends AppCompatActivity {
     private UserViewModel userViewModel = UserViewModel.getInstance();
-
+    private MapsFragment mMapsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         configureBottomView();
+        this.configureMapsFragment();
 
     }
 
@@ -36,11 +38,10 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.sign_out:
-                userViewModel.signOut(this);
-                finish();
-                return true;
+        if (item.getItemId() == R.id.sign_out) {
+            userViewModel.signOut(this);
+            finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -54,5 +55,13 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
     }
 
+    private void configureMapsFragment(){
+        mMapsFragment = (MapsFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+         mMapsFragment = new MapsFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.map, mMapsFragment)
+                    .commit();
+
+    }
 
 }
