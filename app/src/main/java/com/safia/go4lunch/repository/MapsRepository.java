@@ -1,6 +1,7 @@
 package com.safia.go4lunch.repository;
 
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -16,9 +17,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapsRepository {
-    public static final String GET_USER_LOCATION = "GET_USER_LOCATION";
-    public static final int GET_RADIUS = 0;
-
     public LiveData<List<Restaurant>> getRestaurant(Restaurant restaurant,String location,int radius){
         final MutableLiveData<List<Restaurant>> result = new MutableLiveData<>();
 
@@ -37,12 +35,12 @@ public class MapsRepository {
         call.enqueue(new Callback<List<Restaurant>>() {
 
             @Override
-            public void onResponse(Call<List<Restaurant>> call, Response<List<Restaurant>> response) {
+            public void onResponse(@NonNull Call<List<Restaurant>> call, @NonNull Response<List<Restaurant>> response) {
                 result.postValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<List<Restaurant>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Restaurant>> call, @NonNull Throwable t) {
             }
         });
         return result;

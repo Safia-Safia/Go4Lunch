@@ -5,7 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -20,27 +21,30 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.safia.go4lunch.Injection.Injection;
+import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
-import com.safia.go4lunch.activity.HomeActivity;
+import com.safia.go4lunch.model.Restaurant;
+
+import java.util.List;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private MapsViewModel mViewModel;
+    private Restaurant mRestaurant;
+    private int PROXIMITY_RADIUS = 10000;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        MapsViewModel mapsViewModel = new ViewModelProvider(this).get(MapsViewModel.class);
-
+        this.configureViewModel();
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
@@ -76,6 +80,25 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState);
         getLocationPermission();
     }
+
+    public void configureViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(getActivity());
+        this.mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MapsViewModel.class);
+    }
+
+    public void getRestaurant (){
+        mViewModel.fetchRestaurantFollowing(mRestaurant,FINE_LOCATION,PROXIMITY_RADIUS).observe(this, new Observer<List<Restaurant>>() {
+            @Override
+            public void onChanged(List<Restaurant> restaurants) {
+                LatLng sydney = new LatLng(-34, 151);
+                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney")
+                        // below line is use to add custom marker on our map.
+                       // .icon(BitmapFromVector(getActivity().getApplicationContext(), R.drawable.ic_flag)));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            }
+        });
+    }
+
 
     private void getDeviceLocation() {
 
@@ -147,7 +170,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 }
                 mLocationPermissionsGranted = true;
                 //initialize our map
-                //initMap();
+                initMap();
             }
         }
     }
