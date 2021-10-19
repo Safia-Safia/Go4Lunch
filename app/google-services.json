@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "397215434706-agu1kb2ue0j1km4e6vjcduvdmdt0qj8v.apps.googleusercontent.com",
+          "client_id": "397215434706-jo8u7p740j4rapnuu3ofafsk5lqco79u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.safia.go4lunch",
-            "certificate_hash": "1d9596df2277cd3b835af60afb0613b42bb65942"
+            "certificate_hash": "0c354f93781742e142e8e013783c7eaf57dd150a"
           }
         },
         {

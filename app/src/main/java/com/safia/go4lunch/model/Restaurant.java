@@ -7,9 +7,9 @@ import com.google.gson.annotations.SerializedName;
 
 
 public class Restaurant {
-    @SerializedName("uid")
+    @SerializedName("restaurantId")
     @Expose
-    private String uid;
+    private String restaurantId;
     @SerializedName("name")
     @Expose
     private String name;
@@ -32,8 +32,8 @@ public class Restaurant {
     @Expose
     private String phoneNumber;
 
-    public Restaurant(String uid, String name, Double latitude, Double longitude, @Nullable String address, @Nullable String urlPhoto, @Nullable int rating, String phoneNumber) {
-        this.uid = uid;
+    public Restaurant(String restaurantId, String name, Double latitude, Double longitude, @Nullable String address, @Nullable String urlPhoto, @Nullable int rating, String phoneNumber) {
+        this.restaurantId = restaurantId;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -43,12 +43,12 @@ public class Restaurant {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getUid() {
-        return uid;
+    public String getRestaurantId() {
+        return restaurantId;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
     }
 
     public String getName() {

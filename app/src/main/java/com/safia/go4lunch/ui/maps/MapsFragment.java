@@ -23,7 +23,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.safia.go4lunch.Injection.Injection;
@@ -32,12 +35,12 @@ import com.safia.go4lunch.R;
 import com.safia.go4lunch.model.Restaurant;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private MapsViewModel mViewModel;
-    private Restaurant mRestaurant;
     private int PROXIMITY_RADIUS = 10000;
 
     @Override
@@ -51,11 +54,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        Log.e("onMapReady", "2");
 
         if (mLocationPermissionsGranted) {
             getDeviceLocation();
-            Log.e("onMapReady", "1");
             if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(),
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -74,6 +75,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
     private Boolean mLocationPermissionsGranted = false;
+    FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -86,35 +88,32 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         this.mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MapsViewModel.class);
     }
 
-    public void getRestaurant (){
-        mViewModel.fetchRestaurantFollowing(mRestaurant,FINE_LOCATION,PROXIMITY_RADIUS).observe(this, new Observer<List<Restaurant>>() {
+
+    public void getRestaurant(LatLng location) {
+        String locationStr = location.latitude + "," + location.longitude;
+        mViewModel.fetchRestaurantFollowing(locationStr, 10000).observe(this, new Observer<List<Restaurant>>() {
             @Override
             public void onChanged(List<Restaurant> restaurants) {
-                LatLng sydney = new LatLng(-34, 151);
-                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney")
-                        // below line is use to add custom marker on our map.
-                       // .icon(BitmapFromVector(getActivity().getApplicationContext(), R.drawable.ic_flag)));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                MarkerOptions markerOptions = new MarkerOptions();
+                Marker m = mMap.addMarker(markerOptions);
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             }
         });
     }
 
 
     private void getDeviceLocation() {
-
-        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getContext());
-
         try {
             if (mLocationPermissionsGranted) {
+                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
 
                 final Task location = fusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Location currentLocation = (Location) task.getResult();
-
-                        moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())
-                        );
-
+                        LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                        moveCamera(latLng);
+                        getRestaurant(latLng);
                     }
                 });
             }

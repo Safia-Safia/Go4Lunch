@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         );
 
         googleButton.setOnClickListener(view -> {
-                    signInBuilder(
+                   signInBuilder(
                             Collections.singletonList(new AuthUI.IdpConfig.GoogleBuilder().build()));
                     progressBar.setVisibility(View.VISIBLE);
                 }
@@ -111,5 +111,6 @@ public class MainActivity extends AppCompatActivity {
     private void startHomeActivity(){
         Intent homeActivityIntent = new Intent(this, HomeActivity.class);
         startActivity(homeActivityIntent);
+        finish();
     }
 }
