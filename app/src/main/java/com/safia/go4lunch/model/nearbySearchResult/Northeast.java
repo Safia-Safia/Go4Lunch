@@ -1,5 +1,5 @@
 
-package com.safia.go4lunch.model;
+package com.safia.go4lunch.model.nearbySearchResult;
 
 public class Northeast {
 

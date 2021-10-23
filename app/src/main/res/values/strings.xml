@@ -28,4 +28,8 @@
     <!-- Map -->
     <string name="google_maps_key" templateMergeStrategy="preserve"
         translatable="false">AIzaSyDho4ut-Xsxg7efCchEwhcJe7uKqJANJnM</string>
+    <string name="restaurant_distance">120m</string>
+    <string name="restaurant_name">restaurantName</string>
+    <string name="restaurant_address">restaurant_address</string>
+    <string name="opening_hour">opening_hour</string>
 </resources>

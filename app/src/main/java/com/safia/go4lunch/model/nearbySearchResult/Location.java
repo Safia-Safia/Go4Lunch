@@ -1,7 +1,7 @@
 
-package com.safia.go4lunch.model;
+package com.safia.go4lunch.model.nearbySearchResult;
 
-public class Southwest {
+public class Location {
 
     private Double lat;
     private Double lng;

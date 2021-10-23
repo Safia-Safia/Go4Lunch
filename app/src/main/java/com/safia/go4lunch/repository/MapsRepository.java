@@ -8,9 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.safia.go4lunch.model.NearbyPlace;
+import com.safia.go4lunch.model.nearbySearchResult.NearbyPlace;
 import com.safia.go4lunch.model.Restaurant;
-import com.safia.go4lunch.model.Result;
+import com.safia.go4lunch.model.nearbySearchResult.Result;
 import com.safia.go4lunch.ui.maps.MapService;
 
 import java.util.ArrayList;

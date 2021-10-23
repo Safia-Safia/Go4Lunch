@@ -1,5 +1,8 @@
 
-package com.safia.go4lunch.model;
+package com.safia.go4lunch.model.nearbySearchResult;
+
+import com.safia.go4lunch.model.nearbySearchResult.Northeast;
+import com.safia.go4lunch.model.nearbySearchResult.Southwest;
 
 public class Viewport {
 

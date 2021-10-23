@@ -40,12 +40,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private MapsViewModel mViewModel;
-    List <Restaurant> restaurantsList = new ArrayList<>();
+    List<Restaurant> restaurantsList = new ArrayList<>();
+    private static final String TAG = "MapActivity";
+    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+    private static final float DEFAULT_ZOOM = 15f;
+    private Boolean mLocationPermissionsGranted = false;
+    FusedLocationProviderClient fusedLocationProviderClient;
+
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.configureViewModel();
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
@@ -53,7 +59,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-
         if (mLocationPermissionsGranted) {
             getDeviceLocation();
             if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -67,15 +72,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-    private static final String TAG = "MapActivity";
-
-    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private static final float DEFAULT_ZOOM = 15f;
-    private Boolean mLocationPermissionsGranted = false;
-    FusedLocationProviderClient fusedLocationProviderClient;
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -86,27 +82,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(getActivity());
         this.mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MapsViewModel.class);
     }
-Marker marker;
+
     public void getRestaurant(LatLng location) {
         String locationStr = location.latitude + "," + location.longitude;
-        mViewModel.getRestaurants(locationStr).observe(this, new Observer<List<Restaurant>>() {
-            @Override
-            public void onChanged(List<Restaurant> nearbyRestaurantList) {
-                if (nearbyRestaurantList != null) {
-                    restaurantsList = nearbyRestaurantList;
-                    for (Restaurant restaurant : restaurantsList) {
-                        marker = mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(restaurant.getLatitude(),
-                                        restaurant.getLongitude()))
-                                .title(restaurant.getName())
-                                .icon((BitmapDescriptorFactory
-                                        .defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))));
-                    }
+        mViewModel.getRestaurants(locationStr).observe(this, nearbyRestaurantList -> {
+            if (nearbyRestaurantList != null) {
+                restaurantsList = nearbyRestaurantList;
+                for (Restaurant restaurant : restaurantsList) {
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
+                            .title(restaurant.getName())
+                            .icon((BitmapDescriptorFactory
+                            .defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))));
                 }
             }
         });
     }
-
 
     private void getDeviceLocation() {
         try {
@@ -141,29 +132,20 @@ Marker marker;
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
 
-        if (ContextCompat.checkSelfPermission(this.getContext().getApplicationContext(),
-                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this.getContext().getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this.getContext().getApplicationContext(),
                     COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mLocationPermissionsGranted = true;
                 initMap();
             } else {
-                requestPermissions(
-                        permissions,
-                        LOCATION_PERMISSION_REQUEST_CODE);
+                requestPermissions(permissions, LOCATION_PERMISSION_REQUEST_CODE);
             }
-        } else {
-            requestPermissions(
-                    permissions,
-                    LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        mLocationPermissionsGranted = false;
 
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0) {
