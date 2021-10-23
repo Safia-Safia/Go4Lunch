@@ -1,7 +1,6 @@
 package com.safia.go4lunch.repository;
 
 
-import static java.security.AccessController.getContext;
 
 import android.util.Log;
 
@@ -9,13 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.gson.Gson;
 import com.safia.go4lunch.model.NearbyPlace;
 import com.safia.go4lunch.model.Restaurant;
+import com.safia.go4lunch.model.Result;
 import com.safia.go4lunch.ui.maps.MapService;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -26,8 +25,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapsRepository {
-
-    public LiveData<List<Restaurant>> getRestaurant(String location, int radius) {
+    public LiveData<List<Restaurant>> getRestaurant(String location) {
         final MutableLiveData<List<Restaurant>> result = new MutableLiveData<>();
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -51,16 +49,24 @@ public class MapsRepository {
         MapService mapService = retrofit.create(MapService.class);
 
         // Create the call on NearbyPlace API
-        Call<NearbyPlace> call = mapService.getNearbyPlaces(location, radius);
+        Call<NearbyPlace> call = mapService.getNearbyPlaces(location);
         // Start the call
         call.enqueue(new Callback<NearbyPlace>() {
 
             @Override
             public void onResponse(@NonNull Call<NearbyPlace> call, @NonNull Response<NearbyPlace> response) {
-                Gson gson = new Gson();
-                NearbyPlace restaurantList = response.body();
-                Log.e("onResponse()", "true" + gson.toJson(restaurantList));
-                // result.postValue(restaurantList);
+                List<Restaurant> restaurantList = new ArrayList<>();
+                if (response.body() != null) {
+                    for (Result result1 : response.body().getResults()) {
+                        Restaurant restaurant = new Restaurant();
+                        restaurant.setRestaurantId(result1.getPlaceId());
+                        restaurant.setName(result1.getName());
+                        restaurant.setLatitude(result1.getGeometry().getLocation().getLat());
+                        restaurant.setLongitude(result1.getGeometry().getLocation().getLng());
+                        restaurantList.add(restaurant);
+                    }
+                }
+                result.setValue(restaurantList);
             }
 
             @Override

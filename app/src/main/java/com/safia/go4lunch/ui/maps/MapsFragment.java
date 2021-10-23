@@ -23,7 +23,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -34,14 +33,14 @@ import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.model.Restaurant;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private MapsViewModel mViewModel;
-    private int PROXIMITY_RADIUS = 10000;
+    List <Restaurant> restaurantsList = new ArrayList<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -87,16 +86,23 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(getActivity());
         this.mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MapsViewModel.class);
     }
-
-
+Marker marker;
     public void getRestaurant(LatLng location) {
         String locationStr = location.latitude + "," + location.longitude;
-        mViewModel.fetchRestaurantFollowing(locationStr, 10000).observe(this, new Observer<List<Restaurant>>() {
+        mViewModel.getRestaurants(locationStr).observe(this, new Observer<List<Restaurant>>() {
             @Override
-            public void onChanged(List<Restaurant> restaurants) {
-                MarkerOptions markerOptions = new MarkerOptions();
-                Marker m = mMap.addMarker(markerOptions);
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            public void onChanged(List<Restaurant> nearbyRestaurantList) {
+                if (nearbyRestaurantList != null) {
+                    restaurantsList = nearbyRestaurantList;
+                    for (Restaurant restaurant : restaurantsList) {
+                        marker = mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(restaurant.getLatitude(),
+                                        restaurant.getLongitude()))
+                                .title(restaurant.getName())
+                                .icon((BitmapDescriptorFactory
+                                        .defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))));
+                    }
+                }
             }
         });
     }

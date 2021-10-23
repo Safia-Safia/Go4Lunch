@@ -13,6 +13,7 @@ public interface MapService {
     @GET("nearbysearch/json" +
             "?sensor=true" +
             "&key=AIzaSyDho4ut-Xsxg7efCchEwhcJe7uKqJANJnM" +
-            "&type=restaurant")
-    Call<NearbyPlace> getNearbyPlaces(@Query("location") String location, @Query("radius") int radius);
+            "&type=restaurant"+
+            "&radius=10000")
+    Call<NearbyPlace> getNearbyPlaces(@Query("location") String location);
 }

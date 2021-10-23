@@ -43,6 +43,9 @@ public class Restaurant {
         this.phoneNumber = phoneNumber;
     }
 
+    public  Restaurant (){
+    }
+
     public String getRestaurantId() {
         return restaurantId;
     }

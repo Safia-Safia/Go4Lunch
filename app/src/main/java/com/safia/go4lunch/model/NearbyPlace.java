@@ -26,7 +26,7 @@ public class NearbyPlace {
         this.nextPageToken = nextPageToken;
     }
 
-    public List<Result> getResults() {
+    public List<Result>getResults() {
         return results;
     }
 

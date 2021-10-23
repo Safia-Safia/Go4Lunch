@@ -18,6 +18,6 @@ public class MapsViewModel extends ViewModel {
         this.repository = mapsRepository;
     }
 
-    public LiveData<List<Restaurant>> fetchRestaurantFollowing(String location,int radius){
-        return repository.getRestaurant(location,radius);
+    public LiveData<List<Restaurant>> getRestaurants(String location){
+        return repository.getRestaurant(location);
     }}
