@@ -20,4 +20,9 @@ public class MapsViewModel extends ViewModel {
 
     public LiveData<List<Restaurant>> getRestaurants(String location){
         return repository.getRestaurant(location);
-    }}
+    }
+
+    public LiveData<List<Restaurant>> getRestaurantDetails(String placeId) {
+        return repository.getRestaurant(placeId);
+    }
+}

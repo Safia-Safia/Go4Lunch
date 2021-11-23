@@ -89,11 +89,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             if (nearbyRestaurantList != null) {
                 restaurantsList = nearbyRestaurantList;
                 for (Restaurant restaurant : restaurantsList) {
-                Marker marker = mMap.addMarker(new MarkerOptions()
+                    Marker marker = mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
                             .title(restaurant.getName())
                             .icon((BitmapDescriptorFactory
-                            .defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))));
+                                    .defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))));
                 }
             }
         });
@@ -140,6 +140,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             } else {
                 requestPermissions(permissions, LOCATION_PERMISSION_REQUEST_CODE);
             }
+        }else {
+            requestPermissions(permissions, LOCATION_PERMISSION_REQUEST_CODE);
+
         }
     }
 
