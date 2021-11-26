@@ -27,12 +27,17 @@ public class Restaurant {
     private String urlPhoto;
     @SerializedName("rating")
     @Expose
-    private int rating;
+    private Double rating;
     @SerializedName("phoneNumber")
     @Expose
     private String phoneNumber;
+    @SerializedName("openingHour")
+    @Expose
+    private String openingHour;
 
-    public Restaurant(String restaurantId, String name, Double latitude, Double longitude, @Nullable String address, @Nullable String urlPhoto, @Nullable int rating, String phoneNumber) {
+
+
+    public Restaurant(String restaurantId, String name, Double latitude, Double longitude, @Nullable String address, @Nullable String urlPhoto, @Nullable Double rating, String phoneNumber, String openingHour) {
         this.restaurantId = restaurantId;
         this.name = name;
         this.latitude = latitude;
@@ -41,6 +46,7 @@ public class Restaurant {
         this.urlPhoto = urlPhoto;
         this.rating = rating;
         this.phoneNumber = phoneNumber;
+        this.openingHour = openingHour;
     }
 
     public  Restaurant (){
@@ -94,11 +100,11 @@ public class Restaurant {
         this.urlPhoto = urlPhoto;
     }
 
-    public int getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
@@ -108,5 +114,8 @@ public class Restaurant {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setOpeningHours(String toString) {
     }
 }

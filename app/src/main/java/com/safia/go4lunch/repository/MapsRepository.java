@@ -110,17 +110,17 @@ public class MapsRepository {
             public void onResponse(@NonNull Call<PlaceDetail> call, @NonNull Response<PlaceDetail> response) {
                 //TODO faire le mapping
                 //TODO rajouter le nouvel objet restaurant dans une liste
-                //TODO Lorsque cette liste aura la mÃªme taille que la liste de
+                //TODO Lorsque cette liste aura la même taille que la liste de
                 // getResult de la ligne 60, on fera le post value
                 List<Restaurant> restaurantList1 = new ArrayList<>();
                 if (response.body() != null) {
                     for (PlaceDetail results : response.body().getResult()) {
                         Restaurant restaurant = new Restaurant();
-                        restaurant.setAddress(results.getAdrAddress());
-                        restaurant.setRating((int) results.getRating());
-                        restaurant.setPhoneNumber(results.getFormattedPhoneNumber());
-                        restaurant.setOpeningHours(results.getOpeningHours().getOpenNow().toString());
-                        restaurantList1.add(restaurant);
+                        restaurant.setAddress(results.getResult().getAdrAddress());
+                        restaurant.setRating(results.getResult().getRating());
+                        restaurant.setPhoneNumber(results.getResult().getFormattedPhoneNumber());
+                        restaurant.setOpeningHours(results.getResult().getOpeningHours().getOpenNow().toString());
+                        restaurantList1.add(restaurantList1);
                     }
                 }
             }

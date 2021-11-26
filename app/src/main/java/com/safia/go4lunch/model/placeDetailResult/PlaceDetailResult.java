@@ -1,11 +1,9 @@
 
 package com.safia.go4lunch.model.placeDetailResult;
 
-import com.safia.go4lunch.model.Review;
-
 import java.util.List;
 
-public class Result {
+public class PlaceDetailResult {
 
     private List<AddressComponent> addressComponents = null;
     private String adrAddress;

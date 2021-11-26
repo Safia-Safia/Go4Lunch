@@ -1,11 +1,6 @@
 
 package com.safia.go4lunch.model.nearbySearchResult;
 
-import com.safia.go4lunch.model.nearbySearchResult.Geometry;
-import com.safia.go4lunch.model.nearbySearchResult.OpeningHours;
-import com.safia.go4lunch.model.nearbySearchResult.Photo;
-import com.safia.go4lunch.model.nearbySearchResult.PlusCode;
-
 import java.util.List;
 
 public class Result {

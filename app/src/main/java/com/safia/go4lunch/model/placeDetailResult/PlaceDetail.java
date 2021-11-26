@@ -8,7 +8,7 @@ import java.util.List;
 public class PlaceDetail {
 
     private List<Object> htmlAttributions = null;
-    private Result result;
+    private PlaceDetailResult result;
     private String status;
 
     public List<Object> getHtmlAttributions() {
@@ -19,11 +19,11 @@ public class PlaceDetail {
         this.htmlAttributions = htmlAttributions;
     }
 
-    public Result getResult() {
+    public PlaceDetailResult getResult() {
         return result;
     }
 
-    public void setResult(Result result) {
+    public void setResult(PlaceDetailResult result) {
         this.result = result;
     }
 
