@@ -118,4 +118,12 @@ public class Restaurant {
 
     public void setOpeningHours(String toString) {
     }
+
+    public String getOpeningHour() {
+        return openingHour;
+    }
+
+    public void setOpeningHour(String openingHour) {
+        this.openingHour = openingHour;
+    }
 }

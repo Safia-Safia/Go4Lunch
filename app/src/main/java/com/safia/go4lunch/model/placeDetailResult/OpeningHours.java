@@ -1,8 +1,6 @@
 
 package com.safia.go4lunch.model.placeDetailResult;
 
-import com.safia.go4lunch.model.Period;
-
 import java.util.List;
 
 public class OpeningHours {
