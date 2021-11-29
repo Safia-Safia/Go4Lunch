@@ -116,9 +116,6 @@ public class Restaurant {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setOpeningHours(String toString) {
-    }
-
     public String getOpeningHour() {
         return openingHour;
     }

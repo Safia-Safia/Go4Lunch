@@ -1,5 +1,6 @@
 package com.safia.go4lunch.ui.listview;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ public class RestaurantRvAdapter extends RecyclerView.Adapter<RestaurantRvAdapte
 
     @Override
     public void onBindViewHolder(RestaurantViewHolder holder, int position) {
-        Restaurant restaurant = new Restaurant();
+        Restaurant restaurant = mRestaurants.get(position);
         holder.display(restaurant.getName(), restaurant.getAddress(), restaurant.getOpeningHour());
     }
 

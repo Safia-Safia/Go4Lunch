@@ -99,7 +99,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-    private void getDeviceLocation() {
+    public void getDeviceLocation() {
         try {
             if (mLocationPermissionsGranted) {
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getActivity());

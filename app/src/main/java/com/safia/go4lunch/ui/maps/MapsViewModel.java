@@ -22,7 +22,4 @@ public class MapsViewModel extends ViewModel {
         return repository.getRestaurant(location);
     }
 
-    public LiveData<List<Restaurant>> getRestaurantDetails(String placeId) {
-        return repository.getRestaurant(placeId);
-    }
 }

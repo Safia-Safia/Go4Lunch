@@ -83,7 +83,7 @@ public class MapsRepository {
                         restaurant.setAddress(placeDetail.getResult().getAdrAddress());
                         restaurant.setRating(placeDetail.getResult().getRating());
                         restaurant.setPhoneNumber(placeDetail.getResult().getFormattedPhoneNumber());
-                        //restaurant.setOpeningHours(placeDetail.getResult().getOpeningHours().toString());
+                        //restaurant.setOpeningHour(result1.getOpeningHours().getOpenNow().toString());
                         restaurantList.add(restaurant);
                     }
                     result.postValue(restaurantList);
@@ -102,8 +102,6 @@ public class MapsRepository {
         Retrofit retrofit = createRetrofit();
         // Get a Retrofit instance and the related endpoints
         MapService mapService2 = retrofit.create(MapService.class);
-        Gson gson = new Gson();
-        Log.e("result", gson.toJson(result) );
         // Create the call on NearbyPlace API
         Call<PlaceDetail> call = mapService2.getRestaurantDetails(result.getPlaceId());
         // Start the call
