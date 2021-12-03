@@ -16,4 +16,10 @@
             <item name="android:windowTranslucentStatus">true</item>
             <item name="android:windowTranslucentNavigation">true</item>
     </style>
+    <style name="Theme.Go4Lunch.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.Go4Lunch.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.Go4Lunch.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

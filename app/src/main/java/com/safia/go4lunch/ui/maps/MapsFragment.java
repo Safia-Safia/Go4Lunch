@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -31,10 +32,13 @@ import com.google.android.gms.tasks.Task;
 import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
+import com.safia.go4lunch.activity.DetailActivity;
 import com.safia.go4lunch.model.Restaurant;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
@@ -55,7 +59,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         this.configureViewModel();
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
+    public static final String KEY_RESTAURANT = "KEY_RESTAURANT";
 
+    Map<String, String> mMarkerMap = new HashMap<>();
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
@@ -69,6 +75,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                String venueName = mMarkerMap.get(marker.getId());
+                Intent intent = new Intent(MapsFragment.this.getActivity(), DetailActivity.class);
+                intent.putExtra(KEY_RESTAURANT, venueName);
+                startActivity(intent);
+                return false;
+            }
+        });
     }
 
 

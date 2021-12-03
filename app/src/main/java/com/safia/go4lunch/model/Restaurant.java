@@ -123,4 +123,6 @@ public class Restaurant {
     public void setOpeningHour(String openingHour) {
         this.openingHour = openingHour;
     }
+
+
 }
