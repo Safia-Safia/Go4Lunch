@@ -29,30 +29,28 @@ import java.util.List;
 public class ListViewFragment extends Fragment {
     private List<Restaurant> mRestaurant = new ArrayList<>();
     private MapsViewModel mViewModel;
-
+    private RecyclerView mRecyclerView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.list_view, container, false);
-
-        RestaurantRvAdapter mAdapter = new RestaurantRvAdapter(mRestaurant);
-        RecyclerView mRecyclerView = view.findViewById(R.id.recyclerview_restaurant);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView = view.findViewById(R.id.recyclerview_restaurant);
 
         configureViewModel();
         getDeviceLocation();
         return view;
     }
 
+    private void setUpRecyclerView(List<Restaurant> restaurants){
+        RestaurantRvAdapter mAdapter = new RestaurantRvAdapter(restaurants);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
     private void getRestaurant(LatLng location) {
         String locationStr = location.latitude + "," + location.longitude;
-        mViewModel.getRestaurants(locationStr).observe(this.getViewLifecycleOwner(), nearbyRestaurantList -> {
-            if (nearbyRestaurantList != null) {
-                mRestaurant = nearbyRestaurantList;
-            }
-        });
+        mViewModel.getRestaurants(locationStr).observe(this.getViewLifecycleOwner(), this::setUpRecyclerView);
     }
 
     public void configureViewModel() {

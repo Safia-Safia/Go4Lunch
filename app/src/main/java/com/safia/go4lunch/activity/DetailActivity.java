@@ -1,13 +1,18 @@
 package com.safia.go4lunch.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -15,11 +20,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.safia.go4lunch.R;
+import com.safia.go4lunch.databinding.ActivityDetailBinding;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.ui.maps.MapsFragment;
 
 public class DetailActivity extends AppCompatActivity {
-
+    private ActivityDetailBinding binding;
     private ImageView restaurantPhoto;
     private TextView restaurantName;
     private TextView restaurantType;
@@ -31,8 +37,12 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
+        binding = ActivityDetailBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        setUpView();
+        initView();
+        initWebsiteBtn();
+        initPhoneBtn();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -44,6 +54,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void setUpView(){
         mRestaurant = getIntent().getParcelableExtra(MapsFragment.KEY_RESTAURANT);
+        Log.e("setUpView", " " + mRestaurant);
         restaurantName = findViewById(R.id.restaurant_name_details);
         restaurantPhoto = findViewById(R.id.toolbarImage);
         restaurantType = findViewById(R.id.restaurant_type);
@@ -51,6 +62,37 @@ public class DetailActivity extends AppCompatActivity {
         likeBtn = findViewById(R.id.like_button);
         websiteBtn = findViewById(R.id.website_button);
         fab = findViewById(R.id.fav);
+    }
+
+    private void initPhoneBtn(){
+        phoneBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String phone = mRestaurant.getPhoneNumber();
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void initLikeBtn(){
+        likeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
+
+    private void initWebsiteBtn(){
+        websiteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri uri = Uri.parse( mRestaurant.getWebsite());
+                Intent intent= new Intent(Intent.ACTION_VIEW,uri);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initFabButton(){
@@ -65,7 +107,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initView(){
         restaurantName.setText(mRestaurant.getName());
-        restaurantType.setText(mRestaurant.getName());
+        restaurantType.setText(mRestaurant.getTypes());
         Glide.with(this).load(mRestaurant.getUrlPhoto()).into(restaurantPhoto);
     }
 }

@@ -1,7 +1,6 @@
 package com.safia.go4lunch.repository;
 
 
-
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -33,7 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapsRepository {
 
-    public Retrofit createRetrofit(){
+    public Retrofit createRetrofit() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         // set your desired log level
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -55,6 +54,7 @@ public class MapsRepository {
                 .build();
 
     }
+
     public LiveData<List<Restaurant>> getRestaurant(String location) {
         final MutableLiveData<List<Restaurant>> result = new MutableLiveData<>();
 
@@ -74,16 +74,23 @@ public class MapsRepository {
                 List<Restaurant> restaurantList = new ArrayList<>();
                 if (response.body() != null) {
                     for (Result result1 : response.body().getResults()) {
-                        PlaceDetail placeDetail= getRestaurantDetail(result1);
+                        PlaceDetail placeDetail = getRestaurantDetail(result1);
                         Restaurant restaurant = new Restaurant();
                         restaurant.setRestaurantId(result1.getPlaceId());
                         restaurant.setName(result1.getName());
                         restaurant.setLatitude(result1.getGeometry().getLocation().getLat());
                         restaurant.setLongitude(result1.getGeometry().getLocation().getLng());
-                        restaurant.setAddress(placeDetail.getResult().getAdrAddress());
+                        restaurant.setAddress(placeDetail.getResult().getFormattedAddress());
                         restaurant.setRating(placeDetail.getResult().getRating());
                         restaurant.setPhoneNumber(placeDetail.getResult().getFormattedPhoneNumber());
-                        //restaurant.setOpeningHour(result1.getOpeningHours().getOpenNow().toString());
+                        restaurant.setWebsite(placeDetail.getResult().getWebsite());
+                        restaurant.setTypes(placeDetail.getResult().getTypes().get(0));
+                        if (placeDetail.getResult().getPhotos() != null) {
+                            restaurant.setUrlPhoto(
+                                    "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=" + placeDetail.getResult().getPhotos().get(0).getPhotoReference() + "&key=AIzaSyDho4ut-Xsxg7efCchEwhcJe7uKqJANJnM"
+                            );
+                        }
+                        restaurant.setOpeningHour(placeDetail.getResult().getReference());
                         restaurantList.add(restaurant);
                     }
                     result.postValue(restaurantList);
@@ -97,6 +104,7 @@ public class MapsRepository {
         });
         return result;
     }
+
     public PlaceDetail getRestaurantDetail(Result result) {
 
         Retrofit retrofit = createRetrofit();

@@ -61,7 +61,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
     public static final String KEY_RESTAURANT = "KEY_RESTAURANT";
 
-    Map<String, String> mMarkerMap = new HashMap<>();
+    Map<String, Restaurant> mMarkerMap = new HashMap<>();
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
@@ -79,9 +79,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                String venueName = mMarkerMap.get(marker.getId());
+                Restaurant restaurant = mMarkerMap.get(marker.getId());
                 Intent intent = new Intent(MapsFragment.this.getActivity(), DetailActivity.class);
-                intent.putExtra(KEY_RESTAURANT, venueName);
+                intent.putExtra(KEY_RESTAURANT, restaurant);
                 startActivity(intent);
                 return false;
             }
@@ -111,6 +111,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                             .title(restaurant.getName())
                             .icon((BitmapDescriptorFactory
                                     .defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))));
+                    mMarkerMap.put(marker.getId(), restaurant);
                 }
             }
         });

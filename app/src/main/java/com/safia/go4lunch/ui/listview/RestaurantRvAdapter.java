@@ -4,11 +4,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.model.Restaurant;
 
@@ -27,7 +31,7 @@ public class RestaurantRvAdapter extends RecyclerView.Adapter<RestaurantRvAdapte
     @Override
     public RestaurantRvAdapter.RestaurantViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_view, parent, false);
+                .inflate(R.layout.restaurant_recyclerview, parent, false);
         return new RestaurantViewHolder(view);
     }
 
@@ -35,6 +39,9 @@ public class RestaurantRvAdapter extends RecyclerView.Adapter<RestaurantRvAdapte
     public void onBindViewHolder(RestaurantViewHolder holder, int position) {
         Restaurant restaurant = mRestaurants.get(position);
         holder.display(restaurant.getName(), restaurant.getAddress(), restaurant.getOpeningHour());
+        Glide.with(holder.restaurantPhoto.getContext())
+                .load(restaurant.getUrlPhoto())
+                .into(holder.restaurantPhoto);
     }
 
     @Override
@@ -46,6 +53,7 @@ public class RestaurantRvAdapter extends RecyclerView.Adapter<RestaurantRvAdapte
         TextView restaurantName;
         TextView restaurantAddress;
         TextView openingHour;
+        ImageView restaurantPhoto;
 
 
         public RestaurantViewHolder(@NonNull View itemView) {
@@ -53,13 +61,14 @@ public class RestaurantRvAdapter extends RecyclerView.Adapter<RestaurantRvAdapte
             restaurantName =itemView.findViewById(R.id.restaurantName_textView);
             restaurantAddress =itemView.findViewById(R.id.restaurantAddress_textView);
             openingHour =itemView.findViewById(R.id.restaurant_openings_hour_textView);
+            restaurantPhoto = itemView.findViewById(R.id.restaurant_imageView);
         }
 
         public void display (String restaurantName, String restaurantAddress,String openingHour){
             this.restaurantName.setText(restaurantName);
             this.restaurantAddress.setText(restaurantAddress);
             this.openingHour.setText(openingHour);
-        }
+           }
     }
 
 

@@ -1,12 +1,15 @@
 package com.safia.go4lunch.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class Restaurant {
+public class Restaurant implements Parcelable {
     @SerializedName("restaurantId")
     @Expose
     private String restaurantId;
@@ -34,6 +37,12 @@ public class Restaurant {
     @SerializedName("openingHour")
     @Expose
     private String openingHour;
+    @SerializedName("types")
+    @Expose
+    private String types;
+    @SerializedName("website")
+    @Expose
+    private String website;
 
 
 
@@ -124,5 +133,80 @@ public class Restaurant {
         this.openingHour = openingHour;
     }
 
+    public String getTypes() {
+        return types;
+    }
 
+    public void setTypes(String types) {
+        this.types = types;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.restaurantId);
+        dest.writeString(this.name);
+        dest.writeValue(this.latitude);
+        dest.writeValue(this.longitude);
+        dest.writeString(this.address);
+        dest.writeString(this.urlPhoto);
+        dest.writeValue(this.rating);
+        dest.writeString(this.phoneNumber);
+        dest.writeString(this.openingHour);
+        dest.writeString(this.types);
+        dest.writeString(this.website);
+    }
+
+    public void readFromParcel(Parcel source) {
+        this.restaurantId = source.readString();
+        this.name = source.readString();
+        this.latitude = (Double) source.readValue(Double.class.getClassLoader());
+        this.longitude = (Double) source.readValue(Double.class.getClassLoader());
+        this.address = source.readString();
+        this.urlPhoto = source.readString();
+        this.rating = (Double) source.readValue(Double.class.getClassLoader());
+        this.phoneNumber = source.readString();
+        this.openingHour = source.readString();
+        this.types = source.readString();
+        this.website = source.readString();
+    }
+
+    protected Restaurant(Parcel in) {
+        this.restaurantId = in.readString();
+        this.name = in.readString();
+        this.latitude = (Double) in.readValue(Double.class.getClassLoader());
+        this.longitude = (Double) in.readValue(Double.class.getClassLoader());
+        this.address = in.readString();
+        this.urlPhoto = in.readString();
+        this.rating = (Double) in.readValue(Double.class.getClassLoader());
+        this.phoneNumber = in.readString();
+        this.openingHour = in.readString();
+        this.types = in.readString();
+        this.website = in.readString();
+    }
+
+    public static final Parcelable.Creator<Restaurant> CREATOR = new Parcelable.Creator<Restaurant>() {
+        @Override
+        public Restaurant createFromParcel(Parcel source) {
+            return new Restaurant(source);
+        }
+
+        @Override
+        public Restaurant[] newArray(int size) {
+            return new Restaurant[size];
+        }
+    };
 }
