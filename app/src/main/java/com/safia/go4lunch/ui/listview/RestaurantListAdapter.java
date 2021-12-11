@@ -1,6 +1,5 @@
 package com.safia.go4lunch.ui.listview;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,28 +10,27 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.google.gson.Gson;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.model.Restaurant;
 
 import java.util.List;
 
-public class RestaurantRvAdapter extends RecyclerView.Adapter<RestaurantRvAdapter.RestaurantViewHolder> {
+public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAdapter.RestaurantViewHolder> {
 
-    private List <Restaurant> mRestaurants;
+    private final List <Restaurant> mRestaurants;
+    private onRestaurantClickListener mOnRestaurantClickListener;
 
-    public RestaurantRvAdapter(List<Restaurant> restaurants) {
+    public RestaurantListAdapter(List<Restaurant> restaurants, onRestaurantClickListener onRestaurantClickListener) {
         mRestaurants = restaurants;
+        this.mOnRestaurantClickListener = onRestaurantClickListener;
     }
-
 
     @NonNull
     @Override
-    public RestaurantRvAdapter.RestaurantViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RestaurantListAdapter.RestaurantViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.restaurant_recyclerview, parent, false);
-        return new RestaurantViewHolder(view);
+        return new RestaurantViewHolder(view, mOnRestaurantClickListener);
     }
 
     @Override
@@ -49,19 +47,21 @@ public class RestaurantRvAdapter extends RecyclerView.Adapter<RestaurantRvAdapte
         return mRestaurants.size();
     }
 
-    public static class RestaurantViewHolder extends RecyclerView.ViewHolder {
+    public static class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView restaurantName;
         TextView restaurantAddress;
         TextView openingHour;
         ImageView restaurantPhoto;
+        onRestaurantClickListener mOnRestaurantClickListener;
 
 
-        public RestaurantViewHolder(@NonNull View itemView) {
+        public RestaurantViewHolder(View itemView,onRestaurantClickListener onRestaurantClickListener) {
             super(itemView);
             restaurantName =itemView.findViewById(R.id.restaurantName_textView);
             restaurantAddress =itemView.findViewById(R.id.restaurantAddress_textView);
             openingHour =itemView.findViewById(R.id.restaurant_openings_hour_textView);
             restaurantPhoto = itemView.findViewById(R.id.restaurant_imageView);
+            this.mOnRestaurantClickListener = onRestaurantClickListener;
         }
 
         public void display (String restaurantName, String restaurantAddress,String openingHour){
@@ -69,6 +69,16 @@ public class RestaurantRvAdapter extends RecyclerView.Adapter<RestaurantRvAdapte
             this.restaurantAddress.setText(restaurantAddress);
             this.openingHour.setText(openingHour);
            }
+
+
+        @Override
+        public void onClick(View view) {
+            mOnRestaurantClickListener.onRestaurantClick(getAbsoluteAdapterPosition());
+        }
+    }
+
+    public interface onRestaurantClickListener {
+        void onRestaurantClick(int position);
     }
 
 

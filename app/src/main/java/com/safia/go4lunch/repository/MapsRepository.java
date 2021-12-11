@@ -81,16 +81,14 @@ public class MapsRepository {
                         restaurant.setLatitude(result1.getGeometry().getLocation().getLat());
                         restaurant.setLongitude(result1.getGeometry().getLocation().getLng());
                         restaurant.setAddress(placeDetail.getResult().getFormattedAddress());
-                        restaurant.setRating(placeDetail.getResult().getRating());
+                        restaurant.setRating(placeDetail.getResult().getRating().floatValue());
                         restaurant.setPhoneNumber(placeDetail.getResult().getFormattedPhoneNumber());
                         restaurant.setWebsite(placeDetail.getResult().getWebsite());
                         restaurant.setTypes(placeDetail.getResult().getTypes().get(0));
                         if (placeDetail.getResult().getPhotos() != null) {
-                            restaurant.setUrlPhoto(
-                                    "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=" + placeDetail.getResult().getPhotos().get(0).getPhotoReference() + "&key=AIzaSyDho4ut-Xsxg7efCchEwhcJe7uKqJANJnM"
-                            );
+                            restaurant.setUrlPhoto(placeDetail.getResult().getPhotos().get(0).getPhotoReference());
                         }
-                        restaurant.setOpeningHour(placeDetail.getResult().getReference());
+                        //restaurant.setOpeningHour(placeDetail.getResult().getOpeningHours().getPeriods());
                         restaurantList.add(restaurant);
                     }
                     result.postValue(restaurantList);

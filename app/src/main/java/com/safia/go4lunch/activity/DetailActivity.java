@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.safia.go4lunch.R;
@@ -32,6 +33,8 @@ public class DetailActivity extends AppCompatActivity {
     private ImageButton phoneBtn, likeBtn, websiteBtn;
     private Restaurant mRestaurant;
     private FloatingActionButton fab;
+    private Toolbar mToolbar;
+    RatingBar ratingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,13 @@ public class DetailActivity extends AppCompatActivity {
         likeBtn = findViewById(R.id.like_button);
         websiteBtn = findViewById(R.id.website_button);
         fab = findViewById(R.id.fav);
+        mToolbar =findViewById(R.id.toolbar);
+        ratingBar = findViewById(R.id.rating_detail);
+    }
+
+    private void setUpToolbar(){
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void initPhoneBtn(){
@@ -108,6 +118,7 @@ public class DetailActivity extends AppCompatActivity {
     private void initView(){
         restaurantName.setText(mRestaurant.getName());
         restaurantType.setText(mRestaurant.getTypes());
+        ratingBar.setRating(mRestaurant.getRating());
         Glide.with(this).load(mRestaurant.getUrlPhoto()).into(restaurantPhoto);
     }
 }

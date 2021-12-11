@@ -1,5 +1,6 @@
 package com.safia.go4lunch.ui.listview;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,14 +21,16 @@ import com.google.android.gms.tasks.Task;
 import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
+import com.safia.go4lunch.activity.DetailActivity;
 import com.safia.go4lunch.model.Restaurant;
+import com.safia.go4lunch.ui.maps.MapsFragment;
 import com.safia.go4lunch.ui.maps.MapsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListViewFragment extends Fragment {
-    private List<Restaurant> mRestaurant = new ArrayList<>();
+public class ListViewFragment extends Fragment implements RestaurantListAdapter.onRestaurantClickListener{
+    private List<Restaurant> mRestaurant;
     private MapsViewModel mViewModel;
     private RecyclerView mRecyclerView;
 
@@ -43,7 +46,7 @@ public class ListViewFragment extends Fragment {
     }
 
     private void setUpRecyclerView(List<Restaurant> restaurants){
-        RestaurantRvAdapter mAdapter = new RestaurantRvAdapter(restaurants);
+        RestaurantListAdapter mAdapter = new RestaurantListAdapter(restaurants,this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -78,4 +81,10 @@ public class ListViewFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onRestaurantClick(int position) {
+        Intent intent = new Intent(ListViewFragment.this.getActivity(), DetailActivity.class);
+        intent.putExtra(MapsFragment.KEY_RESTAURANT, mRestaurant.get(position));
+        startActivity(intent);
+    }
 }

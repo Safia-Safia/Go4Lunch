@@ -30,7 +30,7 @@ public class Restaurant implements Parcelable {
     private String urlPhoto;
     @SerializedName("rating")
     @Expose
-    private Double rating;
+    private Float rating;
     @SerializedName("phoneNumber")
     @Expose
     private String phoneNumber;
@@ -46,7 +46,7 @@ public class Restaurant implements Parcelable {
 
 
 
-    public Restaurant(String restaurantId, String name, Double latitude, Double longitude, @Nullable String address, @Nullable String urlPhoto, @Nullable Double rating, String phoneNumber, String openingHour) {
+    public Restaurant(String restaurantId, String name, Double latitude, Double longitude, @Nullable String address, @Nullable String urlPhoto, @Nullable Float rating, String phoneNumber, String openingHour) {
         this.restaurantId = restaurantId;
         this.name = name;
         this.latitude = latitude;
@@ -106,14 +106,15 @@ public class Restaurant implements Parcelable {
     }
 
     public void setUrlPhoto(String urlPhoto) {
-        this.urlPhoto = urlPhoto;
+        this.urlPhoto = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference="
+                + urlPhoto + "&key=AIzaSyDho4ut-Xsxg7efCchEwhcJe7uKqJANJnM";
     }
 
-    public Double getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
 
@@ -177,7 +178,7 @@ public class Restaurant implements Parcelable {
         this.longitude = (Double) source.readValue(Double.class.getClassLoader());
         this.address = source.readString();
         this.urlPhoto = source.readString();
-        this.rating = (Double) source.readValue(Double.class.getClassLoader());
+        this.rating = (Float) source.readValue(Double.class.getClassLoader());
         this.phoneNumber = source.readString();
         this.openingHour = source.readString();
         this.types = source.readString();
@@ -191,7 +192,7 @@ public class Restaurant implements Parcelable {
         this.longitude = (Double) in.readValue(Double.class.getClassLoader());
         this.address = in.readString();
         this.urlPhoto = in.readString();
-        this.rating = (Double) in.readValue(Double.class.getClassLoader());
+        this.rating = (Float) in.readValue(Double.class.getClassLoader());
         this.phoneNumber = in.readString();
         this.openingHour = in.readString();
         this.types = in.readString();

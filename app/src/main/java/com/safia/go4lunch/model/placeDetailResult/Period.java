@@ -3,8 +3,8 @@ package com.safia.go4lunch.model.placeDetailResult;
 
 public class Period {
 
-    private Close close;
-    private Open open;
+    public Close close;
+    public Open open;
 
     public Close getClose() {
         return close;
