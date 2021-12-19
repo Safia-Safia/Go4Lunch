@@ -36,4 +36,8 @@
         "Material is the metaphor.\n\n"
     </string>
     <string name="action_settings">Settings</string>
+    <string name="close">Closed</string>
+    <string name="closing_soon">Closing Soon</string>
+    <string name="open">Open</string>
+    <string name="unavailable">Indisponible</string>
 </resources>

@@ -1,9 +1,13 @@
 
 package com.safia.go4lunch.model.placeDetailResult;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class OpeningHours {
+public class OpeningHours implements Parcelable {
 
     private Boolean openNow;
     private List<Period> periods = null;
@@ -33,4 +37,44 @@ public class OpeningHours {
         this.weekdayText = weekdayText;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.openNow);
+        dest.writeList(this.periods);
+        dest.writeStringList(this.weekdayText);
+    }
+
+    public void readFromParcel(Parcel source) {
+        this.openNow = (Boolean) source.readValue(Boolean.class.getClassLoader());
+        this.periods = new ArrayList<Period>();
+        source.readList(this.periods, Period.class.getClassLoader());
+        this.weekdayText = source.createStringArrayList();
+    }
+
+    public OpeningHours() {
+    }
+
+    protected OpeningHours(Parcel in) {
+        this.openNow = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.periods = new ArrayList<Period>();
+        in.readList(this.periods, Period.class.getClassLoader());
+        this.weekdayText = in.createStringArrayList();
+    }
+
+    public static final Parcelable.Creator<OpeningHours> CREATOR = new Parcelable.Creator<OpeningHours>() {
+        @Override
+        public OpeningHours createFromParcel(Parcel source) {
+            return new OpeningHours(source);
+        }
+
+        @Override
+        public OpeningHours[] newArray(int size) {
+            return new OpeningHours[size];
+        }
+    };
 }

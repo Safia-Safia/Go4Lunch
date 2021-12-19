@@ -3,10 +3,9 @@ package com.safia.go4lunch.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.Nullable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.safia.go4lunch.model.placeDetailResult.OpeningHours;
 
 
 public class Restaurant implements Parcelable {
@@ -36,27 +35,13 @@ public class Restaurant implements Parcelable {
     private String phoneNumber;
     @SerializedName("openingHour")
     @Expose
-    private String openingHour;
+    private OpeningHours openingHours;
     @SerializedName("types")
     @Expose
     private String types;
     @SerializedName("website")
     @Expose
     private String website;
-
-
-
-    public Restaurant(String restaurantId, String name, Double latitude, Double longitude, @Nullable String address, @Nullable String urlPhoto, @Nullable Float rating, String phoneNumber, String openingHour) {
-        this.restaurantId = restaurantId;
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.address = address;
-        this.urlPhoto = urlPhoto;
-        this.rating = rating;
-        this.phoneNumber = phoneNumber;
-        this.openingHour = openingHour;
-    }
 
     public  Restaurant (){
     }
@@ -126,12 +111,12 @@ public class Restaurant implements Parcelable {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getOpeningHour() {
-        return openingHour;
+    public OpeningHours getOpeningHours() {
+        return openingHours;
     }
 
-    public void setOpeningHour(String openingHour) {
-        this.openingHour = openingHour;
+    public void setOpeningHours(OpeningHours openingHours) {
+        this.openingHours = openingHours;
     }
 
     public String getTypes() {
@@ -166,7 +151,7 @@ public class Restaurant implements Parcelable {
         dest.writeString(this.urlPhoto);
         dest.writeValue(this.rating);
         dest.writeString(this.phoneNumber);
-        dest.writeString(this.openingHour);
+        dest.writeParcelable(this.openingHours, flags);
         dest.writeString(this.types);
         dest.writeString(this.website);
     }
@@ -180,7 +165,7 @@ public class Restaurant implements Parcelable {
         this.urlPhoto = source.readString();
         this.rating = (Float) source.readValue(Double.class.getClassLoader());
         this.phoneNumber = source.readString();
-        this.openingHour = source.readString();
+        this.openingHours = source.readParcelable(OpeningHours.class.getClassLoader());
         this.types = source.readString();
         this.website = source.readString();
     }
@@ -194,7 +179,7 @@ public class Restaurant implements Parcelable {
         this.urlPhoto = in.readString();
         this.rating = (Float) in.readValue(Double.class.getClassLoader());
         this.phoneNumber = in.readString();
-        this.openingHour = in.readString();
+        this.openingHours = in.readParcelable(OpeningHours.class.getClassLoader());
         this.types = in.readString();
         this.website = in.readString();
     }

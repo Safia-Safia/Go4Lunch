@@ -14,7 +14,6 @@ import com.safia.go4lunch.model.nearbySearchResult.NearbyPlace;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.nearbySearchResult.Result;
 import com.safia.go4lunch.model.placeDetailResult.PlaceDetail;
-import com.safia.go4lunch.model.placeDetailResult.PlaceDetailResult;
 import com.safia.go4lunch.ui.maps.MapService;
 
 import java.io.IOException;
@@ -88,7 +87,7 @@ public class MapsRepository {
                         if (placeDetail.getResult().getPhotos() != null) {
                             restaurant.setUrlPhoto(placeDetail.getResult().getPhotos().get(0).getPhotoReference());
                         }
-                        //restaurant.setOpeningHour(placeDetail.getResult().getOpeningHours().getPeriods());
+                        restaurant.setOpeningHours(placeDetail.getResult().getOpeningHours());
                         restaurantList.add(restaurant);
                     }
                     result.postValue(restaurantList);
