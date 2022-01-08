@@ -1,9 +1,17 @@
 package com.safia.go4lunch.activity;
 
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.ui.maps.MapsFragment;
@@ -44,6 +52,30 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    private   static FusedLocationProviderClient fusedLocationProviderClient;
+    private static Boolean mLocationPermissionsGranted = false;
+    private static final String TAG = "HomeActivity";
+    private static GoogleMap mMap;
+
+    public void getDeviceLocation() { //TODO appeler cette methode dans l'activité HomeActivity
+        try {
+            if (mLocationPermissionsGranted) {
+                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+                final Task location = fusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Location currentLocation = (Location) task.getResult();
+                        LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                       // moveCamera(latLng);
+                        //MapsFragment.getRestaurant(latLng);
+                    }
+                });
+            }
+        } catch (SecurityException e) {
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
+        }
     }
 
     //Configure BottomNavigationView Listener

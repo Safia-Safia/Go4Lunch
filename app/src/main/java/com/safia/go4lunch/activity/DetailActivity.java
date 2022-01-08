@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -28,8 +27,7 @@ import com.safia.go4lunch.ui.maps.MapsFragment;
 public class DetailActivity extends AppCompatActivity {
     private ActivityDetailBinding binding;
     private ImageView restaurantPhoto;
-    private TextView restaurantName;
-    private TextView restaurantType;
+    private TextView restaurantName, restaurantAddress, restaurantType;
     private ImageButton phoneBtn, likeBtn, websiteBtn;
     private Restaurant mRestaurant;
     private FloatingActionButton fab;
@@ -57,10 +55,10 @@ public class DetailActivity extends AppCompatActivity {
 
     private void setUpView(){
         mRestaurant = getIntent().getParcelableExtra(MapsFragment.KEY_RESTAURANT);
-        Log.e("setUpView", " " + mRestaurant);
         restaurantName = findViewById(R.id.restaurant_name_details);
         restaurantPhoto = findViewById(R.id.toolbarImage);
-        restaurantType = findViewById(R.id.restaurant_type);
+        restaurantType = findViewById(R.id.restaurant_type_detail);
+        restaurantAddress = findViewById(R.id.restaurant_adress_detail);
         phoneBtn = findViewById(R.id.phone_button);
         likeBtn = findViewById(R.id.like_button);
         websiteBtn = findViewById(R.id.website_button);
@@ -117,7 +115,8 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initView(){
         restaurantName.setText(mRestaurant.getName());
-        restaurantType.setText(mRestaurant.getTypes());
+        restaurantType.setText(mRestaurant.getTypes().toUpperCase());
+        restaurantAddress.setText(mRestaurant.getAddress());
         ratingBar.setRating(mRestaurant.getRating());
         Glide.with(this).load(mRestaurant.getUrlPhoto()).into(restaurantPhoto);
     }

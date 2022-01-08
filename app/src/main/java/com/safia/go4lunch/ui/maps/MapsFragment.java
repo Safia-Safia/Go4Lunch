@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
@@ -76,15 +77,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
 
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Restaurant restaurant = mMarkerMap.get(marker.getId());
-                Intent intent = new Intent(MapsFragment.this.getActivity(), DetailActivity.class);
-                intent.putExtra(KEY_RESTAURANT, restaurant);
-                startActivity(intent);
-                return false;
-            }
+        mMap.setOnMarkerClickListener(marker -> {
+            Restaurant restaurant = mMarkerMap.get(marker.getId());
+            Intent intent = new Intent(MapsFragment.this.getActivity(), DetailActivity.class);
+            intent.putExtra(KEY_RESTAURANT, restaurant);
+            startActivity(intent);
+            return false;
         });
     }
 
@@ -100,7 +98,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         this.mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MapsViewModel.class);
     }
 
-    public void getRestaurant(LatLng location) {
+    public void getRestaurant(LatLng location) { //TODO changer le string en latlng
         String locationStr = location.latitude + "," + location.longitude;
         mViewModel.getRestaurants(locationStr).observe(this, nearbyRestaurantList -> {
             if (nearbyRestaurantList != null) {
@@ -117,7 +115,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-    public void getDeviceLocation() {
+    public void getDeviceLocation() { //TODO appeler cette methode dans l'activité HomeActivity
         try {
             if (mLocationPermissionsGranted) {
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getActivity());

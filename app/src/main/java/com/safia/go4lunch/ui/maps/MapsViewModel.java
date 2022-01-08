@@ -1,9 +1,9 @@
 package com.safia.go4lunch.ui.maps;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.repository.MapsRepository;
 

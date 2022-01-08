@@ -50,7 +50,9 @@
         android:layout_marginEnd="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_baseline_check_circle_outline_24" />
+        android:tint="@color/white"
+        app:backgroundTint="@color/white"
+        app:srcCompat="@drawable/ic_baseline_check_circle_24" />
 
 
 

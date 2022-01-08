@@ -18,11 +18,9 @@ import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.placeDetailResult.OpeningHours;
 import com.safia.go4lunch.model.placeDetailResult.Period;
 
-import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -62,9 +60,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         TextView restaurantOpeningHour;
         ImageView restaurantPhoto;
         onRestaurantClickListener mOnRestaurantClickListener;
-        Calendar currentHour, currentDate;
-        int hour, minute;
-        Date closingHour;
+        Calendar currentTime;
         SimpleDateFormat formatter;
 
         public RestaurantViewHolder(View itemView, onRestaurantClickListener onRestaurantClickListener) {
@@ -74,11 +70,8 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
             restaurantOpeningHour = itemView.findViewById(R.id.restaurant_openings_hour_textView);
             restaurantPhoto = itemView.findViewById(R.id.restaurant_imageView);
             this.mOnRestaurantClickListener = onRestaurantClickListener;
-            currentHour = Calendar.getInstance();
-            currentDate = Calendar.getInstance();
+            currentTime = Calendar.getInstance();
             formatter = new SimpleDateFormat("kkmm", Locale.FRANCE);
-
-
         }
 
         public void display(Restaurant restaurant, OpeningHours openingHours) {
@@ -90,52 +83,91 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
                     .centerCrop()
                     .into(restaurantPhoto);
 
-            for (Period period : openingHours.getPeriods()){
-              if (currentDate.equals(period.getOpen().getDay()) && currentDate != null){
-              if ( openingHours == null){
-                    restaurantOpeningHour.setText(R.string.unavailable);
-                } else if (!openingHours.getOpenNow()) {
-                    restaurantOpeningHour.setText(R.string.close);
-                    restaurantOpeningHour.setTextColor(Color.RED);
-                } else {
-                    getRestaurantOpeningHour(restaurant);
-                }}
+            if (openingHours == null) {
+                restaurantOpeningHour.setText(R.string.unavailable);
+                restaurantOpeningHour.setTextColor(Color.DKGRAY);
+
+            } else if (!openingHours.getOpenNow()) {
+                restaurantOpeningHour.setText(R.string.close);
+                restaurantOpeningHour.setTextColor(Color.RED);
+
+                for (Period period : openingHours.getPeriods()) {
+                    if (currentTime.get(Calendar.DAY_OF_WEEK) - 1 == period.getOpen().getDay()) {
+                        Log.e("restaurantName", restaurant.getName());
+                        Calendar openingSoon = Calendar.getInstance();
+                        Calendar openingTime = Calendar.getInstance();
+                        String openingTimeStr = period.getOpen().getTime();
+                        String closingTimeStr = period.getClose().getTime();
+                        int openingHour, openingMinute;
+                        try {
+                            openingHour = Objects.requireNonNull(formatter.parse(openingTimeStr)).getHours();
+                            openingMinute = Objects.requireNonNull(formatter.parse(openingTimeStr)).getMinutes();
+                            openingSoon.set(Calendar.HOUR_OF_DAY, openingHour);
+                            openingSoon.set(Calendar.MINUTE, openingMinute);
+                            openingSoon.add(Calendar.MINUTE, -30);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            return;
+                        }
+
+                        if (currentTime.after(openingSoon) && currentTime.before(openingTime)) {
+                            restaurantOpeningHour.setText("opening soon");
+                            restaurantOpeningHour.setTextColor(Color.MAGENTA);
+                        }
+                    }
+                }
+
+            } else if (openingHours.getPeriods().size() == 1) {
+                restaurantOpeningHour.setText("Ouvert 24/24h");
+                restaurantOpeningHour.setTextColor(Color.GREEN);
+            } else {
+                for (Period period : openingHours.getPeriods()) {
+                    if (currentTime.get(Calendar.DAY_OF_WEEK) - 1 == period.getOpen().getDay()) {
+                        Log.e("restaurantName", restaurant.getName());
+                        getRestaurantOpeningHour(period);
+                    }
+                }
             }
 
-            /*2-Si c'est openUntil, on doit parcourir la liste des perdiods et si le day = au jour actuel (au préalable récupérer le
-            jour actuel) dans ce cas on entre dans cette période pour vérifier si l'heure qui est dans l'objet Open est superieur à l'heure actuelle
-            et que l'heure de fermeture et avant l'heure actuelle*/
-            /*3-Pour savoir si ça ferme bientôt (closingSoon) -> Dans la condition du openUntil, vérifier si
-            l'heure actuelle est après l'heure de fermeture -Xminutes Dans ce cas là, on affiche ClosingSoon au lieu d'OpenUntil
-             */
+            /*2-OpeningSOOON*/
         }
 
-        public void getRestaurantOpeningHour(Restaurant restaurant) {
-            String str_date = restaurant.getOpeningHours().getPeriods().get(0).getOpen().getTime();
-            try {
-                hour = Objects.requireNonNull(formatter.parse(str_date)).getHours();
-                minute = Objects.requireNonNull(formatter.parse(str_date)).getMinutes();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            restaurantOpeningHour.setText(MessageFormat.format("Open until {0}:{1}", hour, minute));
-        }
 
-        public void getRestaurantClosingHour(Restaurant restaurant) {
-            String str_date = restaurant.getOpeningHours().getPeriods().get(0).getClose().getTime();
+        public void getRestaurantOpeningHour(Period period) {
+            String openingTimeStr = period.getOpen().getTime();
+            String closingTimeStr = period.getClose().getTime();
+            int openingHour, openingMinute, closingHour, closingMinute;
+
             try {
-                hour = Objects.requireNonNull(formatter.parse(str_date)).getHours();
-                minute = Objects.requireNonNull(formatter.parse(str_date)).getMinutes();
+                openingHour = Objects.requireNonNull(formatter.parse(openingTimeStr)).getHours();
+                openingMinute = Objects.requireNonNull(formatter.parse(openingTimeStr)).getMinutes();
+                closingHour = Objects.requireNonNull(formatter.parse(closingTimeStr)).getHours();
+                closingMinute = Objects.requireNonNull(formatter.parse(closingTimeStr)).getMinutes();
             } catch (ParseException e) {
                 e.printStackTrace();
+                return;
             }
-            currentHour.set(Calendar.HOUR_OF_DAY, hour);
-            currentHour.set(Calendar.MINUTE, minute);
-            currentHour.add(Calendar.MINUTE, -15);
-            closingHour = currentHour.getTime();
-            if (currentHour.after(closingHour)){
+            Calendar closingTime = Calendar.getInstance();
+            Calendar openingTime = Calendar.getInstance();
+            Calendar closingSoon = Calendar.getInstance();
+
+            closingTime.set(Calendar.HOUR_OF_DAY, closingHour);
+            closingTime.set(Calendar.MINUTE, closingMinute);
+
+            closingSoon.set(Calendar.HOUR_OF_DAY, closingHour);
+            closingSoon.set(Calendar.MINUTE, closingMinute);
+            closingSoon.add(Calendar.MINUTE, -30);
+
+            openingTime.set(Calendar.HOUR_OF_DAY, openingHour);
+            openingTime.set(Calendar.MINUTE, openingMinute);
+
+
+            if (currentTime.before(closingTime) && currentTime.after(closingSoon)) {
                 restaurantOpeningHour.setText(R.string.closing_soon);
                 restaurantOpeningHour.setTextColor(Color.RED);
+            } else {
+                restaurantOpeningHour.setText(String.format("Open Until %02d:%02d ", closingHour, closingMinute));
+                restaurantOpeningHour.setTextColor(Color.GREEN);
             }
         }
 
@@ -143,13 +175,10 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         public void onClick(View view) {
             mOnRestaurantClickListener.onRestaurantClick(getAbsoluteAdapterPosition());
         }
-
-
     }
 
     public interface onRestaurantClickListener {
         void onRestaurantClick(int position);
     }
-
 
 }

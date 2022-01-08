@@ -42,6 +42,9 @@ public class Restaurant implements Parcelable {
     @SerializedName("website")
     @Expose
     private String website;
+    @SerializedName("distance")
+    @Expose
+    private int distance;
 
     public  Restaurant (){
     }
@@ -135,6 +138,13 @@ public class Restaurant implements Parcelable {
         this.website = website;
     }
 
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
 
     @Override
     public int describeContents() {
@@ -154,6 +164,7 @@ public class Restaurant implements Parcelable {
         dest.writeParcelable(this.openingHours, flags);
         dest.writeString(this.types);
         dest.writeString(this.website);
+        dest.writeInt(this.distance);
     }
 
     public void readFromParcel(Parcel source) {
@@ -168,6 +179,7 @@ public class Restaurant implements Parcelable {
         this.openingHours = source.readParcelable(OpeningHours.class.getClassLoader());
         this.types = source.readString();
         this.website = source.readString();
+        this.distance = source.readInt();
     }
 
     protected Restaurant(Parcel in) {

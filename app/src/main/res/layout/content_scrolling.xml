@@ -49,18 +49,35 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/restaurant_name_details"
-                        android:numStars="5"
+                        android:numStars="3"
                         app:tint="@color/white" />
 
                     <TextView
-                        android:id="@+id/restaurant_type"
+                        android:id="@+id/restaurant_type_detail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/restaurant_name_details"
                         android:maxLines="1"
                         android:text="restaurant_type"
                         android:textColor="@color/white" />
-
+                    <TextView
+                        android:id="@+id/tiret"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/restaurant_name_details"
+                        android:layout_toRightOf="@+id/restaurant_type_detail"
+                        android:maxLines="1"
+                        android:text=" - "
+                        android:textColor="@color/white" />
+                    <TextView
+                        android:id="@+id/restaurant_adress_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/restaurant_name_details"
+                        android:layout_toRightOf="@+id/tiret"
+                        android:maxLines="1"
+                        android:text="@string/restaurant_address"
+                        android:textColor="@color/white" />
 
                 </RelativeLayout>
 

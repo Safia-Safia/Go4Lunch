@@ -1,10 +1,9 @@
 package com.safia.go4lunch.ui.maps;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.safia.go4lunch.model.nearbySearchResult.NearbyPlace;
-import com.safia.go4lunch.model.Restaurant;
-import com.safia.go4lunch.model.nearbySearchResult.Result;
+
 import com.safia.go4lunch.model.placeDetailResult.PlaceDetail;
-import com.safia.go4lunch.model.placeDetailResult.PlaceDetailResult;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

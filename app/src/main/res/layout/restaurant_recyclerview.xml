@@ -51,8 +51,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/restaurantAddress_textView"
         android:layout_marginTop="10dp"
-        android:textStyle="italic"
-        android:text="@string/opening_hour"/>
+        android:textStyle="italic"/>
 
     <View
         android:layout_width="match_parent"

@@ -53,7 +53,7 @@
                         android:numStars="3"
                         android:layout_toEndOf="@id/restaurant_name_details"/>
                     <TextView
-                        android:id="@+id/restaurant_type"
+                        android:id="@+id/restaurant_type_detail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/restaurant_name_details"

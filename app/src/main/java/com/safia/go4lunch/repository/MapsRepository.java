@@ -1,12 +1,14 @@
 package com.safia.go4lunch.repository;
 
 
+import android.location.Location;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,7 +39,7 @@ public class MapsRepository {
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        // add your other interceptors â€¦
+        // add your other interceptors
 
         // add logging as last interceptor
         httpClient.addInterceptor(logging);  // <-- this is the important line!
@@ -51,14 +53,12 @@ public class MapsRepository {
                 .callbackExecutor(Executors.newSingleThreadExecutor())
                 .client(httpClient.build())
                 .build();
-
     }
 
     public LiveData<List<Restaurant>> getRestaurant(String location) {
         final MutableLiveData<List<Restaurant>> result = new MutableLiveData<>();
 
         Retrofit retrofit = createRetrofit();
-
 
         // Get a Retrofit instance and the related endpoints
         MapService mapService = retrofit.create(MapService.class);
@@ -88,6 +88,9 @@ public class MapsRepository {
                             restaurant.setUrlPhoto(placeDetail.getResult().getPhotos().get(0).getPhotoReference());
                         }
                         restaurant.setOpeningHours(placeDetail.getResult().getOpeningHours());
+
+                      // Location.distanceBetween(restaurant.getLatitude(),restaurant.getLongitude(), );
+                        
                         restaurantList.add(restaurant);
                     }
                     result.postValue(restaurantList);
