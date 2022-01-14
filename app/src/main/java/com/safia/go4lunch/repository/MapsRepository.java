@@ -55,7 +55,7 @@ public class MapsRepository {
                 .build();
     }
 
-    public LiveData<List<Restaurant>> getRestaurant(String location) {
+    public LiveData<List<Restaurant>> getRestaurant(LatLng location) {
         final MutableLiveData<List<Restaurant>> result = new MutableLiveData<>();
 
         Retrofit retrofit = createRetrofit();
@@ -64,7 +64,8 @@ public class MapsRepository {
         MapService mapService = retrofit.create(MapService.class);
 
         // Create the call on NearbyPlace API
-        Call<NearbyPlace> call = mapService.getNearbyPlaces(location);
+        String locationStr = location.latitude + "," + location.longitude;
+        Call<NearbyPlace> call = mapService.getNearbyPlaces(locationStr);
         // Start the call
         call.enqueue(new Callback<NearbyPlace>() {
 
@@ -89,8 +90,10 @@ public class MapsRepository {
                         }
                         restaurant.setOpeningHours(placeDetail.getResult().getOpeningHours());
 
-                      // Location.distanceBetween(restaurant.getLatitude(),restaurant.getLongitude(), );
-                        
+                        float [] results = new float[1];
+                        Location.distanceBetween(restaurant.getLatitude(), restaurant.getLongitude(), location.latitude, location.longitude, results );
+                        Log.e("results", results[0] + " ");
+                        restaurant.setDistance((int)results[0]);
                         restaurantList.add(restaurant);
                     }
                     result.postValue(restaurantList);

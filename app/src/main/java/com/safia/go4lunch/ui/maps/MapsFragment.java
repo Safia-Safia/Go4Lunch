@@ -99,8 +99,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void getRestaurant(LatLng location) { //TODO changer le string en latlng
-        String locationStr = location.latitude + "," + location.longitude;
-        mViewModel.getRestaurants(locationStr).observe(this, nearbyRestaurantList -> {
+        mViewModel.getRestaurants(location).observe(this, nearbyRestaurantList -> {
             if (nearbyRestaurantList != null) {
                 restaurantsList = nearbyRestaurantList;
                 for (Restaurant restaurant : restaurantsList) {

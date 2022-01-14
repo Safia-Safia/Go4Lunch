@@ -1,6 +1,7 @@
 package com.safia.go4lunch.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -18,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.databinding.ActivityDetailBinding;
@@ -77,8 +79,12 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String phone = mRestaurant.getPhoneNumber();
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
-                startActivity(intent);
+                if (phone != null) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+                    startActivity(intent);
+                }else {
+                    Toast.makeText(getApplicationContext(), R.string.unavailable, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -96,9 +102,15 @@ public class DetailActivity extends AppCompatActivity {
         websiteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Uri uri = Uri.parse( mRestaurant.getWebsite());
-                Intent intent= new Intent(Intent.ACTION_VIEW,uri);
-                startActivity(intent);
+                if (uri != null){
+                    Intent intent= new Intent(Intent.ACTION_VIEW,uri);
+                    startActivity(intent);
+                }else {
+                    Toast.makeText(getApplicationContext(), R.string.unavailable, Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }

@@ -52,8 +52,7 @@ public class ListViewFragment extends Fragment implements RestaurantListAdapter.
     }
 
     private void getRestaurant(LatLng location) {
-        String locationStr = location.latitude + "," + location.longitude;
-        mViewModel.getRestaurants(locationStr).observe(this.getViewLifecycleOwner(), this::setUpRecyclerView);
+        mViewModel.getRestaurants(location).observe(this.getViewLifecycleOwner(), this::setUpRecyclerView);
     }
 
     public void configureViewModel() {

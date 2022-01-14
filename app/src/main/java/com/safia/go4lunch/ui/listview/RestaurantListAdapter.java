@@ -56,7 +56,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
     public static class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView restaurantName;
-        TextView restaurantAddress;
+        TextView restaurantAddress, restaurantDistance;
         TextView restaurantOpeningHour;
         ImageView restaurantPhoto;
         onRestaurantClickListener mOnRestaurantClickListener;
@@ -66,6 +66,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         public RestaurantViewHolder(View itemView, onRestaurantClickListener onRestaurantClickListener) {
             super(itemView);
             restaurantName = itemView.findViewById(R.id.restaurantName_textView);
+            restaurantDistance = itemView.findViewById(R.id.distance_textView);
             restaurantAddress = itemView.findViewById(R.id.restaurantAddress_textView);
             restaurantOpeningHour = itemView.findViewById(R.id.restaurant_openings_hour_textView);
             restaurantPhoto = itemView.findViewById(R.id.restaurant_imageView);
@@ -77,6 +78,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         public void display(Restaurant restaurant, OpeningHours openingHours) {
             this.restaurantName.setText(restaurant.getName());
             this.restaurantAddress.setText(restaurant.getAddress());
+            this.restaurantDistance.setText(restaurant.getDistance() + " m");
 
             Glide.with(restaurantPhoto.getContext())
                     .load(restaurant.getUrlPhoto())

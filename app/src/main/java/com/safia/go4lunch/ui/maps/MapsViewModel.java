@@ -18,7 +18,7 @@ public class MapsViewModel extends ViewModel {
         this.repository = mapsRepository;
     }
 
-    public LiveData<List<Restaurant>> getRestaurants(String location){
+    public LiveData<List<Restaurant>> getRestaurants(LatLng location){
         return repository.getRestaurant(location);
     }
 
