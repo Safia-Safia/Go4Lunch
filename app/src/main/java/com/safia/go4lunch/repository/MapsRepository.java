@@ -92,7 +92,6 @@ public class MapsRepository {
 
                         float [] results = new float[1];
                         Location.distanceBetween(restaurant.getLatitude(), restaurant.getLongitude(), location.latitude, location.longitude, results );
-                        Log.e("results", results[0] + " ");
                         restaurant.setDistance((int)results[0]);
                         restaurantList.add(restaurant);
                     }

@@ -75,9 +75,11 @@ dependencies {
     //EASY PERMISSIONS
     implementation 'pub.devrel:easypermissions:3.0.0'
 
-    // FIREBASE UI
+    //FIREBASE UI
     implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
     implementation 'com.firebaseui:firebase-ui-firestore:7.1.1'
+    implementation 'com.google.firebase:firebase-firestore'
+
 
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
