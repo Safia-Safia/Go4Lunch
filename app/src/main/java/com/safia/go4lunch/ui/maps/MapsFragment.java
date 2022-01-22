@@ -49,18 +49,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private static final String TAG = "MapActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    public static final String KEY_RESTAURANT = "KEY_RESTAURANT";
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private static final float DEFAULT_ZOOM = 15f;
+    public static final float DEFAULT_ZOOM = 15f;
     private Boolean mLocationPermissionsGranted = false;
     FusedLocationProviderClient fusedLocationProviderClient;
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.configureViewModel();
+        Log.e("mapfragment", "in fragment");
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
-    public static final String KEY_RESTAURANT = "KEY_RESTAURANT";
 
     Map<String, Restaurant> mMarkerMap = new HashMap<>();
     @Override

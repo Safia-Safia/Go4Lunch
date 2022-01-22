@@ -1,6 +1,7 @@
 package com.safia.go4lunch.repository;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -15,7 +16,7 @@ import com.safia.go4lunch.model.User;
 
 public class UserRepository {
 
-    private static final String COLLECTION_NAME = "users";
+    public static final String COLLECTION_NAME = "users";
     private static volatile UserRepository instance;
 
     private UserRepository() {
@@ -63,6 +64,7 @@ public class UserRepository {
             String uid = user.getUid();
 
             User userToCreate = new User(uid, username, urlPicture);
+            this.getUsersCollection().document(uid).set(userToCreate);
 
             Task<DocumentSnapshot> userData = getUserData();
         }

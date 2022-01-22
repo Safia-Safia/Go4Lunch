@@ -50,6 +50,7 @@ public class DetailActivity extends AppCompatActivity {
         initWebsiteBtn();
         initPhoneBtn();
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -58,7 +59,7 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setUpView(){
+    private void setUpView() {
         mRestaurant = getIntent().getParcelableExtra(MapsFragment.KEY_RESTAURANT);
         restaurantName = findViewById(R.id.restaurant_name_details);
         restaurantPhoto = findViewById(R.id.toolbarImage);
@@ -68,16 +69,16 @@ public class DetailActivity extends AppCompatActivity {
         likeBtn = findViewById(R.id.like_button);
         websiteBtn = findViewById(R.id.website_button);
         fab = findViewById(R.id.fav);
-        mToolbar =findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         ratingBar = findViewById(R.id.rating_detail);
     }
 
-    private void setUpToolbar(){
+    private void setUpToolbar() {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void initPhoneBtn(){
+    private void initPhoneBtn() {
         phoneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,38 +86,49 @@ public class DetailActivity extends AppCompatActivity {
                 if (phone != null) {
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
                     startActivity(intent);
-                }else {
+                } else {
                     Toast.makeText(getApplicationContext(), R.string.unavailable, Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    private void initLikeBtn(){
+    private void initLikeBtn() {
         likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("Likebutton", "clicked");
-                if ( mRestaurant != null && userViewModel.getCurrentUser() != null){
-                    Log.e("Likebutton", "cliqué");
-                    RestaurantRepository.createLike(mRestaurant.getRestaurantId(),userViewModel.getCurrentUser().getUid()).addOnCompleteListener(likeTask -> {
-                    likeBtn.setImageResource(R.drawable.ic_star_yellow);
+                if (mRestaurant != null && userViewModel.getCurrentUser() != null) {
+                    RestaurantRepository.createLike(mRestaurant.getRestaurantId(), userViewModel.getCurrentUser().getUid()).addOnCompleteListener(likeTask -> {
+                        likeBtn.setImageResource(R.drawable.ic_star_yellow);
                     });
                 }
             }
         });
     }
 
-    private void initWebsiteBtn(){
+    private boolean isOnFavorite(){
+        return RestaurantRepository.getLikedCollection().document().equals(mRestaurant.getRestaurantId());
+    }
+
+    private void addToFavorite(){
+
+        }
+
+    private void removeFromFavorite() {
+        RestaurantRepository.deleteLike(mRestaurant.getRestaurantId(), userViewModel.getCurrentUser().getUid());
+        likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
+    }
+
+    private void initWebsiteBtn() {
         websiteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Uri uri = Uri.parse( mRestaurant.getWebsite());
-                if (uri != null){
-                    Intent intent= new Intent(Intent.ACTION_VIEW,uri);
+                Uri uri = Uri.parse(mRestaurant.getWebsite());
+                if (uri != null) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
-                }else {
+                } else {
                     Toast.makeText(getApplicationContext(), R.string.unavailable, Toast.LENGTH_SHORT).show();
                 }
 
@@ -124,7 +136,7 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-    private void initFabButton(){
+    private void initFabButton() {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,8 +146,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
-
-    private void initView(){
+    private void initView() {
         restaurantName.setText(mRestaurant.getName());
         restaurantType.setText(mRestaurant.getTypes().toUpperCase());
         restaurantAddress.setText(mRestaurant.getAddress());

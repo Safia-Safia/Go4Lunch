@@ -8,7 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,6 +20,7 @@ import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.nearbySearchResult.Result;
 import com.safia.go4lunch.model.placeDetailResult.PlaceDetail;
 import com.safia.go4lunch.ui.maps.MapService;
+import com.safia.go4lunch.ui.maps.MapsFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +36,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapsRepository {
+    private static final String COLLECTION_RESTAURANT = "restaurants";
 
+    public  CollectionReference getRestaurantCollection(){
+        return FirebaseFirestore.getInstance().collection(COLLECTION_RESTAURANT);
+    }
     public Retrofit createRetrofit() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         // set your desired log level
@@ -94,6 +102,7 @@ public class MapsRepository {
                         Location.distanceBetween(restaurant.getLatitude(), restaurant.getLongitude(), location.latitude, location.longitude, results );
                         restaurant.setDistance((int)results[0]);
                         restaurantList.add(restaurant);
+                        MapsRepository.this.getRestaurantCollection().document(restaurant.getRestaurantId()).set(restaurant);
                     }
                     result.postValue(restaurantList);
                 }
