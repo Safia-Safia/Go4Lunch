@@ -44,7 +44,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
     <!-- 2 | NavigationView -->
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/activity_main_nav_view"
+        android:id="@+id/activity_home_nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"

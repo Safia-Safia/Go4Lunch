@@ -130,8 +130,6 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
                     }
                 }
             }
-
-            /*2-OpeningSOOON*/
         }
 
 

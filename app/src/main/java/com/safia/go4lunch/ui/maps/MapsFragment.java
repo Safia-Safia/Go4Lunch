@@ -58,7 +58,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.configureViewModel();
-        Log.e("mapfragment", "in fragment");
+        this.getActivity().setTitle("I'm Hungry!");
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
@@ -74,7 +74,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 return;
             }
             mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+           // mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
 
         mMap.setOnMarkerClickListener(marker -> {
@@ -98,7 +98,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         this.mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MapsViewModel.class);
     }
 
-    public void getRestaurant(LatLng location) { //TODO changer le string en latlng
+    public void getRestaurant(LatLng location) {
         mViewModel.getRestaurants(location).observe(this, nearbyRestaurantList -> {
             if (nearbyRestaurantList != null) {
                 restaurantsList = nearbyRestaurantList;

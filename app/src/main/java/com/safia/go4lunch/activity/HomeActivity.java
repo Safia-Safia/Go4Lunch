@@ -1,9 +1,14 @@
 package com.safia.go4lunch.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.safia.go4lunch.R;
@@ -22,28 +27,48 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private UserViewModel userViewModel = UserViewModel.getInstance();
-    private MapsFragment mMapsFragment;
+    private final UserViewModel userViewModel = UserViewModel.getInstance();
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private ImageView user_picture;
+    private View headerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        userViewModel.getCurrentUser().getPhotoUrl();
-        configureBottomView();
+        //this.loadCurrentUserMail();
+        //this.loadUserName();
+        //this.loadCurrentUserPicture();
+        this.configureBottomView();
         this.configureMapsFragment();
         this.configureToolBar();
         this.configureDrawerLayout();
         this.configureNavigationView();
+        headerView =navigationView.getHeaderView(0);
 
     }
 
+    private void loadCurrentUserMail(){
+        TextView userMail = headerView.findViewById(R.id.user_email_nav_header);
+        userMail.setText(userViewModel.getCurrentUser().getEmail());
+    }
+
+    private void loadUserName(){
+        TextView userName = headerView.findViewById(R.id.user_name_nav_header);
+        userName.setText(userViewModel.getCurrentUser().getDisplayName());
+    }
+
+    private void loadCurrentUserPicture (){
+        ImageView userPicture = headerView.findViewById(R.id.nav_header_user_picture);
+        Glide.with(this)
+                .load( userViewModel.getCurrentUser().getPhotoUrl())
+                .circleCrop()
+                .into(userPicture);
+    }
+
     //Configure BottomNavigationView Listener
-    public void configureBottomView() {
+    private void configureBottomView() {
         BottomNavigationView navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.map, R.id.list_view, R.id.workmates).build();
@@ -52,7 +77,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureMapsFragment() {
-        mMapsFragment = (MapsFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        MapsFragment mMapsFragment = (MapsFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapsFragment = new MapsFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.map, mMapsFragment)
@@ -65,8 +90,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     // 1 - Configure Toolbar
     private void configureToolBar() {
-        this.toolbar = (Toolbar) findViewById(R.id.activity_home_toolbar);
+        this.toolbar = findViewById(R.id.activity_home_toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
     }
 
     // 2 - Configure Drawer Layout
@@ -79,13 +105,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     // 3 - Configure NavigationView
     private void configureNavigationView() {
-        this.navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
+        this.navigationView = (NavigationView) findViewById(R.id.activity_home_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
     public void onBackPressed() {
-        // 5 - Handle back click to close menu
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             this.drawerLayout.closeDrawer(GravityCompat.START);
         } else {
@@ -95,12 +120,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // 4 - Handle Navigation Item Click
         int id = item.getItemId();
 
         if (id == R.id.activity_main_drawer_your_lunch) {
-
+            Toast.makeText(this, "Lieu de déjeuner", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.activity_main_drawer_settings) {
+            Toast.makeText(this, "Paramètres", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.activity_main_drawer_logout) {
             userViewModel.signOut(this);
