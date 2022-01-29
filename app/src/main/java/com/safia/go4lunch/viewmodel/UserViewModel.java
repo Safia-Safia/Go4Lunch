@@ -5,12 +5,13 @@ import android.content.Context;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
-import com.safia.go4lunch.model.User;
+import com.google.firebase.firestore.DocumentReference;
+import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.repository.UserRepository;
 
 public class UserViewModel {
     private static volatile UserViewModel instance;
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     private UserViewModel() {
         userRepository = UserRepository.getInstance();
@@ -41,13 +42,21 @@ public class UserViewModel {
         return AuthUI.getInstance().signOut(context);
     }
 
+    public Task<DocumentReference> getLikeForThisRestaurant (Restaurant restaurant){
+        return UserRepository.getLikeForThisRestaurant(restaurant);
+    }
+
+    public Task<DocumentReference> getPickedRestaurant (Restaurant restaurant){
+        return UserRepository.getPickedRestaurant(restaurant);
+    }
+
+    public Task<Void> updateRestaurantPicked (String restaurantName, String uid){
+        return UserRepository.updateRestaurantPicked(restaurantName,uid);
+    }
+
 
     public void createUser(){
         userRepository.createUser();
     }
 
-    public Task<User> getUserData(){
-        // Get the user from Firestore and cast it to a User model Object
-        return userRepository.getUserData().continueWith(task -> task.getResult().toObject(User.class)) ;
-    }
 }

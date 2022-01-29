@@ -12,13 +12,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.safia.go4lunch.R;
 
 public class WorkmatesFragment extends Fragment {
-
-    private WorkmatesViewModel mWorkmatesViewModel;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        mWorkmatesViewModel =
-                new ViewModelProvider(this).get(WorkmatesViewModel.class);
+
         return inflater.inflate(R.layout.workmates, container, false);
     }
 }

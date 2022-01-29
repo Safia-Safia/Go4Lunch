@@ -10,7 +10,7 @@
 
 
     <ImageView
-        android:id="@+id/item_list_avatar"
+        android:id="@+id/workmates_avatar"
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_marginStart="16dp"
@@ -22,14 +22,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/isJoining"
+        android:id="@+id/isJoining_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:text="user_is_joining"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/item_list_avatar"
-        app:layout_constraintStart_toEndOf="@+id/item_list_avatar"
-        app:layout_constraintTop_toTopOf="@+id/item_list_avatar" />
+        app:layout_constraintBottom_toBottomOf="@+id/workmates_avatar"
+        app:layout_constraintStart_toEndOf="@+id/workmates_avatar"
+        app:layout_constraintTop_toTopOf="@+id/workmates_avatar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

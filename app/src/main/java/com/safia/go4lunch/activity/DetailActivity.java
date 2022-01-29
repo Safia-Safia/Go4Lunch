@@ -10,7 +10,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -22,8 +21,9 @@ import android.widget.Toast;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.databinding.ActivityDetailBinding;
 import com.safia.go4lunch.model.Restaurant;
+import com.safia.go4lunch.model.User;
+import com.safia.go4lunch.repository.UserRepository;
 import com.safia.go4lunch.ui.maps.MapsFragment;
-import com.safia.go4lunch.repository.RestaurantRepository;
 import com.safia.go4lunch.viewmodel.UserViewModel;
 
 public class DetailActivity extends AppCompatActivity {
@@ -34,7 +34,7 @@ public class DetailActivity extends AppCompatActivity {
     private Restaurant mRestaurant;
     private FloatingActionButton fab;
     private Toolbar mToolbar;
-    private UserViewModel userViewModel = UserViewModel.getInstance();
+    private final UserViewModel userViewModel = UserViewModel.getInstance();
 
     RatingBar ratingBar;
 
@@ -49,6 +49,7 @@ public class DetailActivity extends AppCompatActivity {
         initLikeBtn();
         initWebsiteBtn();
         initPhoneBtn();
+        initFabButton();
     }
 
     @Override
@@ -98,24 +99,17 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (mRestaurant != null && userViewModel.getCurrentUser() != null) {
-                    RestaurantRepository.createLike(mRestaurant.getRestaurantId(), userViewModel.getCurrentUser().getUid()).addOnCompleteListener(likeTask -> {
-                        likeBtn.setImageResource(R.drawable.ic_star_yellow);
-                    });
+                    userViewModel.getLikeForThisRestaurant(mRestaurant)
+                            .addOnCompleteListener(likeTask -> {
+                                likeBtn.setImageResource(R.drawable.ic_star_yellow);
+                            });
                 }
             }
         });
     }
 
-    private boolean isOnFavorite(){
-        return RestaurantRepository.getLikedCollection().document().equals(mRestaurant.getRestaurantId());
-    }
-
-    private void addToFavorite(){
-
-        }
-
     private void removeFromFavorite() {
-        RestaurantRepository.deleteLike(mRestaurant.getRestaurantId(), userViewModel.getCurrentUser().getUid());
+        // UserRepository.deleteLike(mRestaurant.getRestaurantId(), userViewModel.getCurrentUser().getUid());
         likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
     }
 
@@ -123,7 +117,6 @@ public class DetailActivity extends AppCompatActivity {
         websiteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Uri uri = Uri.parse(mRestaurant.getWebsite());
                 if (uri != null) {
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -131,16 +124,21 @@ public class DetailActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.unavailable, Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
     }
+
 
     private void initFabButton() {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                User user = new User();
+                if (user.getRestaurantPicked(true)){
+                    userViewModel.getPickedRestaurant(mRestaurant);
+                } else {
+                    userViewModel.updateRestaurantPicked(UserRepository.RESTAURANT_PICKED_BY,mRestaurant.getName());
+                }
             }
         });
     }

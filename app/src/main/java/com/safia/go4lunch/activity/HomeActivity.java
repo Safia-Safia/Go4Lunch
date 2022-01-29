@@ -37,16 +37,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        //this.loadCurrentUserMail();
-        //this.loadUserName();
-        //this.loadCurrentUserPicture();
+
         this.configureBottomView();
         this.configureMapsFragment();
         this.configureToolBar();
         this.configureDrawerLayout();
         this.configureNavigationView();
         headerView =navigationView.getHeaderView(0);
-
+        this.loadCurrentUserMail();
+        this.loadUserName();
+        this.loadCurrentUserPicture();
     }
 
     private void loadCurrentUserMail(){
@@ -61,8 +61,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void loadCurrentUserPicture (){
         ImageView userPicture = headerView.findViewById(R.id.nav_header_user_picture);
+        String userPhotoUrl = (userViewModel.getCurrentUser().getPhotoUrl() != null) ? userViewModel.getCurrentUser().getPhotoUrl().toString() : null;
         Glide.with(this)
-                .load( userViewModel.getCurrentUser().getPhotoUrl())
+                .load( userPhotoUrl)
                 .circleCrop()
                 .into(userPicture);
     }
