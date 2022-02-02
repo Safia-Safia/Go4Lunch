@@ -1,4 +1,4 @@
-package com.safia.go4lunch.activity;
+package com.safia.go4lunch.controller.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.safia.go4lunch.R;
-import com.safia.go4lunch.ui.maps.MapsFragment;
+import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
 import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import androidx.annotation.NonNull;

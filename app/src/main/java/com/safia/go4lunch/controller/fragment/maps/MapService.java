@@ -1,6 +1,5 @@
-package com.safia.go4lunch.ui.maps;
+package com.safia.go4lunch.controller.fragment.maps;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.safia.go4lunch.model.nearbySearchResult.NearbyPlace;
 
 import com.safia.go4lunch.model.placeDetailResult.PlaceDetail;

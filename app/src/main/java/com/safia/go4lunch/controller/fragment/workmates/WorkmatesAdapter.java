@@ -1,4 +1,4 @@
-package com.safia.go4lunch.ui.workmates;
+package com.safia.go4lunch.controller.fragment.workmates;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.model.User;
-import com.safia.go4lunch.ui.listview.RestaurantListAdapter;
-import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import java.util.List;
 

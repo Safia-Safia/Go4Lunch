@@ -1,4 +1,4 @@
-package com.safia.go4lunch.activity;
+package com.safia.go4lunch.controller.activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -21,9 +21,8 @@ import android.widget.Toast;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.databinding.ActivityDetailBinding;
 import com.safia.go4lunch.model.Restaurant;
-import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.repository.UserRepository;
-import com.safia.go4lunch.ui.maps.MapsFragment;
+import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
 import com.safia.go4lunch.viewmodel.UserViewModel;
 
 public class DetailActivity extends AppCompatActivity {
@@ -35,7 +34,7 @@ public class DetailActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private Toolbar mToolbar;
     private final UserViewModel userViewModel = UserViewModel.getInstance();
-
+    private  boolean likeOn = false;
     RatingBar ratingBar;
 
     @Override
@@ -74,9 +73,12 @@ public class DetailActivity extends AppCompatActivity {
         ratingBar = findViewById(R.id.rating_detail);
     }
 
-    private void setUpToolbar() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    private void initView() {
+        restaurantName.setText(mRestaurant.getName());
+        restaurantType.setText(mRestaurant.getTypes().toUpperCase());
+        restaurantAddress.setText(mRestaurant.getAddress());
+        ratingBar.setRating(mRestaurant.getRating());
+        Glide.with(this).load(mRestaurant.getUrlPhoto()).into(restaurantPhoto);
     }
 
     private void initPhoneBtn() {
@@ -98,19 +100,22 @@ public class DetailActivity extends AppCompatActivity {
         likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mRestaurant != null && userViewModel.getCurrentUser() != null) {
-                    userViewModel.getLikeForThisRestaurant(mRestaurant)
-                            .addOnCompleteListener(likeTask -> {
+                if (likeOn) {
+                  //UserRepository.removeRestaurantLiked(mRestaurant);
+                            likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
+                    likeOn = false;
+                } else {
+                    userViewModel.getLikeForThisRestaurant(mRestaurant);
                                 likeBtn.setImageResource(R.drawable.ic_star_yellow);
-                            });
+
+                    likeOn = true;
                 }
             }
         });
     }
 
     private void removeFromFavorite() {
-        // UserRepository.deleteLike(mRestaurant.getRestaurantId(), userViewModel.getCurrentUser().getUid());
-        likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
+
     }
 
     private void initWebsiteBtn() {
@@ -128,27 +133,15 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-
     private void initFabButton() {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                User user = new User();
-                if (user.getRestaurantPicked(true)){
-                    userViewModel.getPickedRestaurant(mRestaurant);
-                } else {
-                    userViewModel.updateRestaurantPicked(UserRepository.RESTAURANT_PICKED_BY,mRestaurant.getName());
-                }
+                userViewModel.getPickedRestaurant(mRestaurant);
             }
         });
     }
 
 
-    private void initView() {
-        restaurantName.setText(mRestaurant.getName());
-        restaurantType.setText(mRestaurant.getTypes().toUpperCase());
-        restaurantAddress.setText(mRestaurant.getAddress());
-        ratingBar.setRating(mRestaurant.getRating());
-        Glide.with(this).load(mRestaurant.getUrlPhoto()).into(restaurantPhoto);
-    }
+
 }

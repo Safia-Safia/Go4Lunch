@@ -1,4 +1,4 @@
-package com.safia.go4lunch.ui.listview;
+package com.safia.go4lunch.controller.fragment.listview;
 
 import android.content.Intent;
 import android.location.Location;
@@ -21,12 +21,11 @@ import com.google.android.gms.tasks.Task;
 import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
-import com.safia.go4lunch.activity.DetailActivity;
+import com.safia.go4lunch.controller.activity.DetailActivity;
 import com.safia.go4lunch.model.Restaurant;
-import com.safia.go4lunch.ui.maps.MapsFragment;
-import com.safia.go4lunch.ui.maps.MapsViewModel;
+import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
+import com.safia.go4lunch.viewmodel.MapsViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ListViewFragment extends Fragment implements RestaurantListAdapter.onRestaurantClickListener{

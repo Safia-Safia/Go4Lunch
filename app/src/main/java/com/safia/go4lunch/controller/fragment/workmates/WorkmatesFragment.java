@@ -1,4 +1,4 @@
-package com.safia.go4lunch.ui.workmates;
+package com.safia.go4lunch.controller.fragment.workmates;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.safia.go4lunch.R;
 

@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,8 +18,7 @@ import com.safia.go4lunch.model.nearbySearchResult.NearbyPlace;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.nearbySearchResult.Result;
 import com.safia.go4lunch.model.placeDetailResult.PlaceDetail;
-import com.safia.go4lunch.ui.maps.MapService;
-import com.safia.go4lunch.ui.maps.MapsFragment;
+import com.safia.go4lunch.controller.fragment.maps.MapService;
 
 import java.io.IOException;
 import java.util.ArrayList;

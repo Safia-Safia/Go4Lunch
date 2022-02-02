@@ -1,11 +1,10 @@
-package com.safia.go4lunch.ui.maps;
+package com.safia.go4lunch.controller.fragment.maps;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.Manifest;
@@ -29,12 +28,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
-import com.google.gson.Gson;
 import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
-import com.safia.go4lunch.activity.DetailActivity;
+import com.safia.go4lunch.controller.activity.DetailActivity;
 import com.safia.go4lunch.model.Restaurant;
+import com.safia.go4lunch.viewmodel.MapsViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;

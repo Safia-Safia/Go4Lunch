@@ -1,4 +1,4 @@
-package com.safia.go4lunch.activity;
+package com.safia.go4lunch.controller.activity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +22,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
-    private UserViewModel userViewModel = UserViewModel.getInstance();
+    private final UserViewModel userViewModel = UserViewModel.getInstance();
     private Button facebookButton;
     private Button googleButton;
     ProgressBar progressBar;
@@ -44,18 +44,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupListeners() {
         progressBar.setVisibility(View.INVISIBLE);
-
         facebookButton.setOnClickListener(view -> {
-                    signInBuilder(
-                            Collections.singletonList(new AuthUI.IdpConfig.FacebookBuilder().build())
-                    );
+                    signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.FacebookBuilder().build()));
                     progressBar.setVisibility(View.VISIBLE);
                 }
         );
-
         googleButton.setOnClickListener(view -> {
-                   signInBuilder(
-                            Collections.singletonList(new AuthUI.IdpConfig.GoogleBuilder().build()));
+                   signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.GoogleBuilder().build()));
                     progressBar.setVisibility(View.VISIBLE);
                 }
         );

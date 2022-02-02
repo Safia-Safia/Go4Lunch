@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Go4Lunch" >
         <activity
-            android:name=".activity.DetailActivity"
+            android:name=".controller.activity.DetailActivity"
             android:exported="true"
             android:label="@string/title_activity_detail"
             android:theme="@style/Theme.Go4Lunch.NoActionBar" >
@@ -33,11 +33,11 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".activity.HomeActivity"
+            android:name=".controller.activity.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoTitle"/>
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".controller.activity.MainActivity"
             android:theme="@style/AppTheme.NoTitle" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -5,6 +5,6 @@
     android:id="@+id/recyclerview_restaurant"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.listview.ListViewFragment"
+    tools:context=".controller.fragment.listview.ListViewFragment"
     tools:listitem="@layout/restaurant_recyclerview">
 </androidx.recyclerview.widget.RecyclerView>

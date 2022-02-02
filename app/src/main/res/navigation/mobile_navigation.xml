@@ -6,19 +6,19 @@
 
     <fragment
         android:id="@+id/card_view"
-        android:name="com.safia.go4lunch.ui.maps.MapsFragment"
+        android:name="com.safia.go4lunch.controller.fragment.maps.MapsFragment"
         android:label="@string/title_maps"
         tools:layout="@layout/workmates" />
 
     <fragment
         android:id="@+id/list_view"
-        android:name="com.safia.go4lunch.ui.listview.ListViewFragment"
+        android:name="com.safia.go4lunch.controller.fragment.listview.ListViewFragment"
         android:label="@string/title_listview"
         tools:layout="@layout/list_view" />
 
     <fragment
         android:id="@+id/workmates"
-        android:name="com.safia.go4lunch.ui.listview.ListViewFragment"
+        android:name="com.safia.go4lunch.controller.fragment.listview.ListViewFragment"
         android:label="@string/title_workmates"
         tools:layout="@layout/workmates" />
 </navigation>

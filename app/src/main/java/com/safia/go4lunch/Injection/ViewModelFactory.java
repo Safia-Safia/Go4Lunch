@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.safia.go4lunch.repository.MapsRepository;
-import com.safia.go4lunch.ui.maps.MapsViewModel;
+import com.safia.go4lunch.viewmodel.MapsViewModel;
 
 public class ViewModelFactory  implements ViewModelProvider.Factory {
 

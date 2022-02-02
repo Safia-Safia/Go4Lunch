@@ -5,7 +5,6 @@ import android.content.Context;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.repository.UserRepository;
 
@@ -38,22 +37,17 @@ public class UserViewModel {
         return (this.getCurrentUser() != null);
     }
 
-    public Task<Void> signOut(Context context){
-        return AuthUI.getInstance().signOut(context);
+    public void signOut(Context context){
+        AuthUI.getInstance().signOut(context);
     }
 
-    public Task<DocumentReference> getLikeForThisRestaurant (Restaurant restaurant){
-        return UserRepository.getLikeForThisRestaurant(restaurant);
+    public Task<Void> getLikeForThisRestaurant (Restaurant restaurant){
+        return UserRepository.addRestaurantLike(restaurant);
     }
 
-    public Task<DocumentReference> getPickedRestaurant (Restaurant restaurant){
-        return UserRepository.getPickedRestaurant(restaurant);
+    public void getPickedRestaurant (Restaurant restaurant){
+        UserRepository.getPickedRestaurant(restaurant);
     }
-
-    public Task<Void> updateRestaurantPicked (String restaurantName, String uid){
-        return UserRepository.updateRestaurantPicked(restaurantName,uid);
-    }
-
 
     public void createUser(){
         userRepository.createUser();

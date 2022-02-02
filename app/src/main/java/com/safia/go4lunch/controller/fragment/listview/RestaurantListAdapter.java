@@ -1,4 +1,4 @@
-package com.safia.go4lunch.ui.listview;
+package com.safia.go4lunch.controller.fragment.listview;
 
 import android.graphics.Color;
 import android.util.Log;
@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.placeDetailResult.OpeningHours;

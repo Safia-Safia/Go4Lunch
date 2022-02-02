@@ -1,4 +1,4 @@
-package com.safia.go4lunch.ui.maps;
+package com.safia.go4lunch.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public class MapsViewModel extends ViewModel {
 
-    private MapsRepository repository;
+    private final MapsRepository repository;
 
     // CONSTRUCTOR
     public MapsViewModel(MapsRepository mapsRepository) {

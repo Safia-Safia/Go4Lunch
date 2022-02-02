@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activity.DetailActivity"
+    tools:context=".controller.activity.DetailActivity"
     tools:showIn="@layout/activity_detail">
 
     <LinearLayout
@@ -184,7 +184,7 @@
             android:id="@+id/recyclerview_restaurant"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui.listview.ListViewFragment"
+            tools:context=".controller.fragment.listview.ListViewFragment"
             tools:listitem="@layout/recyclerview_user_list">
         </androidx.recyclerview.widget.RecyclerView>
 
