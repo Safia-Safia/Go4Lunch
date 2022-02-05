@@ -21,7 +21,7 @@ public class UserViewModel {
         if (result != null) {
             return result;
         }
-        synchronized(UserRepository.class) {
+        synchronized (UserRepository.class) {
             if (instance == null) {
                 instance = new UserViewModel();
             }
@@ -29,27 +29,35 @@ public class UserViewModel {
         }
     }
 
-    public FirebaseUser getCurrentUser(){
+    public FirebaseUser getCurrentUser() {
         return userRepository.getCurrentUser();
     }
 
-    public Boolean isCurrentUserLogged(){
+    public Boolean isCurrentUserLogged() {
         return (this.getCurrentUser() != null);
     }
 
-    public void signOut(Context context){
+    public void signOut(Context context) {
         AuthUI.getInstance().signOut(context);
     }
 
-    public Task<Void> getLikeForThisRestaurant (Restaurant restaurant){
-        return UserRepository.addRestaurantLike(restaurant);
+    public void addLikeForThisRestaurant(Restaurant restaurant) {
+        userRepository.addRestaurantLike(restaurant);
     }
 
-    public void getPickedRestaurant (Restaurant restaurant){
-        UserRepository.getPickedRestaurant(restaurant);
+    public void addPickedRestaurant(Restaurant restaurant) {
+        userRepository.addPickedRestaurant(restaurant);
     }
 
-    public void createUser(){
+    public void removeRestaurantLiked(Restaurant restaurant) {
+        userRepository.removeRestaurantLiked(restaurant);
+    }
+
+    public void removeRestaurantPicked() {
+        userRepository.removePickedRestaurant();
+    }
+
+    public void createUser() {
         userRepository.createUser();
     }
 

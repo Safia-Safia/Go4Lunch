@@ -33,11 +33,25 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MapsRepository {
+public class RestaurantRepository {
     private static final String COLLECTION_RESTAURANT = "restaurants";
+    private static volatile RestaurantRepository instance;
+    public static final String USER_PICKED = "user picked";
 
     public  CollectionReference getRestaurantCollection(){
         return FirebaseFirestore.getInstance().collection(COLLECTION_RESTAURANT);
+    }
+    public static RestaurantRepository getInstance() {
+        RestaurantRepository result = instance;
+        if (result != null) {
+            return result;
+        }
+        synchronized (RestaurantRepository.class) {
+            if (instance == null) {
+                instance = new RestaurantRepository();
+            }
+            return instance;
+        }
     }
     public Retrofit createRetrofit() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -100,7 +114,7 @@ public class MapsRepository {
                         Location.distanceBetween(restaurant.getLatitude(), restaurant.getLongitude(), location.latitude, location.longitude, results );
                         restaurant.setDistance((int)results[0]);
                         restaurantList.add(restaurant);
-                        MapsRepository.this.getRestaurantCollection().document(restaurant.getRestaurantId()).set(restaurant);
+                        RestaurantRepository.this.getRestaurantCollection().document(restaurant.getRestaurantId()).set(restaurant);
                     }
                     result.postValue(restaurantList);
                 }

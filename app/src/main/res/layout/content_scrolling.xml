@@ -181,7 +181,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview_restaurant"
+            android:id="@+id/recyclerview_userList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".controller.fragment.listview.ListViewFragment"

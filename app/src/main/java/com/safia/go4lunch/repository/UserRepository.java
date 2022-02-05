@@ -6,8 +6,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.safia.go4lunch.model.Restaurant;
@@ -23,14 +21,16 @@ public class UserRepository {
     public static final String RESTAURANT_PICKED = "restaurant picked";
 
     //--- GET THE COLLECTION REFERENCE ---
-    public static CollectionReference getUsersCollection() {
+    public CollectionReference getUsersCollection() {
         return FirebaseFirestore.getInstance().collection(COLLECTION_USERS);
     }
-    public static CollectionReference getLikedCollection() {
+
+    public CollectionReference getLikedCollection() {
         return FirebaseFirestore.getInstance().collection(COLLECTION_USERS)
                 .document(Objects.requireNonNull(getInstance().getCurrentUserUID())).collection(COLLECTION_LIKED);
     }
-    public static CollectionReference getPickedCollection() {
+
+    public CollectionReference getPickedCollection() {
         return FirebaseFirestore.getInstance().collection(COLLECTION_USERS)
                 .document(Objects.requireNonNull(getInstance().getCurrentUserUID())).collection(RESTAURANT_PICKED);
     }
@@ -81,27 +81,35 @@ public class UserRepository {
     }
 
     public void getAllUsersEating() {
-         getPickedCollection().document().get().addOnCompleteListener(task -> {
+        getPickedCollection().document().get().addOnCompleteListener(task -> {
             getUsersCollection().orderBy("username").get().getResult().getDocuments();
         });
     }
 
-    public static Task<Void> addRestaurantLike(Restaurant restaurant) {
-        return UserRepository.getLikedCollection().document(restaurant.getRestaurantId()).set(restaurant);
-    }
-    public static void removeRestaurantLiked (Restaurant restaurant) {
-       // UserRepository.getLikedCollection().document(restaurant.getRestaurantId()).update(restaurant, FieldValue.delete(restaurant));
+    public Task<Void> addRestaurantLike(Restaurant restaurant) {
+        return getLikedCollection().document(restaurant.getRestaurantId()).set(restaurant);
     }
 
-    public static Task<DocumentReference> getPickedRestaurant(Restaurant restaurant) {
+    public Task<Void> removeRestaurantLiked(Restaurant restaurant) {
+        return getLikedCollection().document(restaurant.getRestaurantId()).delete();
+    }
+
+    public void addPickedRestaurant(Restaurant restaurant) {
         getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
             user.setRestaurantPicked(restaurant);
+            RestaurantRepository.getInstance().getRestaurantCollection().document(restaurant.getRestaurantId())
+                    .collection(RestaurantRepository.USER_PICKED).document(user.uid).set(user);
             getUsersCollection().document(user.getUid()).set(user);
         });
-        return UserRepository.getPickedCollection().add(restaurant);
     }
 
-
+    public void removePickedRestaurant() {
+        getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
+            User user = task.getResult().toObject(User.class);
+            user.setRestaurantPicked(null);
+            getUsersCollection().document(user.getUid()).set(user);
+        });
+    }
 
 }

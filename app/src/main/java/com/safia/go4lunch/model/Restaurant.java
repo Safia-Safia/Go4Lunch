@@ -7,6 +7,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.safia.go4lunch.model.placeDetailResult.OpeningHours;
 
+import java.util.List;
+
 
 public class Restaurant implements Parcelable {
     @SerializedName("restaurantId")
@@ -45,6 +47,16 @@ public class Restaurant implements Parcelable {
     @SerializedName("distance")
     @Expose
     private int distance;
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    List<User> userList;
 
     public  Restaurant (){
     }

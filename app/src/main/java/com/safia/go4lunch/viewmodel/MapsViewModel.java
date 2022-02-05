@@ -5,17 +5,17 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.safia.go4lunch.model.Restaurant;
-import com.safia.go4lunch.repository.MapsRepository;
+import com.safia.go4lunch.repository.RestaurantRepository;
 
 import java.util.List;
 
 public class MapsViewModel extends ViewModel {
 
-    private final MapsRepository repository;
+    private final RestaurantRepository repository;
 
     // CONSTRUCTOR
-    public MapsViewModel(MapsRepository mapsRepository) {
-        this.repository = mapsRepository;
+    public MapsViewModel(RestaurantRepository restaurantRepository) {
+        this.repository = restaurantRepository;
     }
 
     public LiveData<List<Restaurant>> getRestaurants(LatLng location){

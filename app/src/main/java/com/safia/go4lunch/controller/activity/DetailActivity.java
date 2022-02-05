@@ -8,7 +8,8 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.MenuItem;
 import android.view.View;
@@ -19,23 +20,32 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.safia.go4lunch.R;
+import com.safia.go4lunch.controller.fragment.workmates.WorkmatesAdapter;
 import com.safia.go4lunch.databinding.ActivityDetailBinding;
 import com.safia.go4lunch.model.Restaurant;
-import com.safia.go4lunch.repository.UserRepository;
+import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
+import com.safia.go4lunch.repository.RestaurantRepository;
+import com.safia.go4lunch.repository.UserRepository;
 import com.safia.go4lunch.viewmodel.UserViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
     private ActivityDetailBinding binding;
     private ImageView restaurantPhoto;
     private TextView restaurantName, restaurantAddress, restaurantType;
     private ImageButton phoneBtn, likeBtn, websiteBtn;
-    private Restaurant mRestaurant;
+    public  Restaurant mRestaurant;
     private FloatingActionButton fab;
-    private Toolbar mToolbar;
     private final UserViewModel userViewModel = UserViewModel.getInstance();
-    private  boolean likeOn = false;
+    private boolean likeOn = false;
+    private boolean fabOn = false;
     RatingBar ratingBar;
+    List<User> userList = new ArrayList<>();
+    WorkmatesAdapter adapter;
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +59,9 @@ public class DetailActivity extends AppCompatActivity {
         initWebsiteBtn();
         initPhoneBtn();
         initFabButton();
+        configureRecyclerView();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -69,8 +81,8 @@ public class DetailActivity extends AppCompatActivity {
         likeBtn = findViewById(R.id.like_button);
         websiteBtn = findViewById(R.id.website_button);
         fab = findViewById(R.id.fav);
-        mToolbar = findViewById(R.id.toolbar);
         ratingBar = findViewById(R.id.rating_detail);
+        mRecyclerView = findViewById(R.id.recyclerview_userList);
     }
 
     private void initView() {
@@ -79,6 +91,14 @@ public class DetailActivity extends AppCompatActivity {
         restaurantAddress.setText(mRestaurant.getAddress());
         ratingBar.setRating(mRestaurant.getRating());
         Glide.with(this).load(mRestaurant.getUrlPhoto()).into(restaurantPhoto);
+    }
+
+    private void configureRecyclerView(){
+        adapter= new WorkmatesAdapter(userList);
+        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        userViewModel.addLikeForThisRestaurant(mRestaurant);
     }
 
     private void initPhoneBtn() {
@@ -101,21 +121,16 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (likeOn) {
-                  //UserRepository.removeRestaurantLiked(mRestaurant);
-                            likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
+                    userViewModel.removeRestaurantLiked(mRestaurant);
+                    likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
                     likeOn = false;
                 } else {
-                    userViewModel.getLikeForThisRestaurant(mRestaurant);
-                                likeBtn.setImageResource(R.drawable.ic_star_yellow);
-
+                    userViewModel.addLikeForThisRestaurant(mRestaurant);
+                    likeBtn.setImageResource(R.drawable.ic_star_yellow);
                     likeOn = true;
                 }
             }
         });
-    }
-
-    private void removeFromFavorite() {
-
     }
 
     private void initWebsiteBtn() {
@@ -137,11 +152,17 @@ public class DetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userViewModel.getPickedRestaurant(mRestaurant);
+                if (fabOn) {
+                    userViewModel.removeRestaurantPicked();
+                    fab.setImageResource(R.drawable.ic_baseline_check_circle_outline_24);
+                    fabOn = false;
+                } else {
+                    userViewModel.addPickedRestaurant(mRestaurant);
+                    fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
+                    fabOn = true;
+                }
             }
         });
     }
-
-
 
 }

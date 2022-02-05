@@ -52,7 +52,7 @@
     <string name="menu_slideshow">Slideshow</string>
 
     <!-- Workmates -->
-    <string name="isEatingHere"> %s is eating %s </string>
+    <string name="isJoining"> %s is joining </string>
 
 
 </resources>
