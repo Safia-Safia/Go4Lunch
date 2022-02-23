@@ -5,12 +5,16 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -19,6 +23,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.gson.Gson;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.fragment.workmates.WorkmatesAdapter;
 import com.safia.go4lunch.databinding.ActivityDetailBinding;
@@ -27,6 +37,7 @@ import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
 import com.safia.go4lunch.repository.RestaurantRepository;
 import com.safia.go4lunch.repository.UserRepository;
+import com.safia.go4lunch.viewmodel.RestaurantViewModel;
 import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import java.util.ArrayList;
@@ -37,12 +48,16 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView restaurantPhoto;
     private TextView restaurantName, restaurantAddress, restaurantType;
     private ImageButton phoneBtn, likeBtn, websiteBtn;
-    public  Restaurant mRestaurant;
+    public Restaurant mRestaurant;
     private FloatingActionButton fab;
     private final UserViewModel userViewModel = UserViewModel.getInstance();
+    private final RestaurantViewModel restaurantViewModel = RestaurantViewModel.getInstance();
+    public static final double MAX_STAR = 3;
+    public static final double MAX_RATING = 5;
     private boolean likeOn = false;
     private boolean fabOn = false;
     RatingBar ratingBar;
+    User user;
     List<User> userList = new ArrayList<>();
     WorkmatesAdapter adapter;
     private RecyclerView mRecyclerView;
@@ -59,6 +74,8 @@ public class DetailActivity extends AppCompatActivity {
         initWebsiteBtn();
         initPhoneBtn();
         initFabButton();
+        displayRating();
+        likeStatus();
         configureRecyclerView();
     }
 
@@ -89,16 +106,26 @@ public class DetailActivity extends AppCompatActivity {
         restaurantName.setText(mRestaurant.getName());
         restaurantType.setText(mRestaurant.getTypes().toUpperCase());
         restaurantAddress.setText(mRestaurant.getAddress());
-        ratingBar.setRating(mRestaurant.getRating());
         Glide.with(this).load(mRestaurant.getUrlPhoto()).into(restaurantPhoto);
     }
 
-    private void configureRecyclerView(){
-        adapter= new WorkmatesAdapter(userList);
+    private void configureRecyclerView() {
+        adapter = new WorkmatesAdapter(userList);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        userViewModel.addLikeForThisRestaurant(mRestaurant);
+        restaurantViewModel.getAllUserForThisRestaurant(mRestaurant)
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
+                        User user = documentSnapshot.toObject(User.class);
+                        if (user != null && user.getRestaurantPicked() != null) {
+                            String restaurantUid = user.getRestaurantPicked().getRestaurantId();
+                            if (restaurantUid.equals(mRestaurant.getRestaurantId())) {
+                                userList.add(user);
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
     }
 
     private void initPhoneBtn() {
@@ -165,4 +192,22 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
+    private  void displayRating (){
+        if (mRestaurant.getRestaurantId() != null){
+            double rating = mRestaurant.getRating() /MAX_RATING * MAX_STAR;
+            ratingBar.setRating((float) rating);
+        }
+    }
+
+
+    public void likeStatus() {
+       UserRepository.getInstance().getLikedCollection().document(mRestaurant.getRestaurantId()).get().addOnCompleteListener(task -> {
+           if (task.getResult().contains(mRestaurant.getRestaurantId())){
+               likeBtn.setImageResource(R.drawable.ic_star_yellow);
+           }else{
+               likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
+
+           }
+       });
+    }
 }

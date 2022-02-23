@@ -24,13 +24,13 @@ import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.activity.DetailActivity;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
-import com.safia.go4lunch.viewmodel.MapsViewModel;
+import com.safia.go4lunch.viewmodel.RestaurantViewModel;
 
 import java.util.List;
 
 public class ListViewFragment extends Fragment implements RestaurantListAdapter.onRestaurantClickListener{
     private List<Restaurant> mRestaurant;
-    private MapsViewModel mViewModel;
+    private RestaurantViewModel mViewModel;
     private RecyclerView mRecyclerView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -56,7 +56,7 @@ public class ListViewFragment extends Fragment implements RestaurantListAdapter.
 
     public void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(getActivity());
-        this.mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MapsViewModel.class);
+        this.mViewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantViewModel.class);
     }
 
     private static final String TAG = "MapActivity";

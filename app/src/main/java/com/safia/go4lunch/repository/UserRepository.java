@@ -1,11 +1,14 @@
 package com.safia.go4lunch.repository;
-
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.safia.go4lunch.model.Restaurant;
@@ -15,24 +18,18 @@ import java.util.Objects;
 
 public class UserRepository {
 
-    public static final String COLLECTION_USERS = "users";
     private static volatile UserRepository instance;
     public static final String COLLECTION_LIKED = "restaurant liked";
-    public static final String RESTAURANT_PICKED = "restaurant picked";
+    public static final String COLLECTION_USERS = "users";
 
     //--- GET THE COLLECTION REFERENCE ---
-    public CollectionReference getUsersCollection() {
+    public  CollectionReference getUsersCollection() {
         return FirebaseFirestore.getInstance().collection(COLLECTION_USERS);
     }
 
     public CollectionReference getLikedCollection() {
         return FirebaseFirestore.getInstance().collection(COLLECTION_USERS)
                 .document(Objects.requireNonNull(getInstance().getCurrentUserUID())).collection(COLLECTION_LIKED);
-    }
-
-    public CollectionReference getPickedCollection() {
-        return FirebaseFirestore.getInstance().collection(COLLECTION_USERS)
-                .document(Objects.requireNonNull(getInstance().getCurrentUserUID())).collection(RESTAURANT_PICKED);
     }
 
     private UserRepository() {
@@ -51,11 +48,7 @@ public class UserRepository {
         }
     }
 
-    @Nullable
-    public String getCurrentUserUID() {
-        FirebaseUser user = getCurrentUser();
-        return (user != null) ? user.getUid() : null;
-    }
+
 
     //--- CREATE ---
     public void createUser() {
@@ -70,20 +63,15 @@ public class UserRepository {
     }
 
     //--- GET ---
+    @Nullable
+    public String getCurrentUserUID() {
+        FirebaseUser user = getCurrentUser();
+        return (user != null) ? user.getUid() : null;
+    }
 
     @Nullable
     public FirebaseUser getCurrentUser() {
         return FirebaseAuth.getInstance().getCurrentUser();
-    }
-
-    public Task<QuerySnapshot> getAllUsersFromFirebase() {
-        return getUsersCollection().orderBy("username").get();
-    }
-
-    public void getAllUsersEating() {
-        getPickedCollection().document().get().addOnCompleteListener(task -> {
-            getUsersCollection().orderBy("username").get().getResult().getDocuments();
-        });
     }
 
     public Task<Void> addRestaurantLike(Restaurant restaurant) {
@@ -98,8 +86,8 @@ public class UserRepository {
         getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
             user.setRestaurantPicked(restaurant);
-            RestaurantRepository.getInstance().getRestaurantCollection().document(restaurant.getRestaurantId())
-                    .collection(RestaurantRepository.USER_PICKED).document(user.uid).set(user);
+         //   RestaurantRepository.getInstance().getRestaurantCollection().document(restaurant.getRestaurantId())
+           //         .collection(RestaurantRepository.USER_PICKED).document(user.uid).set(user);
             getUsersCollection().document(user.getUid()).set(user);
         });
     }
@@ -111,5 +99,4 @@ public class UserRepository {
             getUsersCollection().document(user.getUid()).set(user);
         });
     }
-
 }

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.safia.go4lunch.repository.RestaurantRepository;
-import com.safia.go4lunch.viewmodel.MapsViewModel;
+import com.safia.go4lunch.viewmodel.RestaurantViewModel;
 
 public class ViewModelFactory  implements ViewModelProvider.Factory {
 
@@ -18,8 +18,8 @@ public class ViewModelFactory  implements ViewModelProvider.Factory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(MapsViewModel.class)) {
-            return (T) new MapsViewModel(mapRepository);
+        if (modelClass.isAssignableFrom(RestaurantViewModel.class)) {
+            return (T) new RestaurantViewModel(mapRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

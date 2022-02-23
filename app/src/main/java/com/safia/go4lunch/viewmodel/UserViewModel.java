@@ -2,9 +2,12 @@ package com.safia.go4lunch.viewmodel;
 
 import android.content.Context;
 
+import androidx.lifecycle.LiveData;
+
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.repository.UserRepository;
 
@@ -49,7 +52,7 @@ public class UserViewModel {
         userRepository.addPickedRestaurant(restaurant);
     }
 
-    public void removeRestaurantLiked(Restaurant restaurant) {
+    public void  removeRestaurantLiked(Restaurant restaurant) {
         userRepository.removeRestaurantLiked(restaurant);
     }
 

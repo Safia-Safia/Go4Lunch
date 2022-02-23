@@ -48,16 +48,6 @@ public class Restaurant implements Parcelable {
     @Expose
     private int distance;
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
-    }
-
-    public List<User> getUserList() {
-        return userList;
-    }
-
-    List<User> userList;
-
     public  Restaurant (){
     }
 

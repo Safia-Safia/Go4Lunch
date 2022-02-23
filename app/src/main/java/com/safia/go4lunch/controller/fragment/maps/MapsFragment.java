@@ -33,7 +33,7 @@ import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.activity.DetailActivity;
 import com.safia.go4lunch.model.Restaurant;
-import com.safia.go4lunch.viewmodel.MapsViewModel;
+import com.safia.go4lunch.viewmodel.RestaurantViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +43,7 @@ import java.util.Map;
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private MapsViewModel mViewModel;
+    private RestaurantViewModel mViewModel;
     List<Restaurant> restaurantsList = new ArrayList<>();
     private static final String TAG = "MapActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -94,7 +94,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     public void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(getActivity());
-        this.mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MapsViewModel.class);
+        this.mViewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantViewModel.class);
     }
 
     public void getRestaurant(LatLng location) {

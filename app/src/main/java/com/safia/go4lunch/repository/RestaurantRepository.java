@@ -9,14 +9,20 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.safia.go4lunch.model.nearbySearchResult.NearbyPlace;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.nearbySearchResult.Result;
+import com.safia.go4lunch.model.placeDetailResult.OpeningHours;
 import com.safia.go4lunch.model.placeDetailResult.PlaceDetail;
 import com.safia.go4lunch.controller.fragment.maps.MapService;
 
@@ -38,9 +44,10 @@ public class RestaurantRepository {
     private static volatile RestaurantRepository instance;
     public static final String USER_PICKED = "user picked";
 
-    public  CollectionReference getRestaurantCollection(){
+    public CollectionReference getRestaurantCollection() {
         return FirebaseFirestore.getInstance().collection(COLLECTION_RESTAURANT);
     }
+
     public static RestaurantRepository getInstance() {
         RestaurantRepository result = instance;
         if (result != null) {
@@ -53,6 +60,7 @@ public class RestaurantRepository {
             return instance;
         }
     }
+
     public Retrofit createRetrofit() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         // set your desired log level
@@ -89,9 +97,13 @@ public class RestaurantRepository {
         // Start the call
         call.enqueue(new Callback<NearbyPlace>() {
 
+
             @Override
             public void onResponse(@NonNull Call<NearbyPlace> call, @NonNull Response<NearbyPlace> response) {
                 List<Restaurant> restaurantList = new ArrayList<>();
+                List<Restaurant> restaurantListFromFirestore = new ArrayList<>();
+
+
                 if (response.body() != null) {
                     for (Result result1 : response.body().getResults()) {
                         PlaceDetail placeDetail = getRestaurantDetail(result1);
@@ -110,13 +122,48 @@ public class RestaurantRepository {
                         }
                         restaurant.setOpeningHours(placeDetail.getResult().getOpeningHours());
 
-                        float [] results = new float[1];
-                        Location.distanceBetween(restaurant.getLatitude(), restaurant.getLongitude(), location.latitude, location.longitude, results );
-                        restaurant.setDistance((int)results[0]);
+                        float[] results = new float[1];
+                        Location.distanceBetween(restaurant.getLatitude(), restaurant.getLongitude(), location.latitude, location.longitude, results);
+                        restaurant.setDistance((int) results[0]);
+
                         restaurantList.add(restaurant);
+
                         RestaurantRepository.this.getRestaurantCollection().document(restaurant.getRestaurantId()).set(restaurant);
+
                     }
-                    result.postValue(restaurantList);
+                    getRestaurantCollection().get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            document.getData();
+                                            Restaurant restaurant = new Restaurant();
+                                            restaurant.setRestaurantId((String) document.getData().get("restaurantId"));
+                                            restaurant.setName((String) document.getData().get("name"));
+                                            //restaurant.setLatitude((double) document.getData().get("latitude"));
+                                            //restaurant.setLongitude((double) document.getData().get("longitude"));
+                                            restaurant.setAddress((String) document.getData().get("address"));
+                                            //restaurant.setRating( (float)document.getData().get("rating"));
+                                            restaurant.setPhoneNumber((String) document.getData().get("phoneNumber"));
+                                            restaurant.setWebsite((String) document.getData().get("website"));
+                                            restaurant.setTypes((String) document.getData().get("type"));
+                                            if (document.getData().get("") != null) {
+                                                restaurant.setUrlPhoto((String) document.getData().get("urlPhoto"));
+                                            }
+                                            //restaurant.setOpeningHours((OpeningHours) document.getData().get("openingHours"));
+
+                                            //restaurant.setDistance((int) document.getData().get("distance"));
+
+                                            restaurantListFromFirestore.add(restaurant);
+                                        }
+                                    } else {
+                                        // Log.d(TAG, "Error getting documents: ", task.getException());
+                                    }
+                                }
+                            });
+                        result.postValue(restaurantList);
+
                 }
             }
 
@@ -128,6 +175,11 @@ public class RestaurantRepository {
         return result;
     }
 
+
+    public Task<QuerySnapshot> getAllUsersForThisRestaurant(Restaurant restaurant){
+        return getRestaurantCollection().document(restaurant.getRestaurantId())
+                .collection(USER_PICKED).get();
+    }
     public PlaceDetail getRestaurantDetail(Result result) {
 
         Retrofit retrofit = createRetrofit();

@@ -17,6 +17,7 @@ import com.safia.go4lunch.R;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.repository.UserRepository;
+import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import java.util.List;
 import java.util.ResourceBundle;
@@ -52,6 +53,7 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
     public static class WorkmatesViewHolder extends RecyclerView.ViewHolder {
         TextView isJoining;
         ImageView userPicture;
+        private final UserViewModel userViewModel = UserViewModel.getInstance();
 
         public WorkmatesViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -62,10 +64,10 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
         public void updateWithData(User user) {
             if (!(user.getUrlPicture() == null)) {
                 Glide.with(this.itemView)
-                        .load( userPicture)
+                        .load( user.getUrlPicture())
                         .circleCrop()
                         .into(userPicture); }
-            isJoining.setText(String.format("is joining", user.getUsername()));
+            isJoining.setText(String.format("is joining", userViewModel.getCurrentUser().getDisplayName()));
 
         }
     }
