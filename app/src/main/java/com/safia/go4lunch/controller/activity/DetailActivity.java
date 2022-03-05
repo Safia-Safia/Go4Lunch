@@ -1,10 +1,12 @@
 package com.safia.go4lunch.controller.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -14,21 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.gson.Gson;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.fragment.workmates.WorkmatesAdapter;
 import com.safia.go4lunch.databinding.ActivityDetailBinding;
@@ -44,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
-    private ActivityDetailBinding binding;
     private ImageView restaurantPhoto;
     private TextView restaurantName, restaurantAddress, restaurantType;
     private ImageButton phoneBtn, likeBtn, websiteBtn;
@@ -57,7 +50,6 @@ public class DetailActivity extends AppCompatActivity {
     private boolean likeOn = false;
     private boolean fabOn = false;
     RatingBar ratingBar;
-    User user;
     List<User> userList = new ArrayList<>();
     WorkmatesAdapter adapter;
     private RecyclerView mRecyclerView;
@@ -66,7 +58,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityDetailBinding.inflate(getLayoutInflater());
+        com.safia.go4lunch.databinding.ActivityDetailBinding binding = ActivityDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setUpView();
         initView();
@@ -76,6 +68,7 @@ public class DetailActivity extends AppCompatActivity {
         initFabButton();
         displayRating();
         likeStatus();
+        pickedStatus();
         configureRecyclerView();
     }
 
@@ -109,6 +102,7 @@ public class DetailActivity extends AppCompatActivity {
         Glide.with(this).load(mRestaurant.getUrlPhoto()).into(restaurantPhoto);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void configureRecyclerView() {
         adapter = new WorkmatesAdapter(userList);
         mRecyclerView.setAdapter(adapter);
@@ -129,85 +123,99 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initPhoneBtn() {
-        phoneBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String phone = mRestaurant.getPhoneNumber();
-                if (phone != null) {
-                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.unavailable, Toast.LENGTH_SHORT).show();
-                }
+        phoneBtn.setOnClickListener(view -> {
+            String phone = mRestaurant.getPhoneNumber();
+            if (phone != null) {
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+                startActivity(intent);
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.unavailable, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void initLikeBtn() {
-        likeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (likeOn) {
-                    userViewModel.removeRestaurantLiked(mRestaurant);
-                    likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
-                    likeOn = false;
-                } else {
-                    userViewModel.addLikeForThisRestaurant(mRestaurant);
-                    likeBtn.setImageResource(R.drawable.ic_star_yellow);
-                    likeOn = true;
-                }
+        likeBtn.setOnClickListener(view -> {
+            if (likeOn) {
+                userViewModel.removeRestaurantLiked(mRestaurant);
+                likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
+                likeOn = false;
+            } else {
+                userViewModel.addLikeForThisRestaurant(mRestaurant);
+                likeBtn.setImageResource(R.drawable.ic_star_yellow);
+                likeOn = true;
             }
         });
     }
 
     private void initWebsiteBtn() {
-        websiteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Uri uri = Uri.parse(mRestaurant.getWebsite());
-                if (uri != null) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.unavailable, Toast.LENGTH_SHORT).show();
-                }
+        websiteBtn.setOnClickListener(view -> {
+            Uri uri = Uri.parse(mRestaurant.getWebsite());
+            if (uri != null) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.unavailable, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void initFabButton() {
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (fabOn) {
-                    userViewModel.removeRestaurantPicked();
-                    fab.setImageResource(R.drawable.ic_baseline_check_circle_outline_24);
-                    fabOn = false;
-                } else {
-                    userViewModel.addPickedRestaurant(mRestaurant);
-                    fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
-                    fabOn = true;
-                }
+        fab.setOnClickListener(view -> {
+            if (fabOn) {
+                userViewModel.removeRestaurantPicked();
+                fab.setImageResource(R.drawable.ic_baseline_check_circle_outline_24);
+                fabOn = false;
+            } else {
+                userViewModel.addPickedRestaurant(mRestaurant);
+                fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
+                fabOn = true;
             }
         });
     }
 
-    private  void displayRating (){
-        if (mRestaurant.getRestaurantId() != null){
-            double rating = mRestaurant.getRating() /MAX_RATING * MAX_STAR;
+    private void displayRating() {
+        if (mRestaurant.getRestaurantId() != null) {
+            double rating = mRestaurant.getRating() / MAX_RATING * MAX_STAR;
             ratingBar.setRating((float) rating);
         }
     }
 
 
     public void likeStatus() {
-       UserRepository.getInstance().getLikedCollection().document(mRestaurant.getRestaurantId()).get().addOnCompleteListener(task -> {
-           if (task.getResult().contains(mRestaurant.getRestaurantId())){
-               likeBtn.setImageResource(R.drawable.ic_star_yellow);
-           }else{
-               likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
+        UserRepository.getInstance().getLikedCollection().document(mRestaurant.getRestaurantId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        document.getData();
+                        likeBtn.setImageResource(R.drawable.ic_star_yellow);
+                    } else {
+                        likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
 
-           }
-       });
+                    }
+                }
+            }
+        });
+    }
+
+    public void pickedStatus(){
+        RestaurantRepository.getInstance().getRestaurantCollection().document(mRestaurant.getRestaurantId())
+                .collection(RestaurantRepository.USER_PICKED).document(userViewModel.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        document.getData();
+                        fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
+                    } else {
+                        fab.setImageResource(R.drawable.ic_baseline_check_circle_outline_24);
+                    }
+                }
+            }
+        });
+
     }
 }

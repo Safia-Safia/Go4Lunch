@@ -1,4 +1,5 @@
 package com.safia.go4lunch.repository;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -10,10 +11,13 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class UserRepository {
@@ -23,7 +27,7 @@ public class UserRepository {
     public static final String COLLECTION_USERS = "users";
 
     //--- GET THE COLLECTION REFERENCE ---
-    public  CollectionReference getUsersCollection() {
+    public CollectionReference getUsersCollection() {
         return FirebaseFirestore.getInstance().collection(COLLECTION_USERS);
     }
 
@@ -47,7 +51,6 @@ public class UserRepository {
             return instance;
         }
     }
-
 
 
     //--- CREATE ---
@@ -86,10 +89,24 @@ public class UserRepository {
         getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
             user.setRestaurantPicked(restaurant);
-         //   RestaurantRepository.getInstance().getRestaurantCollection().document(restaurant.getRestaurantId())
-           //         .collection(RestaurantRepository.USER_PICKED).document(user.uid).set(user);
+            RestaurantRepository.getInstance().getRestaurantCollection()
+                    .document(restaurant.getRestaurantId())
+                    .collection(RestaurantRepository.USER_PICKED)
+                    .document(user.uid).set(user);
             getUsersCollection().document(user.getUid()).set(user);
         });
+
+        RestaurantRepository.getInstance().getRestaurantCollection().document(restaurant.getRestaurantId())
+                .collection(RestaurantRepository.USER_PICKED)
+                .whereEqualTo(restaurant.getRestaurantId(), true)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            document.getData().clear();
+                        }
+                    }
+                });
     }
 
     public void removePickedRestaurant() {

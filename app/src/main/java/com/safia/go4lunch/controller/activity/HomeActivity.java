@@ -1,14 +1,20 @@
 package com.safia.go4lunch.controller.activity;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.safia.go4lunch.R;
@@ -20,6 +26,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -43,27 +50,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         this.configureToolBar();
         this.configureDrawerLayout();
         this.configureNavigationView();
-        headerView =navigationView.getHeaderView(0);
+        headerView = navigationView.getHeaderView(0);
         this.loadCurrentUserMail();
         this.loadUserName();
         this.loadCurrentUserPicture();
     }
 
-    private void loadCurrentUserMail(){
+    private void loadCurrentUserMail() {
         TextView userMail = headerView.findViewById(R.id.user_email_nav_header);
         userMail.setText(userViewModel.getCurrentUser().getEmail());
     }
 
-    private void loadUserName(){
+    private void loadUserName() {
         TextView userName = headerView.findViewById(R.id.user_name_nav_header);
         userName.setText(userViewModel.getCurrentUser().getDisplayName());
     }
 
-    private void loadCurrentUserPicture (){
+    private void loadCurrentUserPicture() {
         ImageView userPicture = headerView.findViewById(R.id.nav_header_user_picture);
         String userPhotoUrl = (userViewModel.getCurrentUser().getPhotoUrl() != null) ? userViewModel.getCurrentUser().getPhotoUrl().toString() : null;
         Glide.with(this)
-                .load( userPhotoUrl)
+                .load(userPhotoUrl)
                 .circleCrop()
                 .into(userPicture);
     }
@@ -78,7 +85,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureMapsFragment() {
-        MapsFragment mMapsFragment = (MapsFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        MapsFragment mMapsFragment;
         mMapsFragment = new MapsFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.map, mMapsFragment)
@@ -106,8 +113,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     // 3 - Configure NavigationView
     private void configureNavigationView() {
-        this.navigationView = (NavigationView) findViewById(R.id.activity_home_nav_view);
+        this.navigationView = findViewById(R.id.activity_home_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    // Search Button
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
+        return true;
     }
 
     @Override
@@ -119,20 +143,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+
+
+    // Navigation Drawer setting button
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.activity_main_drawer_your_lunch) {
-            Toast.makeText(this, "Lieu de déjeuner", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, (R.string.your_lunch), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.activity_main_drawer_settings) {
-            Toast.makeText(this, "Paramètres", Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(this, (R.string.parameters), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.activity_main_drawer_logout) {
             userViewModel.signOut(this);
             finish();
         }
-
 
         this.drawerLayout.closeDrawer(GravityCompat.START);
 

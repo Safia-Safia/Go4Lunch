@@ -53,6 +53,9 @@
 
     <!-- Workmates -->
     <string name="isJoining"> %s is joining </string>
+    <string name="restaurant_type_detail">restaurant_type</string>
+    <string name="parameters">Paramètres</string>
+    <string name="your_lunch">Lieu de déjeuner</string>
 
 
 </resources>

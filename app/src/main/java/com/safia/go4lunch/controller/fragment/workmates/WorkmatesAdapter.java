@@ -53,7 +53,6 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
     public static class WorkmatesViewHolder extends RecyclerView.ViewHolder {
         TextView isJoining;
         ImageView userPicture;
-        private final UserViewModel userViewModel = UserViewModel.getInstance();
 
         public WorkmatesViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -67,7 +66,7 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
                         .load( user.getUrlPicture())
                         .circleCrop()
                         .into(userPicture); }
-            isJoining.setText(String.format("is joining", userViewModel.getCurrentUser().getDisplayName()));
+            isJoining.setText(String.format(user.getUsername() + " is joining ! "));
 
         }
     }
