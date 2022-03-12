@@ -57,5 +57,6 @@
     <string name="parameters">Paramètres</string>
     <string name="your_lunch">Lieu de déjeuner</string>
 
+    <string name="notificcationChannel" translatable="false">notificationChannel</string>
 
 </resources>

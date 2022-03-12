@@ -31,7 +31,7 @@ public class Restaurant implements Parcelable {
     private String urlPhoto;
     @SerializedName("rating")
     @Expose
-    private Float rating;
+    private double rating;
     @SerializedName("phoneNumber")
     @Expose
     private String phoneNumber;
@@ -46,7 +46,7 @@ public class Restaurant implements Parcelable {
     private String website;
     @SerializedName("distance")
     @Expose
-    private int distance;
+    private long distance;
 
     public  Restaurant (){
     }
@@ -95,16 +95,20 @@ public class Restaurant implements Parcelable {
         return urlPhoto;
     }
 
-    public void setUrlPhoto(String urlPhoto) {
+    public void setUrlPhotoForRetrofit(String urlPhoto) {
         this.urlPhoto = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference="
                 + urlPhoto + "&key=AIzaSyDho4ut-Xsxg7efCchEwhcJe7uKqJANJnM";
     }
 
-    public float getRating() {
+    public void setUrlPhoto(String urlPhoto) {
+        this.urlPhoto = urlPhoto;
+    }
+
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(Float rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -140,11 +144,11 @@ public class Restaurant implements Parcelable {
         this.website = website;
     }
 
-    public int getDistance() {
+    public long getDistance() {
         return distance;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(long distance) {
         this.distance = distance;
     }
 
@@ -166,23 +170,9 @@ public class Restaurant implements Parcelable {
         dest.writeParcelable(this.openingHours, flags);
         dest.writeString(this.types);
         dest.writeString(this.website);
-        dest.writeInt(this.distance);
+        dest.writeLong(this.distance);
     }
 
-    public void readFromParcel(Parcel source) {
-        this.restaurantId = source.readString();
-        this.name = source.readString();
-        this.latitude = (Double) source.readValue(Double.class.getClassLoader());
-        this.longitude = (Double) source.readValue(Double.class.getClassLoader());
-        this.address = source.readString();
-        this.urlPhoto = source.readString();
-        this.rating = (Float) source.readValue(Double.class.getClassLoader());
-        this.phoneNumber = source.readString();
-        this.openingHours = source.readParcelable(OpeningHours.class.getClassLoader());
-        this.types = source.readString();
-        this.website = source.readString();
-        this.distance = source.readInt();
-    }
 
     protected Restaurant(Parcel in) {
         this.restaurantId = in.readString();
@@ -191,11 +181,12 @@ public class Restaurant implements Parcelable {
         this.longitude = (Double) in.readValue(Double.class.getClassLoader());
         this.address = in.readString();
         this.urlPhoto = in.readString();
-        this.rating = (Float) in.readValue(Double.class.getClassLoader());
+        this.rating = (Double) in.readValue(Double.class.getClassLoader());
         this.phoneNumber = in.readString();
         this.openingHours = in.readParcelable(OpeningHours.class.getClassLoader());
         this.types = in.readString();
         this.website = in.readString();
+        this.distance = in.readLong();
     }
 
     public static final Parcelable.Creator<Restaurant> CREATOR = new Parcelable.Creator<Restaurant>() {

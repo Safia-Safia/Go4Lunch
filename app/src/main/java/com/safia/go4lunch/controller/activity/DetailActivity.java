@@ -165,7 +165,6 @@ public class DetailActivity extends AppCompatActivity {
             if (fabOn) {
                 userViewModel.removeRestaurantPicked();
                 fab.setImageResource(R.drawable.ic_baseline_check_circle_outline_24);
-                fabOn = false;
             } else {
                 userViewModel.addPickedRestaurant(mRestaurant);
                 fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
@@ -202,20 +201,17 @@ public class DetailActivity extends AppCompatActivity {
 
     public void pickedStatus(){
         RestaurantRepository.getInstance().getRestaurantCollection().document(mRestaurant.getRestaurantId())
-                .collection(RestaurantRepository.USER_PICKED).document(userViewModel.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        document.getData();
-                        fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
-                    } else {
-                        fab.setImageResource(R.drawable.ic_baseline_check_circle_outline_24);
+                .collection(RestaurantRepository.USER_PICKED).document(userViewModel.getCurrentUser().getUid()).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            document.getData();
+                            fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
+                        } else {
+                            fab.setImageResource(R.drawable.ic_baseline_check_circle_outline_24);
+                        }
                     }
-                }
-            }
-        });
+                });
 
     }
 }

@@ -12,13 +12,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.safia.go4lunch.model.nearbySearchResult.NearbyPlace;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.nearbySearchResult.Result;
@@ -94,84 +94,90 @@ public class RestaurantRepository {
         // Create the call on NearbyPlace API
         String locationStr = location.latitude + "," + location.longitude;
         Call<NearbyPlace> call = mapService.getNearbyPlaces(locationStr);
-        // Start the call
-        call.enqueue(new Callback<NearbyPlace>() {
+        List<Restaurant> restaurantList = new ArrayList<>();
+        getRestaurantCollection().get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().isEmpty()){
+                            call.enqueue(new Callback<NearbyPlace>() {
 
-
-            @Override
-            public void onResponse(@NonNull Call<NearbyPlace> call, @NonNull Response<NearbyPlace> response) {
-                List<Restaurant> restaurantList = new ArrayList<>();
-                List<Restaurant> restaurantListFromFirestore = new ArrayList<>();
-
-
-                if (response.body() != null) {
-                    for (Result result1 : response.body().getResults()) {
-                        PlaceDetail placeDetail = getRestaurantDetail(result1);
-                        Restaurant restaurant = new Restaurant();
-                        restaurant.setRestaurantId(result1.getPlaceId());
-                        restaurant.setName(result1.getName());
-                        restaurant.setLatitude(result1.getGeometry().getLocation().getLat());
-                        restaurant.setLongitude(result1.getGeometry().getLocation().getLng());
-                        restaurant.setAddress(placeDetail.getResult().getFormattedAddress());
-                        restaurant.setRating(placeDetail.getResult().getRating().floatValue());
-                        restaurant.setPhoneNumber(placeDetail.getResult().getFormattedPhoneNumber());
-                        restaurant.setWebsite(placeDetail.getResult().getWebsite());
-                        restaurant.setTypes(placeDetail.getResult().getTypes().get(0));
-                        if (placeDetail.getResult().getPhotos() != null) {
-                            restaurant.setUrlPhoto(placeDetail.getResult().getPhotos().get(0).getPhotoReference());
-                        }
-                        restaurant.setOpeningHours(placeDetail.getResult().getOpeningHours());
-
-                        float[] results = new float[1];
-                        Location.distanceBetween(restaurant.getLatitude(), restaurant.getLongitude(), location.latitude, location.longitude, results);
-                        restaurant.setDistance((int) results[0]);
-
-                        restaurantList.add(restaurant);
-
-                        RestaurantRepository.this.getRestaurantCollection().document(restaurant.getRestaurantId()).set(restaurant);
-
-                    }
-                    getRestaurantCollection().get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                            document.getData();
+                                public void onResponse(@NonNull Call<NearbyPlace> call1, @NonNull Response<NearbyPlace> response) {
+                                    if (response.body() != null) {
+                                        for (Result result1 : response.body().getResults()) {
+                                            PlaceDetail placeDetail = getRestaurantDetail(result1);
                                             Restaurant restaurant = new Restaurant();
-                                            restaurant.setRestaurantId((String) document.getData().get("restaurantId"));
-                                            restaurant.setName((String) document.getData().get("name"));
-                                            //restaurant.setLatitude((double) document.getData().get("latitude"));
-                                            //restaurant.setLongitude((double) document.getData().get("longitude"));
-                                            restaurant.setAddress((String) document.getData().get("address"));
-                                            //restaurant.setRating( (float)document.getData().get("rating"));
-                                            restaurant.setPhoneNumber((String) document.getData().get("phoneNumber"));
-                                            restaurant.setWebsite((String) document.getData().get("website"));
-                                            restaurant.setTypes((String) document.getData().get("type"));
-                                            if (document.getData().get("") != null) {
-                                                restaurant.setUrlPhoto((String) document.getData().get("urlPhoto"));
+                                            restaurant.setRestaurantId(result1.getPlaceId());
+                                            restaurant.setName(result1.getName());
+                                            restaurant.setLatitude(result1.getGeometry().getLocation().getLat());
+                                            restaurant.setLongitude(result1.getGeometry().getLocation().getLng());
+                                            restaurant.setAddress(placeDetail.getResult().getFormattedAddress());
+                                            restaurant.setRating(placeDetail.getResult().getRating().floatValue());
+                                            restaurant.setPhoneNumber(placeDetail.getResult().getFormattedPhoneNumber());
+                                            restaurant.setWebsite(placeDetail.getResult().getWebsite());
+                                            restaurant.setTypes(placeDetail.getResult().getTypes().get(0));
+                                            if (placeDetail.getResult().getPhotos() != null) {
+                                                restaurant.setUrlPhotoForRetrofit(placeDetail.getResult().getPhotos().get(0).getPhotoReference());
                                             }
-                                            //restaurant.setOpeningHours((OpeningHours) document.getData().get("openingHours"));
+                                            restaurant.setOpeningHours(placeDetail.getResult().getOpeningHours());
 
-                                            //restaurant.setDistance((int) document.getData().get("distance"));
+                                            float[] results = new float[1];
+                                            Location.distanceBetween(restaurant.getLatitude(), restaurant.getLongitude(), location.latitude, location.longitude, results);
+                                            restaurant.setDistance((int) results[0]);
 
-                                            restaurantListFromFirestore.add(restaurant);
+                                            restaurantList.add(restaurant);
+
+                                            RestaurantRepository.this.getRestaurantCollection().document(restaurant.getRestaurantId()).set(restaurant);
+
                                         }
-                                    } else {
-                                        // Log.d(TAG, "Error getting documents: ", task.getException());
+                                        result.postValue(restaurantList);
                                     }
                                 }
+
+                                @Override
+                                public void onFailure(@NonNull Call<NearbyPlace> call1, @NonNull Throwable t) {
+                                    Log.e("onFailure", "true" + t.getMessage());
+                                }
                             });
-                        result.postValue(restaurantList);
+                        }else {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                document.getData();
+                                Gson gson = new Gson();
 
-                }
-            }
+                                String documentGson = gson.toJson(document.getData());
 
-            @Override
-            public void onFailure(@NonNull Call<NearbyPlace> call, @NonNull Throwable t) {
-                Log.e("onFailure", "true" + t.getMessage());
-            }
-        });
+                                Restaurant restaurant = new Restaurant();
+                                restaurant.setRestaurantId((String) document.getData().get("restaurantId"));
+                                restaurant.setName((String) document.getData().get("name"));
+                                restaurant.setLatitude((double) document.getData().get("latitude"));
+                                restaurant.setLongitude((double) document.getData().get("longitude"));
+                                restaurant.setAddress((String) document.getData().get("address"));
+                                restaurant.setRating( (double)document.getData().get("rating"));
+                                restaurant.setPhoneNumber((String) document.getData().get("phoneNumber"));
+                                restaurant.setWebsite((String) document.getData().get("website"));
+                                restaurant.setTypes((String) document.getData().get("types"));
+                                if (document.getData().get("urlPhoto") != null) {
+                                    restaurant.setUrlPhoto((String) document.getData().get("urlPhoto"));
+                                }
+
+                                JsonElement jsonElement = gson.toJsonTree(document.getData().get("openingHours"));
+                                OpeningHours openingHours = gson.fromJson(jsonElement, OpeningHours.class);
+                                restaurant.setOpeningHours(openingHours);
+
+                                restaurant.setDistance((long) document.getData().get("distance"));
+
+                                restaurantList.add(restaurant);
+                            }
+                            result.postValue(restaurantList);
+                        }
+
+                    } else {
+                        // Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+
+        // Start the call
+
         return result;
     }
 

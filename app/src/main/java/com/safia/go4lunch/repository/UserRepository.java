@@ -93,22 +93,9 @@ public class UserRepository {
                     .document(restaurant.getRestaurantId())
                     .collection(RestaurantRepository.USER_PICKED)
                     .document(user.uid).set(user);
-            getUsersCollection().document(user.getUid()).set(user);
+            getUsersCollection().document(user.getUid()).update("user",user);
         });
-
-        RestaurantRepository.getInstance().getRestaurantCollection().document(restaurant.getRestaurantId())
-                .collection(RestaurantRepository.USER_PICKED)
-                .whereEqualTo(restaurant.getRestaurantId(), true)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            document.getData().clear();
-                        }
-                    }
-                });
     }
-
     public void removePickedRestaurant() {
         getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
