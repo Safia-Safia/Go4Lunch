@@ -81,7 +81,7 @@ public class ListViewFragment extends Fragment implements RestaurantListAdapter.
 
     @Override
     public void onRestaurantClick(int position) {
-        Intent intent = new Intent(ListViewFragment.this.getActivity(), DetailActivity.class);
+        Intent intent = new Intent(ListViewFragment.this.getContext(), DetailActivity.class);
         intent.putExtra(MapsFragment.KEY_RESTAURANT, mRestaurant.get(position));
         startActivity(intent);
     }

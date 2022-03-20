@@ -30,36 +30,33 @@ import java.util.Objects;
 
 public class NotificationService extends FirebaseMessagingService {
 
-    public static final int  NOTIFICATION_ID = 7;
+    public static final int NOTIFICATION_ID = 7;
     public static final String NOTIFICATION_TAG = "GO4LUNCH_NOTIFICATION_TAG";
-    private Context context;
     UserRepository userRepository = UserRepository.getInstance();
-    private final UserViewModel userViewModel = UserViewModel.getInstance();
-    private final RestaurantViewModel restaurantViewModel = RestaurantViewModel.getInstance();
     private User currentUser;
+
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         if (remoteMessage.getNotification() != null) {
             // Get message sent by Firebase
+            fetchUsers();
             RemoteMessage.Notification notification = remoteMessage.getNotification();
-            Log.e("TAG" , notification.getBody());
-             sendVisualNotification(notification);
+            sendVisualNotification(notification);
         }
     }
+
     String restaurantName;
-    private String currentUserId;
-
     private void fetchUsers() {
-        userRepository.  getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
+        userRepository.getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
-                        if(user != null && user.getRestaurantPicked().getName() != null) {
-                                currentUser = user;
-                                restaurantName = currentUser.getRestaurantPicked().getName();
-                        }
+            if (user != null && user.getRestaurantPicked().getName() != null) {
+                currentUser = user;
+                restaurantName = currentUser.getRestaurantPicked().getName();
+            }
 
-                });
+        });
 
     }
 
@@ -73,9 +70,7 @@ public class NotificationService extends FirebaseMessagingService {
         // Create a Channel (Android 8)
         String channelId = getString(R.string.notificcationChannel);
         String message;
-        String messageBody;
-        message ="You are eating at "+ restaurantName + "." ;
-        messageBody = String.format(message, restaurantName);
+        message = "You are eating at " + restaurantName + ".";
 
         // Build a Notification object
         NotificationCompat.Builder notificationBuilder =
@@ -83,21 +78,20 @@ public class NotificationService extends FirebaseMessagingService {
                         .setSmallIcon(R.drawable.ic_baseline_dining_24)
                         .setContentTitle(notification.getTitle())
                         .setContentText(notification.getBody())
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                         .setAutoCancel(true)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setContentIntent(pendingIntent);
+        Log.e("TAG", message);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // Support Version >= Android 8
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence channelName = "Firebase Messages";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel mChannel = new NotificationChannel(channelId, channelName, importance);
-            notificationManager.createNotificationChannel(mChannel);
-        }
-
         // Show notification
         notificationManager.notify(NOTIFICATION_TAG, NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+    @Override
+    public void onNewToken(@NonNull String s) {
+        super.onNewToken(s);
     }
 }

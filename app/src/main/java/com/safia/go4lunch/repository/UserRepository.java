@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -88,19 +89,39 @@ public class UserRepository {
     public void addPickedRestaurant(Restaurant restaurant) {
         getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
+            //Récupérer le restaurant qui avait été choisi
+            //Si ce restaurant n'est pas null partir dans la collection userpicked de ce restaurant et enlever le user de cette liste
+            if (user.getRestaurantPicked() != null) {
+                RestaurantRepository.getInstance().getRestaurantCollection()
+                        .document(user.getRestaurantPicked().getRestaurantId())
+                        .collection(RestaurantRepository.USER_PICKED)
+                        .document(user.uid).delete();
+            }
             user.setRestaurantPicked(restaurant);
             RestaurantRepository.getInstance().getRestaurantCollection()
                     .document(restaurant.getRestaurantId())
                     .collection(RestaurantRepository.USER_PICKED)
                     .document(user.uid).set(user);
-            getUsersCollection().document(user.getUid()).update("user",user);
+            getUsersCollection().document(user.getUid()).set(user);
+
         });
     }
+
     public void removePickedRestaurant() {
         getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
+            RestaurantRepository.getInstance().getRestaurantCollection().document(user.getRestaurantPicked().getRestaurantId())
+                    .collection(RestaurantRepository.USER_PICKED).document(user.uid).delete();
             user.setRestaurantPicked(null);
             getUsersCollection().document(user.getUid()).set(user);
+        });
+    }
+
+    public void getUserListFromFirebase() {
+        getUsersCollection().document(COLLECTION_USERS).get().addOnCompleteListener(task -> {
+            List<User> userList = new ArrayList<>();
+            User user = task.getResult().toObject(User.class);
+            userList.add(user);
         });
     }
 }

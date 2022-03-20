@@ -1,29 +1,23 @@
 package com.safia.go4lunch.controller.activity;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.safia.go4lunch.R;
+import com.safia.go4lunch.controller.fragment.listview.ListViewFragment;
 import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
+import com.safia.go4lunch.controller.fragment.workmates.WorkmatesFragment;
 import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import androidx.annotation.NonNull;
@@ -32,13 +26,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-import java.util.Arrays;
-import java.util.List;
 
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -54,7 +46,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_home);
 
         this.configureBottomView();
-        this.configureMapsFragment();
         this.configureToolBar();
         this.configureDrawerLayout();
         this.configureNavigationView();
@@ -92,14 +83,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         NavigationUI.setupWithNavController(navView, navController);
     }
 
-    private void configureMapsFragment() {
-        MapsFragment mMapsFragment;
-        mMapsFragment = new MapsFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.map, mMapsFragment)
-                .commit();
-    }
-
     // ---------------------
     // CONFIGURATION
     // ---------------------
@@ -128,10 +111,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             this.drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            this.finish();
         }
     }
 
@@ -144,6 +128,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.activity_main_drawer_your_lunch) {
             Toast.makeText(this, (R.string.your_lunch), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.activity_main_drawer_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             Toast.makeText(this, (R.string.parameters), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.activity_main_drawer_logout) {
             userViewModel.signOut(this);

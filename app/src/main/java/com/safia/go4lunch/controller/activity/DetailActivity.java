@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.fragment.workmates.WorkmatesAdapter;
@@ -111,13 +112,8 @@ public class DetailActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
                         User user = documentSnapshot.toObject(User.class);
-                        if (user != null && user.getRestaurantPicked() != null) {
-                            String restaurantUid = user.getRestaurantPicked().getRestaurantId();
-                            if (restaurantUid.equals(mRestaurant.getRestaurantId())) {
-                                userList.add(user);
-                            }
-                            adapter.notifyDataSetChanged();
-                        }
+                        userList.add(user);
+                        adapter.notifyDataSetChanged();
                     }
                 });
     }
@@ -199,19 +195,19 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-    public void pickedStatus(){
+    public void pickedStatus() {
         RestaurantRepository.getInstance().getRestaurantCollection().document(mRestaurant.getRestaurantId())
                 .collection(RestaurantRepository.USER_PICKED).document(userViewModel.getCurrentUser().getUid()).get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            document.getData();
-                            fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
-                        } else {
-                            fab.setImageResource(R.drawable.ic_baseline_check_circle_outline_24);
-                        }
-                    }
-                });
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    document.getData();
+                    fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
+                } else {
+                    fab.setImageResource(R.drawable.ic_baseline_check_circle_outline_24);
+                }
+            }
+        });
 
     }
 }

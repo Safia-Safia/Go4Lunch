@@ -62,25 +62,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public static final float DEFAULT_ZOOM = 15f;
     private Boolean mLocationPermissionsGranted = false;
     FusedLocationProviderClient fusedLocationProviderClient;
-    // creating a variable
-    // for search view.
     private SearchView searchView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.configureViewModel();
         this.getActivity().setTitle("I'm Hungry!");
-        // initializing our search view.
-        View view = inflater.inflate(R.layout.fragment_maps, container, false);
-        //searchView = view.findViewById(R.id.idSearchView);
-        setSearchView();
-        return view;
-    }
-
-    private void setSearchView() {
-
-    }
-
+        return inflater.inflate(R.layout.fragment_maps, container, false);}
     Map<String, Restaurant> mMarkerMap = new HashMap<>();
 
     @Override

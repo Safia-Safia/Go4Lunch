@@ -8,7 +8,7 @@
         android:id="@+id/card_view"
         android:name="com.safia.go4lunch.controller.fragment.maps.MapsFragment"
         android:label="@string/title_maps"
-        tools:layout="@layout/workmates" />
+        tools:layout="@layout/fragment_maps" />
 
     <fragment
         android:id="@+id/list_view"
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/workmates"
-        android:name="com.safia.go4lunch.controller.fragment.listview.ListViewFragment"
+        android:name="com.safia.go4lunch.controller.fragment.workmates.WorkmatesFragment"
         android:label="@string/title_workmates"
         tools:layout="@layout/workmates" />
 </navigation>

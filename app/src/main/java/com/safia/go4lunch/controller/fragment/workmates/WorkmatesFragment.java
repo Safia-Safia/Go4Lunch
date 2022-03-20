@@ -20,10 +20,11 @@ import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.repository.UserRepository;
 import com.safia.go4lunch.viewmodel.UserViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WorkmatesFragment extends Fragment {
-    private List<User> userList;
+    private List<User> userList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private final UserViewModel userViewModel = UserViewModel.getInstance();
     WorkmatesAdapter mAdapter;
