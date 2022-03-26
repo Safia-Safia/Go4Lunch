@@ -1,6 +1,8 @@
 package com.safia.go4lunch.repository;
 
 
+import static com.safia.go4lunch.controller.activity.DetailActivity.fab;
+
 import android.location.Location;
 import android.util.Log;
 
@@ -12,6 +14,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -19,6 +22,9 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.safia.go4lunch.R;
+import com.safia.go4lunch.controller.fragment.workmates.WorkmatesAdapter;
+import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.model.nearbySearchResult.NearbyPlace;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.nearbySearchResult.Result;
@@ -98,7 +104,7 @@ public class RestaurantRepository {
         getRestaurantCollection().get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        if (task.getResult().isEmpty()){
+                        if (task.getResult().isEmpty()) {
                             call.enqueue(new Callback<NearbyPlace>() {
 
                                 @Override
@@ -139,7 +145,7 @@ public class RestaurantRepository {
                                     Log.e("onFailure", "true" + t.getMessage());
                                 }
                             });
-                        }else {
+                        } else {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 document.getData();
                                 Gson gson = new Gson();
@@ -152,7 +158,7 @@ public class RestaurantRepository {
                                 restaurant.setLatitude((double) document.getData().get("latitude"));
                                 restaurant.setLongitude((double) document.getData().get("longitude"));
                                 restaurant.setAddress((String) document.getData().get("address"));
-                                restaurant.setRating( (double)document.getData().get("rating"));
+                                restaurant.setRating((double) document.getData().get("rating"));
                                 restaurant.setPhoneNumber((String) document.getData().get("phoneNumber"));
                                 restaurant.setWebsite((String) document.getData().get("website"));
                                 restaurant.setTypes((String) document.getData().get("types"));
@@ -171,21 +177,42 @@ public class RestaurantRepository {
                             result.postValue(restaurantList);
                         }
 
-                    } else {
-                        // Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
-
-        // Start the call
 
         return result;
     }
 
 
-    public Task<QuerySnapshot> getAllUsersForThisRestaurant(Restaurant restaurant){
+    public Task<QuerySnapshot> getAllUsersForThisRestaurant(Restaurant restaurant, List<User> userList, WorkmatesAdapter adapter) {
+        getRestaurantCollection().document(restaurant.getRestaurantId()).collection(USER_PICKED).get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
+                        User user = documentSnapshot.toObject(User.class);
+                        userList.clear();
+                        userList.add(user);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
         return getRestaurantCollection().document(restaurant.getRestaurantId())
                 .collection(USER_PICKED).get();
     }
+
+    public void setRestaurantStatus(Restaurant restaurant){
+        RestaurantRepository.getInstance().getRestaurantCollection().document(restaurant.getRestaurantId())
+                .collection(RestaurantRepository.USER_PICKED).document(UserRepository.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    document.getData();
+                    fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
+                } else {
+                    fab.setImageResource(R.drawable.ic_baseline_check_circle_outline_24);
+                }
+            }
+        });
+    }
+
     public PlaceDetail getRestaurantDetail(Result result) {
 
         Retrofit retrofit = createRetrofit();

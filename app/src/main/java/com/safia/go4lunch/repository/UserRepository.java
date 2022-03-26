@@ -1,24 +1,21 @@
 package com.safia.go4lunch.repository;
 
+import static com.safia.go4lunch.controller.activity.DetailActivity.likeBtn;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.safia.go4lunch.R;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class UserRepository {
@@ -86,11 +83,25 @@ public class UserRepository {
         return getLikedCollection().document(restaurant.getRestaurantId()).delete();
     }
 
+    public void getLikeStatus(Restaurant restaurant){
+        getLikedCollection().document(restaurant.getRestaurantId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        document.getData();
+                        likeBtn.setImageResource(R.drawable.ic_star_yellow);
+                    } else {
+                        likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
+                    }
+                }
+            }
+        });
+    }
     public void addPickedRestaurant(Restaurant restaurant) {
         getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
-            //Récupérer le restaurant qui avait été choisi
-            //Si ce restaurant n'est pas null partir dans la collection userpicked de ce restaurant et enlever le user de cette liste
             if (user.getRestaurantPicked() != null) {
                 RestaurantRepository.getInstance().getRestaurantCollection()
                         .document(user.getRestaurantPicked().getRestaurantId())
@@ -110,18 +121,9 @@ public class UserRepository {
     public void removePickedRestaurant() {
         getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
-            RestaurantRepository.getInstance().getRestaurantCollection().document(user.getRestaurantPicked().getRestaurantId())
-                    .collection(RestaurantRepository.USER_PICKED).document(user.uid).delete();
+            RestaurantRepository.getInstance().getRestaurantCollection().document(user.getRestaurantPicked().getRestaurantId()).collection(RestaurantRepository.USER_PICKED).document(user.uid).delete();
             user.setRestaurantPicked(null);
             getUsersCollection().document(user.getUid()).set(user);
-        });
-    }
-
-    public void getUserListFromFirebase() {
-        getUsersCollection().document(COLLECTION_USERS).get().addOnCompleteListener(task -> {
-            List<User> userList = new ArrayList<>();
-            User user = task.getResult().toObject(User.class);
-            userList.add(user);
         });
     }
 }

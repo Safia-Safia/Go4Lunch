@@ -64,4 +64,8 @@ public class UserViewModel {
         userRepository.createUser();
     }
 
+    public void getLikeStatus(Restaurant restaurant){
+        userRepository.getLikeStatus(restaurant);
+    }
+
 }

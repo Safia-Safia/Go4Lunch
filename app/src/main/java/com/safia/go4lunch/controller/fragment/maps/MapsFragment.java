@@ -110,7 +110,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mViewModel.getRestaurants(location).observe(this, nearbyRestaurantList -> {
             if (nearbyRestaurantList != null) {
                 restaurantsList = nearbyRestaurantList;
-                Log.e("restaurantList", nearbyRestaurantList.size() + "");
                 for (Restaurant restaurant : restaurantsList) {
                     Marker marker = mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))

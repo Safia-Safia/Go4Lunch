@@ -1,6 +1,5 @@
 package com.safia.go4lunch.controller.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,7 +29,6 @@ import com.safia.go4lunch.databinding.ActivityDetailBinding;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
-import com.safia.go4lunch.repository.RestaurantRepository;
 import com.safia.go4lunch.repository.UserRepository;
 import com.safia.go4lunch.viewmodel.RestaurantViewModel;
 import com.safia.go4lunch.viewmodel.UserViewModel;
@@ -41,15 +39,15 @@ import java.util.List;
 public class DetailActivity extends AppCompatActivity {
     private ImageView restaurantPhoto;
     private TextView restaurantName, restaurantAddress, restaurantType;
-    private ImageButton phoneBtn, likeBtn, websiteBtn;
+    public static ImageButton phoneBtn, likeBtn, websiteBtn;
     public Restaurant mRestaurant;
-    private FloatingActionButton fab;
+    public static FloatingActionButton fab;
     private final UserViewModel userViewModel = UserViewModel.getInstance();
     private final RestaurantViewModel restaurantViewModel = RestaurantViewModel.getInstance();
     public static final double MAX_STAR = 3;
     public static final double MAX_RATING = 5;
-    private boolean likeOn = false;
-    private boolean fabOn = false;
+    private static boolean likeOn = false;
+    private static boolean fabOn = false;
     RatingBar ratingBar;
     List<User> userList = new ArrayList<>();
     WorkmatesAdapter adapter;
@@ -103,19 +101,13 @@ public class DetailActivity extends AppCompatActivity {
         Glide.with(this).load(mRestaurant.getUrlPhoto()).into(restaurantPhoto);
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void configureRecyclerView() {
         adapter = new WorkmatesAdapter(userList);
-        mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        restaurantViewModel.getAllUserForThisRestaurant(mRestaurant)
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
-                        User user = documentSnapshot.toObject(User.class);
-                        userList.add(user);
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+        mRecyclerView.setAdapter(adapter);
+        restaurantViewModel.getAllUserForThisRestaurant(mRestaurant, userList, adapter);
+        adapter.notifyDataSetChanged();
+
     }
 
     private void initPhoneBtn() {
@@ -178,36 +170,10 @@ public class DetailActivity extends AppCompatActivity {
 
 
     public void likeStatus() {
-        UserRepository.getInstance().getLikedCollection().document(mRestaurant.getRestaurantId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        document.getData();
-                        likeBtn.setImageResource(R.drawable.ic_star_yellow);
-                    } else {
-                        likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
-
-                    }
-                }
-            }
-        });
+        userViewModel.getLikeStatus(mRestaurant);
     }
 
     public void pickedStatus() {
-        RestaurantRepository.getInstance().getRestaurantCollection().document(mRestaurant.getRestaurantId())
-                .collection(RestaurantRepository.USER_PICKED).document(userViewModel.getCurrentUser().getUid()).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    document.getData();
-                    fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
-                } else {
-                    fab.setImageResource(R.drawable.ic_baseline_check_circle_outline_24);
-                }
-            }
-        });
-
+       restaurantViewModel.setRestaurantStatus(mRestaurant);
     }
 }

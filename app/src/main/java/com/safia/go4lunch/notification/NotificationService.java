@@ -2,30 +2,23 @@ package com.safia.go4lunch.notification;
 
 import static com.safia.go4lunch.repository.UserRepository.getInstance;
 
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.activity.DetailActivity;
 import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.repository.UserRepository;
-import com.safia.go4lunch.viewmodel.RestaurantViewModel;
-import com.safia.go4lunch.viewmodel.UserViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class NotificationService extends FirebaseMessagingService {
@@ -68,7 +61,7 @@ public class NotificationService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         // Create a Channel (Android 8)
-        String channelId = getString(R.string.notificcationChannel);
+        String channelId = getString(R.string.notificationChannel);
         String message;
         message = "You are eating at " + restaurantName + ".";
 
