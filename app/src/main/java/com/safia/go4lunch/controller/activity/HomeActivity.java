@@ -1,12 +1,20 @@
 package com.safia.go4lunch.controller.activity;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,8 +24,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.fragment.listview.ListViewFragment;
+import com.safia.go4lunch.controller.fragment.listview.RestaurantListAdapter;
 import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
 import com.safia.go4lunch.controller.fragment.workmates.WorkmatesFragment;
+import com.safia.go4lunch.model.Restaurant;
+import com.safia.go4lunch.repository.RestaurantRepository;
 import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import androidx.annotation.NonNull;
@@ -25,12 +36,16 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.core.widget.ListViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -53,6 +68,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         this.loadCurrentUserMail();
         this.loadUserName();
         this.loadCurrentUserPicture();
+
+
     }
 
     private void loadCurrentUserMail() {
@@ -141,5 +158,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        // Inflate the options menu from XML
+        getMenuInflater().inflate(R.menu.options_menu, menu);
+        return true;
+    }
 
 }

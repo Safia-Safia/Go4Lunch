@@ -10,33 +10,26 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.request.RequestOptions;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.safia.go4lunch.R;
-import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
-import com.safia.go4lunch.repository.UserRepository;
-import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import java.util.List;
-import java.util.ResourceBundle;
 
 
-public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.WorkmatesViewHolder> {
+public class WorkmatesPickedList extends RecyclerView.Adapter<WorkmatesPickedList.WorkmatesViewHolder> {
 
     private final List<User> mUser;
 
-    public WorkmatesAdapter(List<User> mUser) {
+    public WorkmatesPickedList(List<User> mUser) {
         this.mUser = mUser;
     }
 
     @NonNull
     @Override
-    public WorkmatesAdapter.WorkmatesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public WorkmatesPickedList.WorkmatesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recyclerview_user_list, parent, false);
-        return new WorkmatesAdapter.WorkmatesViewHolder(view);
+        return new WorkmatesPickedList.WorkmatesViewHolder(view);
     }
 
     @Override

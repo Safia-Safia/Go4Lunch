@@ -26,44 +26,40 @@ public class NotificationService extends FirebaseMessagingService {
     public static final int NOTIFICATION_ID = 7;
     public static final String NOTIFICATION_TAG = "GO4LUNCH_NOTIFICATION_TAG";
     UserRepository userRepository = UserRepository.getInstance();
-    private User currentUser;
+    String restaurantName;
 
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+
         if (remoteMessage.getNotification() != null) {
             // Get message sent by Firebase
-            fetchUsers();
             RemoteMessage.Notification notification = remoteMessage.getNotification();
+            Log.e("TAG", notification.getBody());
             sendVisualNotification(notification);
         }
     }
 
-    String restaurantName;
-    private void fetchUsers() {
+
+    private void fetchUsers(RemoteMessage.Notification notification) {
         userRepository.getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
-            if (user != null && user.getRestaurantPicked().getName() != null) {
-                currentUser = user;
-                restaurantName = currentUser.getRestaurantPicked().getName();
-            }
-
+            if (user.getRestaurantPicked() != null) {
+                restaurantName = user.getRestaurantPicked().getName();
+            } else restaurantName = "nowhere";
+            createNotification(notification);
         });
-
     }
 
-    private void sendVisualNotification(RemoteMessage.Notification notification) {
-
-
+    private void createNotification(RemoteMessage.Notification notification){
         // Create an Intent that will be shown when user will click on the Notification
         Intent intent = new Intent(this, DetailActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         // Create a Channel (Android 8)
         String channelId = getString(R.string.notificationChannel);
-        String message;
-        message = "You are eating at " + restaurantName + ".";
+        String message = "You are eating at " + restaurantName + ".";
 
         // Build a Notification object
         NotificationCompat.Builder notificationBuilder =
@@ -76,11 +72,17 @@ public class NotificationService extends FirebaseMessagingService {
                         .setAutoCancel(true)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setContentIntent(pendingIntent);
-        Log.e("TAG", message);
+        Log.e("TAG", message );
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // Show notification
         notificationManager.notify(NOTIFICATION_TAG, NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+    private void sendVisualNotification(RemoteMessage.Notification notification) {
+        fetchUsers(notification);
+
+
     }
 
     @Override

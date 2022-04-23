@@ -1,21 +1,39 @@
 package com.safia.go4lunch.repository;
 
+import static android.content.ContentValues.TAG;
 import static com.safia.go4lunch.controller.activity.DetailActivity.likeBtn;
+
+import android.net.Uri;
+import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 import com.safia.go4lunch.R;
+import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
+import com.safia.go4lunch.controller.fragment.workmates.WorkmatesAdapter2;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
 
+import java.util.List;
 import java.util.Objects;
 
 public class UserRepository {
@@ -63,6 +81,11 @@ public class UserRepository {
         }
     }
 
+    @Nullable
+    public FirebaseUser getCurrentUser() {
+        return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
     //--- GET ---
     @Nullable
     public String getCurrentUserUID() {
@@ -70,9 +93,22 @@ public class UserRepository {
         return (user != null) ? user.getUid() : null;
     }
 
-    @Nullable
-    public FirebaseUser getCurrentUser() {
-        return FirebaseAuth.getInstance().getCurrentUser();
+
+    public void setProfileUpdates(String userName) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(userName)
+                .setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))
+                .build();
+
+        user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "User profile updated.");
+                }
+            }
+        });
     }
 
     public Task<Void> addRestaurantLike(Restaurant restaurant) {
@@ -83,22 +119,18 @@ public class UserRepository {
         return getLikedCollection().document(restaurant.getRestaurantId()).delete();
     }
 
-    public void getLikeStatus(Restaurant restaurant){
-        getLikedCollection().document(restaurant.getRestaurantId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        document.getData();
-                        likeBtn.setImageResource(R.drawable.ic_star_yellow);
-                    } else {
-                        likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
-                    }
+    public void getLikeStatus(Restaurant restaurant) {
+        getLikedCollection().document(restaurant.getRestaurantId()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    document.getData();
                 }
             }
         });
     }
+
+
     public void addPickedRestaurant(Restaurant restaurant) {
         getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
@@ -124,6 +156,18 @@ public class UserRepository {
             RestaurantRepository.getInstance().getRestaurantCollection().document(user.getRestaurantPicked().getRestaurantId()).collection(RestaurantRepository.USER_PICKED).document(user.uid).delete();
             user.setRestaurantPicked(null);
             getUsersCollection().document(user.getUid()).set(user);
+        });
+    }
+
+    public void getAllUsers(List<User> userList, WorkmatesAdapter2 mAdapter) {
+        getUsersCollection().get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    User user = document.toObject(User.class);
+                    userList.add(user);
+                }
+                mAdapter.notifyDataSetChanged();
+            }
         });
     }
 }

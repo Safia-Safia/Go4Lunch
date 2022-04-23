@@ -2,14 +2,14 @@ package com.safia.go4lunch.viewmodel;
 
 import android.content.Context;
 
-import androidx.lifecycle.LiveData;
-
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.safia.go4lunch.controller.fragment.workmates.WorkmatesAdapter2;
 import com.safia.go4lunch.model.Restaurant;
+import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.repository.UserRepository;
+
+import java.util.List;
 
 public class UserViewModel {
     private static volatile UserViewModel instance;
@@ -66,6 +66,10 @@ public class UserViewModel {
 
     public void getLikeStatus(Restaurant restaurant){
         userRepository.getLikeStatus(restaurant);
+    }
+
+    public void getAllUsers(List<User> userList, WorkmatesAdapter2 mAdapter) {
+        userRepository.getAllUsers(userList, mAdapter);
     }
 
 }

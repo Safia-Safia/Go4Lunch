@@ -6,30 +6,30 @@ import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.safia.go4lunch.R;
-import com.safia.go4lunch.controller.fragment.workmates.WorkmatesAdapter;
+import com.safia.go4lunch.controller.fragment.workmates.WorkmatesPickedList;
 import com.safia.go4lunch.databinding.ActivityDetailBinding;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
-import com.safia.go4lunch.repository.UserRepository;
 import com.safia.go4lunch.viewmodel.RestaurantViewModel;
 import com.safia.go4lunch.viewmodel.UserViewModel;
 
@@ -50,7 +50,7 @@ public class DetailActivity extends AppCompatActivity {
     private static boolean fabOn = false;
     RatingBar ratingBar;
     List<User> userList = new ArrayList<>();
-    WorkmatesAdapter adapter;
+    WorkmatesPickedList adapter;
     private RecyclerView mRecyclerView;
 
     @Override
@@ -102,12 +102,10 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void configureRecyclerView() {
-        adapter = new WorkmatesAdapter(userList);
+        adapter = new WorkmatesPickedList(userList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(adapter);
-        restaurantViewModel.getAllUserForThisRestaurant(mRestaurant, userList, adapter);
-        adapter.notifyDataSetChanged();
-
+        restaurantViewModel.getAllUserForThisRestaurant(mRestaurant, userList);
     }
 
     private void initPhoneBtn() {
@@ -153,6 +151,7 @@ public class DetailActivity extends AppCompatActivity {
             if (fabOn) {
                 userViewModel.removeRestaurantPicked();
                 fab.setImageResource(R.drawable.ic_baseline_check_circle_outline_24);
+
             } else {
                 userViewModel.addPickedRestaurant(mRestaurant);
                 fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
@@ -174,6 +173,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void pickedStatus() {
-       restaurantViewModel.setRestaurantStatus(mRestaurant);
+       restaurantViewModel.getCurrentUserChoice(mRestaurant);
     }
 }

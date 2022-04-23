@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@+id/restaurant_imageView"
         app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="5dp"
         android:text="@string/restaurant_distance"/>
 
     <TextView
@@ -53,11 +54,48 @@
         android:layout_marginTop="10dp"
         android:textStyle="italic"/>
 
+    <ImageView
+        android:id="@+id/workmates_eating_here"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/restaurant_imageView"
+        app:layout_constraintTop_toBottomOf="@+id/distance_textView"
+        app:layout_constraintStart_toEndOf="@id/restaurantAddress_textView"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="10dp"
+
+        android:background="@drawable/ic_baseline_workmates"/>
+
+    <TextView
+        android:id="@+id/workmates_eating_here_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="()"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintEnd_toStartOf="@+id/restaurant_imageView"
+        app:layout_constraintStart_toEndOf="@+id/workmates_eating_here"
+        app:layout_constraintTop_toBottomOf="@+id/distance_textView"
+        />
+
+    <RatingBar
+        android:id="@+id/rating_listView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintEnd_toStartOf="@+id/restaurant_imageView"
+        app:layout_constraintTop_toBottomOf="@id/restaurantAddress_textView"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:numStars="3"
+        app:tint="#FFD53B"
+        />
     <View
+        android:id="@+id/view_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="#E8E6E6"
+        android:layout_marginTop="15dp"
+        android:background="#ACACAC"
         app:layout_constraintTop_toBottomOf="@+id/restaurant_openings_hour_textView"/>
 
 

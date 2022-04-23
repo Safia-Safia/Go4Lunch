@@ -1,5 +1,7 @@
 package com.safia.go4lunch.controller.fragment.maps;
 
+import static com.safia.go4lunch.repository.RestaurantRepository.USER_PICKED;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -36,11 +38,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.activity.DetailActivity;
 import com.safia.go4lunch.model.Restaurant;
+import com.safia.go4lunch.model.User;
+import com.safia.go4lunch.repository.RestaurantRepository;
+import com.safia.go4lunch.repository.UserRepository;
 import com.safia.go4lunch.viewmodel.RestaurantViewModel;
 
 import java.io.IOException;
@@ -51,7 +57,7 @@ import java.util.Map;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
+    public static GoogleMap mMap;
     private RestaurantViewModel mViewModel;
     List<Restaurant> restaurantsList = new ArrayList<>();
     private static final String TAG = "MapActivity";
@@ -62,14 +68,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public static final float DEFAULT_ZOOM = 15f;
     private Boolean mLocationPermissionsGranted = false;
     FusedLocationProviderClient fusedLocationProviderClient;
-    private SearchView searchView;
+    Map<String, Restaurant> mMarkerMap = new HashMap<>();
+    Marker marker;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.configureViewModel();
         this.getActivity().setTitle("I'm Hungry!");
-        return inflater.inflate(R.layout.fragment_maps, container, false);}
-    Map<String, Restaurant> mMarkerMap = new HashMap<>();
+        return inflater.inflate(R.layout.fragment_maps, container, false);
+    }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -106,16 +114,27 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         this.mViewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantViewModel.class);
     }
 
+
     public void getRestaurant(LatLng location) {
         mViewModel.getRestaurants(location).observe(this, nearbyRestaurantList -> {
             if (nearbyRestaurantList != null) {
                 restaurantsList = nearbyRestaurantList;
                 for (Restaurant restaurant : restaurantsList) {
-                    Marker marker = mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
-                            .title(restaurant.getName())
-                            .icon((BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))));
+                    mViewModel.getUsersPickedList(restaurant);
+                    if (restaurant.getUsers().isEmpty()) {
+                        marker = mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
+                                .title(restaurant.getName())
+                                .icon((BitmapDescriptorFactory
+                                        .defaultMarker(BitmapDescriptorFactory.HUE_CYAN))));
+                        mMarkerMap.put(marker.getId(), restaurant);
+                    } else {
+                        marker = mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
+                                .title(restaurant.getName())
+                                .icon((BitmapDescriptorFactory
+                                        .defaultMarker(BitmapDescriptorFactory.HUE_BLUE))));
+                    }
                     mMarkerMap.put(marker.getId(), restaurant);
                 }
             }

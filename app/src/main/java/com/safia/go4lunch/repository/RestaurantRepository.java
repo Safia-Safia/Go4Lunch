@@ -11,24 +11,19 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.safia.go4lunch.R;
-import com.safia.go4lunch.controller.fragment.workmates.WorkmatesAdapter;
+import com.safia.go4lunch.controller.fragment.workmates.WorkmatesPickedList;
 import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.model.nearbySearchResult.NearbyPlace;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.nearbySearchResult.Result;
-import com.safia.go4lunch.model.placeDetailResult.OpeningHours;
 import com.safia.go4lunch.model.placeDetailResult.PlaceDetail;
 import com.safia.go4lunch.controller.fragment.maps.MapService;
 
@@ -92,15 +87,15 @@ public class RestaurantRepository {
     public LiveData<List<Restaurant>> getRestaurant(LatLng location) {
         final MutableLiveData<List<Restaurant>> result = new MutableLiveData<>();
 
+        String locationStr = location.latitude + "," + location.longitude;
+        List<Restaurant> restaurantList = new ArrayList<>();
         Retrofit retrofit = createRetrofit();
 
         // Get a Retrofit instance and the related endpoints
         MapService mapService = retrofit.create(MapService.class);
 
         // Create the call on NearbyPlace API
-        String locationStr = location.latitude + "," + location.longitude;
         Call<NearbyPlace> call = mapService.getNearbyPlaces(locationStr);
-        List<Restaurant> restaurantList = new ArrayList<>();
         getRestaurantCollection().get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -147,31 +142,7 @@ public class RestaurantRepository {
                             });
                         } else {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                document.getData();
-                                Gson gson = new Gson();
-
-                                String documentGson = gson.toJson(document.getData());
-
-                                Restaurant restaurant = new Restaurant();
-                                restaurant.setRestaurantId((String) document.getData().get("restaurantId"));
-                                restaurant.setName((String) document.getData().get("name"));
-                                restaurant.setLatitude((double) document.getData().get("latitude"));
-                                restaurant.setLongitude((double) document.getData().get("longitude"));
-                                restaurant.setAddress((String) document.getData().get("address"));
-                                restaurant.setRating((double) document.getData().get("rating"));
-                                restaurant.setPhoneNumber((String) document.getData().get("phoneNumber"));
-                                restaurant.setWebsite((String) document.getData().get("website"));
-                                restaurant.setTypes((String) document.getData().get("types"));
-                                if (document.getData().get("urlPhoto") != null) {
-                                    restaurant.setUrlPhoto((String) document.getData().get("urlPhoto"));
-                                }
-
-                                JsonElement jsonElement = gson.toJsonTree(document.getData().get("openingHours"));
-                                OpeningHours openingHours = gson.fromJson(jsonElement, OpeningHours.class);
-                                restaurant.setOpeningHours(openingHours);
-
-                                restaurant.setDistance((long) document.getData().get("distance"));
-
+                                Restaurant restaurant = document.toObject(Restaurant.class);
                                 restaurantList.add(restaurant);
                             }
                             result.postValue(restaurantList);
@@ -183,38 +154,39 @@ public class RestaurantRepository {
         return result;
     }
 
-
-    public Task<QuerySnapshot> getAllUsersForThisRestaurant(Restaurant restaurant, List<User> userList, WorkmatesAdapter adapter) {
+    public void getAllUsersForThisRestaurant(Restaurant restaurant, List<User> userList) {
         getRestaurantCollection().document(restaurant.getRestaurantId()).collection(USER_PICKED).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
                         User user = documentSnapshot.toObject(User.class);
                         userList.clear();
                         userList.add(user);
-                        adapter.notifyDataSetChanged();
                     }
                 });
-        return getRestaurantCollection().document(restaurant.getRestaurantId())
-                .collection(USER_PICKED).get();
+        userPickedList(restaurant);
     }
 
-    public void setRestaurantStatus(Restaurant restaurant){
+    public void getCurrentUserChoice(Restaurant restaurant) {
         RestaurantRepository.getInstance().getRestaurantCollection().document(restaurant.getRestaurantId())
                 .collection(RestaurantRepository.USER_PICKED).document(UserRepository.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     document.getData();
-                    fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
-                } else {
-                    fab.setImageResource(R.drawable.ic_baseline_check_circle_outline_24);
                 }
             }
         });
     }
 
-    public PlaceDetail getRestaurantDetail(Result result) {
+    public void userPickedList(Restaurant restaurant) {
+        getRestaurantCollection().document(restaurant.getRestaurantId())
+                .collection(USER_PICKED).get().addOnCompleteListener(task -> {
+            List<User> users = task.getResult().toObjects(User.class);
+            restaurant.setUsers(users);
+        });
+    }
 
+    public PlaceDetail getRestaurantDetail(Result result) {
         Retrofit retrofit = createRetrofit();
         // Get a Retrofit instance and the related endpoints
         MapService mapService2 = retrofit.create(MapService.class);

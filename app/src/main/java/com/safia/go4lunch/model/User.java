@@ -1,8 +1,11 @@
 package com.safia.go4lunch.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
 
-public class User {
+public class User implements Parcelable {
     public String uid;
     public String username;
     @Nullable
@@ -32,4 +35,35 @@ public class User {
         restaurant = restaurantPicked;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.uid);
+        dest.writeString(this.username);
+        dest.writeString(this.urlPicture);
+        dest.writeParcelable(this.restaurant, flags);
+    }
+
+    protected User(Parcel in) {
+        this.uid = in.readString();
+        this.username = in.readString();
+        this.urlPicture = in.readString();
+        this.restaurant = in.readParcelable(Restaurant.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel source) {
+            return new User(source);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }
