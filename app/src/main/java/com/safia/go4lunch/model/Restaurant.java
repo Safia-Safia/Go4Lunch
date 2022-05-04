@@ -198,7 +198,7 @@ public class Restaurant implements Parcelable {
         this.types = in.readString();
         this.website = in.readString();
         this.distance = in.readLong();
-        in.readList(users, List.class.getClassLoader());
+        //in.readList(users, List.class.getClassLoader());
     }
 
     public static final Parcelable.Creator<Restaurant> CREATOR = new Parcelable.Creator<Restaurant>() {

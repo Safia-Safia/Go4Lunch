@@ -23,8 +23,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
     private final UserViewModel userViewModel = UserViewModel.getInstance();
-    private Button facebookButton;
-    private Button googleButton;
+    private Button facebookButton, googleButton, twitterButton;
     ProgressBar progressBar;
 
     @Override
@@ -39,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private void setUpView() {
         googleButton = findViewById(R.id.login_button_google);
         facebookButton = findViewById(R.id.login_button_facebook);
+        twitterButton = findViewById(R.id.login_button_twitter);
         progressBar = findViewById(R.id.progressBar);
     }
 
@@ -50,10 +50,14 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
         googleButton.setOnClickListener(view -> {
-                   signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.GoogleBuilder().build()));
+                    signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.GoogleBuilder().build()));
                     progressBar.setVisibility(View.VISIBLE);
                 }
         );
+       /* twitterButton.setOnClickListener(view -> {
+                    signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.TwitterBuilder().build()));
+                }
+        );*/
     }
 
     private void signInBuilder(List<AuthUI.IdpConfig> providers) {
@@ -95,15 +99,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void isUserLogged(){
-        if (userViewModel.isCurrentUserLogged()){
-           startHomeActivity();
+    public void isUserLogged() {
+        if (userViewModel.isCurrentUserLogged()) {
+            startHomeActivity();
         } else {
             startActivity(this.getIntent());
         }
     }
 
-    private void startHomeActivity(){
+    private void startHomeActivity() {
         Intent homeActivityIntent = new Intent(this, HomeActivity.class);
         startActivity(homeActivityIntent);
         finish();

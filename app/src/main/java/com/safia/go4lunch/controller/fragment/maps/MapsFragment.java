@@ -21,8 +21,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.SearchView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -61,9 +65,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private RestaurantViewModel mViewModel;
     List<Restaurant> restaurantsList = new ArrayList<>();
     private static final String TAG = "MapActivity";
+    public static final String KEY_RESTAURANT = "KEY_RESTAURANT";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    public static final String KEY_RESTAURANT = "KEY_RESTAURANT";
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     public static final float DEFAULT_ZOOM = 15f;
     private Boolean mLocationPermissionsGranted = false;
@@ -76,6 +80,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.configureViewModel();
         this.getActivity().setTitle("I'm Hungry!");
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
@@ -91,7 +96,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 return;
             }
             mMap.setMyLocationEnabled(true);
-            // mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
 
         mMap.setOnMarkerClickListener(marker -> {
@@ -114,31 +118,72 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         this.mViewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantViewModel.class);
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.e("mapsFragment", newText);
+                //Avoir une nouvelle liste de restaurant restaurantAll
+                List<Restaurant> result = new ArrayList<>();
+                String searchStr = newText.toLowerCase();
+                for (Restaurant item : restaurantsList) {
+                    if (item.getName().toLowerCase().contains(searchStr)) {
+                        result.add(item);
+                    }
+                }
+                setUpMarker(result);
+                return true;
+            }
+        });
+
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
 
     public void getRestaurant(LatLng location) {
         mViewModel.getRestaurants(location).observe(this, nearbyRestaurantList -> {
             if (nearbyRestaurantList != null) {
                 restaurantsList = nearbyRestaurantList;
-                for (Restaurant restaurant : restaurantsList) {
-                    mViewModel.getUsersPickedList(restaurant);
-                    if (restaurant.getUsers().isEmpty()) {
-                        marker = mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
-                                .title(restaurant.getName())
-                                .icon((BitmapDescriptorFactory
-                                        .defaultMarker(BitmapDescriptorFactory.HUE_CYAN))));
-                        mMarkerMap.put(marker.getId(), restaurant);
-                    } else {
-                        marker = mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
-                                .title(restaurant.getName())
-                                .icon((BitmapDescriptorFactory
-                                        .defaultMarker(BitmapDescriptorFactory.HUE_BLUE))));
-                    }
-                    mMarkerMap.put(marker.getId(), restaurant);
-                }
+                setUpMarker(restaurantsList);
             }
         });
+    }
+
+    public void setUpMarker(List<Restaurant> restaurants){
+        mMap.clear();
+        for (Restaurant restaurant : restaurants) {
+            if (restaurant.getUsers().isEmpty()) {
+                marker = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
+                        .title(restaurant.getName())
+                        .icon((BitmapDescriptorFactory
+                                .fromResource(R.drawable.marker_red))));
+                mMarkerMap.put(marker.getId(), restaurant);
+            } else {
+                marker = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
+                        .title(restaurant.getName())
+                        .icon((BitmapDescriptorFactory
+                                .fromResource(R.drawable.marker_green))));
+            }
+            mMarkerMap.put(marker.getId(), restaurant);
+        }
+
     }
 
     public void getDeviceLocation() { //TODO appeler cette methode dans l'activité HomeActivity

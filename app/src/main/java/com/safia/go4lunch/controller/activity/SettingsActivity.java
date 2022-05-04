@@ -52,6 +52,7 @@ public class SettingsActivity extends AppCompatActivity {
                 UserRepository.getInstance().setProfileUpdates(userName.getText().toString());
             }
         });
+
         userProfilePicture = findViewById(R.id.profilePicture_setting);
         String userPhotoUrl = (UserViewModel.getInstance().getCurrentUser().getPhotoUrl() != null) ?UserViewModel.getInstance().getCurrentUser().getPhotoUrl().toString() : null;
         Glide.with(this)

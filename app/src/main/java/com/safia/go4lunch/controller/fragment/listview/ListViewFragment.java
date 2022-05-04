@@ -39,7 +39,6 @@ public class ListViewFragment extends Fragment implements RestaurantListAdapter.
     private RestaurantViewModel mViewModel;
     private RecyclerView mRecyclerView;
     RestaurantListAdapter mAdapter;
-    RestaurantRepository restaurantRepository = RestaurantRepository.getInstance();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

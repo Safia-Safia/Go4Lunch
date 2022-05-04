@@ -43,7 +43,8 @@ public class NotificationService extends FirebaseMessagingService {
 
 
     private void fetchUsers(RemoteMessage.Notification notification) {
-        userRepository.getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
+        userRepository.getUsersCollection().document(Objects.requireNonNull(getInstance()
+                .getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
             if (user.getRestaurantPicked() != null) {
                 restaurantName = user.getRestaurantPicked().getName();

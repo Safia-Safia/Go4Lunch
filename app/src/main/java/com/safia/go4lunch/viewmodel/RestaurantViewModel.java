@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.safia.go4lunch.controller.fragment.workmates.WorkmatesPickedList;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.repository.RestaurantRepository;
@@ -40,16 +39,8 @@ public class RestaurantViewModel extends ViewModel {
         return repository.getRestaurant(location);
     }
 
-    public void getAllUserForThisRestaurant(Restaurant restaurant, List<User> userList){
-        repository.getAllUsersForThisRestaurant(restaurant, userList);
-    }
-
-    public void getCurrentUserChoice(Restaurant restaurant){
-        repository.getCurrentUserChoice(restaurant);
-    }
-
-    public void getUsersPickedList(Restaurant restaurant){
-        repository.userPickedList(restaurant);
+    public LiveData <List<User>> getAllUserForThisRestaurant(Restaurant restaurant){
+       return repository.getAllUsersForThisRestaurant(restaurant);
     }
 
 }

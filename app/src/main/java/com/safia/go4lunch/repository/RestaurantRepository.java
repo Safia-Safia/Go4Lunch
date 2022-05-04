@@ -1,8 +1,5 @@
 package com.safia.go4lunch.repository;
 
-
-import static com.safia.go4lunch.controller.activity.DetailActivity.fab;
-
 import android.location.Location;
 import android.util.Log;
 
@@ -18,8 +15,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.safia.go4lunch.R;
-import com.safia.go4lunch.controller.fragment.workmates.WorkmatesPickedList;
 import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.model.nearbySearchResult.NearbyPlace;
 import com.safia.go4lunch.model.Restaurant;
@@ -143,47 +138,31 @@ public class RestaurantRepository {
                         } else {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Restaurant restaurant = document.toObject(Restaurant.class);
-                                restaurantList.add(restaurant);
+                                getRestaurantCollection().document(restaurant.getRestaurantId()).collection(USER_PICKED).get().addOnCompleteListener(task2 -> {
+                                    List<User> users = task2.getResult().toObjects(User.class);
+                                    restaurant.setUsers(users);
+                                    restaurantList.add(restaurant);
+                                    result.postValue(restaurantList);
+                                });
                             }
-                            result.postValue(restaurantList);
                         }
-
                     }
                 });
-
         return result;
     }
 
-    public void getAllUsersForThisRestaurant(Restaurant restaurant, List<User> userList) {
+    public LiveData<List<User>> getAllUsersForThisRestaurant(Restaurant restaurant) {
+        MutableLiveData<List<User>> users = new MutableLiveData<>();
         getRestaurantCollection().document(restaurant.getRestaurantId()).collection(USER_PICKED).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List <User> userList = new ArrayList<>();
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
                         User user = documentSnapshot.toObject(User.class);
-                        userList.clear();
                         userList.add(user);
                     }
+                    users.postValue(userList);
                 });
-        userPickedList(restaurant);
-    }
-
-    public void getCurrentUserChoice(Restaurant restaurant) {
-        RestaurantRepository.getInstance().getRestaurantCollection().document(restaurant.getRestaurantId())
-                .collection(RestaurantRepository.USER_PICKED).document(UserRepository.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    document.getData();
-                }
-            }
-        });
-    }
-
-    public void userPickedList(Restaurant restaurant) {
-        getRestaurantCollection().document(restaurant.getRestaurantId())
-                .collection(USER_PICKED).get().addOnCompleteListener(task -> {
-            List<User> users = task.getResult().toObjects(User.class);
-            restaurant.setUsers(users);
-        });
+        return users;
     }
 
     public PlaceDetail getRestaurantDetail(Result result) {

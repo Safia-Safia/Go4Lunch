@@ -9,6 +9,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -33,6 +35,7 @@ import com.safia.go4lunch.controller.fragment.workmates.WorkmatesAdapter2;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -159,15 +162,30 @@ public class UserRepository {
         });
     }
 
-    public void getAllUsers(List<User> userList, WorkmatesAdapter2 mAdapter) {
+    public LiveData<List<User>> getAllUsers() {
+        MutableLiveData<List<User>> users = new MutableLiveData<>();
         getUsersCollection().get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                List<User> userList = new ArrayList<>();
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     User user = document.toObject(User.class);
                     userList.add(user);
                 }
-                mAdapter.notifyDataSetChanged();
+                users.postValue(userList);
             }
         });
+        return users;
+    }
+
+    public boolean getCurrentUserPickedStatus() {
+        getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
+            User user = task.getResult().toObject(User.class);
+            if (user.getRestaurantPicked() != null) {
+                RestaurantRepository.getInstance().getRestaurantCollection()
+                        .document(user.getRestaurantPicked().getRestaurantId())
+                        .collection(RestaurantRepository.USER_PICKED).get();
+            }
+        });
+        return true;
     }
 }

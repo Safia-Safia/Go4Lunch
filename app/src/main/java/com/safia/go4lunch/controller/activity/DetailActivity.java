@@ -6,10 +6,6 @@ import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -33,7 +28,6 @@ import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
 import com.safia.go4lunch.viewmodel.RestaurantViewModel;
 import com.safia.go4lunch.viewmodel.UserViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
@@ -49,7 +43,6 @@ public class DetailActivity extends AppCompatActivity {
     private static boolean likeOn = false;
     private static boolean fabOn = false;
     RatingBar ratingBar;
-    List<User> userList = new ArrayList<>();
     WorkmatesPickedList adapter;
     private RecyclerView mRecyclerView;
 
@@ -68,7 +61,7 @@ public class DetailActivity extends AppCompatActivity {
         displayRating();
         likeStatus();
         pickedStatus();
-        configureRecyclerView();
+        getAllUsersForThisRestaurant();
     }
 
 
@@ -101,11 +94,14 @@ public class DetailActivity extends AppCompatActivity {
         Glide.with(this).load(mRestaurant.getUrlPhoto()).into(restaurantPhoto);
     }
 
-    private void configureRecyclerView() {
+    private void setUpRecyclerView(List<User> userList) {
         adapter = new WorkmatesPickedList(userList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(adapter);
-        restaurantViewModel.getAllUserForThisRestaurant(mRestaurant, userList);
+    }
+
+    private void getAllUsersForThisRestaurant() {
+        restaurantViewModel.getAllUserForThisRestaurant(mRestaurant).observe(this, this::setUpRecyclerView);
     }
 
     private void initPhoneBtn() {
@@ -173,6 +169,9 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void pickedStatus() {
-       restaurantViewModel.getCurrentUserChoice(mRestaurant);
+        if (userViewModel.getCurrentUserPickedStatus()) {
+            fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
+        }else
+            fab.setImageResource(R.drawable.ic_baseline_check_circle_outline_24);
     }
 }

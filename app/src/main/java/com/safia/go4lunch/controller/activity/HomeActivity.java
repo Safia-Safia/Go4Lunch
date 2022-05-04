@@ -161,8 +161,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
-        // Inflate the options menu from XML
         getMenuInflater().inflate(R.menu.options_menu, menu);
         return true;
     }

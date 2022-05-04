@@ -2,6 +2,8 @@ package com.safia.go4lunch.viewmodel;
 
 import android.content.Context;
 
+import androidx.lifecycle.LiveData;
+
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseUser;
 import com.safia.go4lunch.controller.fragment.workmates.WorkmatesAdapter2;
@@ -68,8 +70,12 @@ public class UserViewModel {
         userRepository.getLikeStatus(restaurant);
     }
 
-    public void getAllUsers(List<User> userList, WorkmatesAdapter2 mAdapter) {
-        userRepository.getAllUsers(userList, mAdapter);
+    public LiveData<List<User>> getAllUsers() {
+        return userRepository.getAllUsers();
+    }
+
+    public boolean getCurrentUserPickedStatus(){
+        return userRepository.getCurrentUserPickedStatus();
     }
 
 }
