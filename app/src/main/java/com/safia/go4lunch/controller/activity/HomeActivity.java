@@ -1,11 +1,14 @@
 package com.safia.go4lunch.controller.activity;
 
+import static com.safia.go4lunch.controller.fragment.maps.MapsFragment.KEY_RESTAURANT;
+
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,15 +23,19 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.fragment.listview.ListViewFragment;
 import com.safia.go4lunch.controller.fragment.listview.RestaurantListAdapter;
 import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
 import com.safia.go4lunch.controller.fragment.workmates.WorkmatesFragment;
 import com.safia.go4lunch.model.Restaurant;
+import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.repository.RestaurantRepository;
+import com.safia.go4lunch.repository.UserRepository;
 import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import androidx.annotation.NonNull;
@@ -46,6 +53,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -141,9 +149,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.activity_main_drawer_your_lunch) {
-            Toast.makeText(this, (R.string.your_lunch), Toast.LENGTH_SHORT).show();
+
         } else if (id == R.id.activity_main_drawer_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);

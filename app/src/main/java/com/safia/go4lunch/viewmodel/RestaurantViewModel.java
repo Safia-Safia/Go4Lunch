@@ -43,4 +43,8 @@ public class RestaurantViewModel extends ViewModel {
        return repository.getAllUsersForThisRestaurant(restaurant);
     }
 
+    public LiveData<Boolean> getCurrentUserPickedStatus(Restaurant restaurant){
+        return repository.getCurrentUserPickedStatus(restaurant);
+    }
+
 }

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.util.Log;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -27,11 +28,13 @@ public class NotificationService extends FirebaseMessagingService {
     public static final String NOTIFICATION_TAG = "GO4LUNCH_NOTIFICATION_TAG";
     UserRepository userRepository = UserRepository.getInstance();
     String restaurantName;
+    Switch switchBtn ;
 
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+        switchBtn.findViewById(R.id.switchBtn);
 
         if (remoteMessage.getNotification() != null) {
             // Get message sent by Firebase

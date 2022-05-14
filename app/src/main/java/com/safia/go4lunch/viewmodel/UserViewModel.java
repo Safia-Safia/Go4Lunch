@@ -74,8 +74,8 @@ public class UserViewModel {
         return userRepository.getAllUsers();
     }
 
-    public boolean getCurrentUserPickedStatus(){
-        return userRepository.getCurrentUserPickedStatus();
+    public LiveData<Boolean> getCurrentUserLikeStatus(Restaurant restaurant){
+        return userRepository.getLikeStatus(restaurant);
     }
 
 }

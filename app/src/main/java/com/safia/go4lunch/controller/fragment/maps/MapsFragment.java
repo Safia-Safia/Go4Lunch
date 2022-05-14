@@ -1,7 +1,5 @@
 package com.safia.go4lunch.controller.fragment.maps;
 
-import static com.safia.go4lunch.repository.RestaurantRepository.USER_PICKED;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -11,11 +9,11 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.Manifest;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,7 +24,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
 import android.widget.SearchView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -42,18 +39,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.gson.Gson;
 import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.activity.DetailActivity;
 import com.safia.go4lunch.model.Restaurant;
-import com.safia.go4lunch.model.User;
-import com.safia.go4lunch.repository.RestaurantRepository;
-import com.safia.go4lunch.repository.UserRepository;
+
 import com.safia.go4lunch.viewmodel.RestaurantViewModel;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +55,7 @@ import java.util.Map;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
-    public static GoogleMap mMap;
+    private  GoogleMap mMap;
     private RestaurantViewModel mViewModel;
     List<Restaurant> restaurantsList = new ArrayList<>();
     private static final String TAG = "MapActivity";
@@ -173,7 +167,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                         .title(restaurant.getName())
                         .icon((BitmapDescriptorFactory
                                 .fromResource(R.drawable.marker_red))));
-                mMarkerMap.put(marker.getId(), restaurant);
             } else {
                 marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
@@ -252,4 +245,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    public static Restaurant getEatingAtPlace(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sp.getString(KEY_RESTAURANT, "RESTAURANT");
+        return gson.fromJson(json, Restaurant.class);
+    }
 }

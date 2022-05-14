@@ -25,6 +25,7 @@ import com.safia.go4lunch.controller.fragment.maps.MapService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 
 import okhttp3.OkHttpClient;
@@ -155,7 +156,7 @@ public class RestaurantRepository {
         MutableLiveData<List<User>> users = new MutableLiveData<>();
         getRestaurantCollection().document(restaurant.getRestaurantId()).collection(USER_PICKED).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List <User> userList = new ArrayList<>();
+                    List<User> userList = new ArrayList<>();
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
                         User user = documentSnapshot.toObject(User.class);
                         userList.add(user);
@@ -178,5 +179,21 @@ public class RestaurantRepository {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public LiveData<Boolean> getCurrentUserPickedStatus(Restaurant restaurant) {
+        MutableLiveData<Boolean> result = new MutableLiveData<>();
+        getRestaurantCollection().document(restaurant.getRestaurantId())
+                .collection(RestaurantRepository.USER_PICKED).get().addOnCompleteListener(task -> {
+                    List<User> users = task.getResult().toObjects(User.class);
+                    boolean isUserFound = false;
+                    for ( User user : users){
+                        if (user.getUid().equals(UserRepository.getInstance().getCurrentUser().getUid())){
+                            isUserFound = true;
+                        }
+                    }
+                    result.postValue(isUserFound);
+                });
+        return result;
     }
 }

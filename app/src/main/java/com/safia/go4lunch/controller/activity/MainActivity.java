@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupListeners() {
         progressBar.setVisibility(View.INVISIBLE);
+
         facebookButton.setOnClickListener(view -> {
                     signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.FacebookBuilder().build()));
                     progressBar.setVisibility(View.VISIBLE);
@@ -54,10 +55,10 @@ public class MainActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.VISIBLE);
                 }
         );
-       /* twitterButton.setOnClickListener(view -> {
+        twitterButton.setOnClickListener(view -> {
                     signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.TwitterBuilder().build()));
                 }
-        );*/
+        );
     }
 
     private void signInBuilder(List<AuthUI.IdpConfig> providers) {
