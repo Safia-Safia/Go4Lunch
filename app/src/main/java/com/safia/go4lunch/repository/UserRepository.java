@@ -1,23 +1,16 @@
 package com.safia.go4lunch.repository;
 
-import static com.safia.go4lunch.controller.fragment.maps.MapsFragment.KEY_RESTAURANT;
-
-import android.content.Intent;
-import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import com.safia.go4lunch.controller.activity.DetailActivity;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
 
@@ -41,7 +34,7 @@ public class UserRepository {
                 .document(Objects.requireNonNull(getInstance().getCurrentUserUID())).collection(COLLECTION_LIKED);
     }
 
-    private UserRepository() {
+    public UserRepository() {
     }
 
     public static UserRepository getInstance() {
@@ -108,7 +101,8 @@ public class UserRepository {
     }
 
     // -- PICKED --
-    public void addPickedRestaurant(Restaurant restaurant) {
+    public LiveData<Boolean> addPickedRestaurant(Restaurant restaurant) {
+        MutableLiveData<Boolean> result = new MutableLiveData<>();
         getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
             if (user.getRestaurantPicked() != null) {
@@ -123,17 +117,22 @@ public class UserRepository {
                     .collection(RestaurantRepository.USER_PICKED)
                     .document(user.uid).set(user);
             getUsersCollection().document(user.getUid()).set(user);
+            result.postValue(true);
         });
+        return result;
     }
 
-    public void removePickedRestaurant() {
+    public LiveData<Boolean> removePickedRestaurant() {
+        MutableLiveData<Boolean> result = new MutableLiveData<>();
         getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
             RestaurantRepository.getInstance().getRestaurantCollection().document(user.getRestaurantPicked()
                     .getRestaurantId()).collection(RestaurantRepository.USER_PICKED).document(user.uid).delete();
             user.setRestaurantPicked(null);
             getUsersCollection().document(user.getUid()).set(user);
+            result.postValue(true);
         });
+        return  result;
     }
 
     //- ALL USERS IN THE APP --

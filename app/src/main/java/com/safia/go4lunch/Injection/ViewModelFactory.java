@@ -4,23 +4,30 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.repository.RestaurantRepository;
+import com.safia.go4lunch.repository.UserRepository;
 import com.safia.go4lunch.viewmodel.RestaurantViewModel;
+import com.safia.go4lunch.viewmodel.UserViewModel;
 
 public class ViewModelFactory  implements ViewModelProvider.Factory {
 
-    private final RestaurantRepository mapRepository;
+    private final RestaurantRepository restaurantRepository;
+    private final UserRepository userRepository;
 
-    public ViewModelFactory(RestaurantRepository mapRepository) {
-        this.mapRepository = mapRepository;
+    public ViewModelFactory(RestaurantRepository restaurantRepository, UserRepository userRepository) {
+        this.restaurantRepository = restaurantRepository;
+        this.userRepository = userRepository;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
         if (modelClass.isAssignableFrom(RestaurantViewModel.class)) {
-            return (T) new RestaurantViewModel(mapRepository);
+            return (T) new RestaurantViewModel(restaurantRepository);
+        } else {
+            return (T) new UserViewModel(userRepository);
+
         }
-        throw new IllegalArgumentException("Unknown ViewModel class");
     }
 }

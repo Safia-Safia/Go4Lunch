@@ -34,8 +34,6 @@ public class NotificationService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        switchBtn.findViewById(R.id.switchBtn);
-
         if (remoteMessage.getNotification() != null) {
             // Get message sent by Firebase
             RemoteMessage.Notification notification = remoteMessage.getNotification();

@@ -55,8 +55,8 @@ import java.util.Map;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
-    private  GoogleMap mMap;
-    private RestaurantViewModel mViewModel;
+    private GoogleMap mMap;
+    private RestaurantViewModel restaurantViewModel;
     List<Restaurant> restaurantsList = new ArrayList<>();
     private static final String TAG = "MapActivity";
     public static final String KEY_RESTAURANT = "KEY_RESTAURANT";
@@ -107,9 +107,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         getLocationPermission();
     }
 
+    private void initMap() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+
     public void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(getActivity());
-        this.mViewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantViewModel.class);
+        this.restaurantViewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantViewModel.class);
     }
 
     @Override
@@ -150,7 +155,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void getRestaurant(LatLng location) {
-        mViewModel.getRestaurants(location).observe(this, nearbyRestaurantList -> {
+        restaurantViewModel.getRestaurants(location).observe(this, nearbyRestaurantList -> {
             if (nearbyRestaurantList != null) {
                 restaurantsList = nearbyRestaurantList;
                 setUpMarker(restaurantsList);
@@ -165,14 +170,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
                         .title(restaurant.getName())
-                        .icon((BitmapDescriptorFactory
-                                .fromResource(R.drawable.marker_red))));
+                        .icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_red))));
             } else {
                 marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
                         .title(restaurant.getName())
-                        .icon((BitmapDescriptorFactory
-                                .fromResource(R.drawable.marker_green))));
+                        .icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_green))));
             }
             mMarkerMap.put(marker.getId(), restaurant);
         }
@@ -199,13 +202,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void moveCamera(LatLng latLng) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, MapsFragment.DEFAULT_ZOOM));
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDeviceLocation();
     }
 
-    private void initMap() {
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+    private void moveCamera(LatLng latLng) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, MapsFragment.DEFAULT_ZOOM));
     }
 
     private void getLocationPermission() {

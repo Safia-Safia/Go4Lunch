@@ -3,24 +3,28 @@ package com.safia.go4lunch.viewmodel;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseUser;
 import com.safia.go4lunch.controller.fragment.workmates.WorkmatesAdapter2;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
+import com.safia.go4lunch.repository.RestaurantRepository;
 import com.safia.go4lunch.repository.UserRepository;
 
 import java.util.List;
 
-public class UserViewModel {
+public class UserViewModel extends ViewModel {
     private static volatile UserViewModel instance;
     private final UserRepository userRepository;
-
-    private UserViewModel() {
+    public UserViewModel() {
         userRepository = UserRepository.getInstance();
     }
 
+    public UserViewModel(UserRepository userRepository){
+        this.userRepository = userRepository;
+    }
     public static UserViewModel getInstance() {
         UserViewModel result = instance;
         if (result != null) {
@@ -50,24 +54,20 @@ public class UserViewModel {
         userRepository.addRestaurantLike(restaurant);
     }
 
-    public void addPickedRestaurant(Restaurant restaurant) {
-        userRepository.addPickedRestaurant(restaurant);
+    public LiveData<Boolean> addPickedRestaurant(Restaurant restaurant) {
+        return userRepository.addPickedRestaurant(restaurant);
     }
 
     public void  removeRestaurantLiked(Restaurant restaurant) {
         userRepository.removeRestaurantLiked(restaurant);
     }
 
-    public void removeRestaurantPicked() {
-        userRepository.removePickedRestaurant();
+    public LiveData<Boolean> removeRestaurantPicked() {
+        return userRepository.removePickedRestaurant();
     }
 
     public void createUser() {
         userRepository.createUser();
-    }
-
-    public void getLikeStatus(Restaurant restaurant){
-        userRepository.getLikeStatus(restaurant);
     }
 
     public LiveData<List<User>> getAllUsers() {

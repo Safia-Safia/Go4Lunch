@@ -120,6 +120,12 @@ public class ListViewFragment extends Fragment implements RestaurantListAdapter.
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getDeviceLocation();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         return super.onOptionsItemSelected(item);
     }

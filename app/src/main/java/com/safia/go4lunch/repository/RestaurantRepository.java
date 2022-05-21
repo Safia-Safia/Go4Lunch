@@ -25,7 +25,6 @@ import com.safia.go4lunch.controller.fragment.maps.MapService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.Executors;
 
 import okhttp3.OkHttpClient;

@@ -130,13 +130,16 @@ public class DetailActivity extends AppCompatActivity {
     private void initFabButton() {
         fab.setOnClickListener(view -> restaurantViewModel.getCurrentUserPickedStatus(mRestaurant).observe(this, isRestaurantPicked -> {
             if (isRestaurantPicked) {
-                userViewModel.removeRestaurantPicked();
-                fab.setImageResource(R.drawable.circle_outline_24);
+                userViewModel.removeRestaurantPicked().observe(this,aBoolean -> {
+                    fab.setImageResource(R.drawable.circle_outline_24);
+                    getAllUsersForThisRestaurant();
+                });
             } else {
-                userViewModel.addPickedRestaurant(mRestaurant);
-                fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
+                userViewModel.addPickedRestaurant(mRestaurant).observe(this,aBoolean -> {
+                    fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
+                    getAllUsersForThisRestaurant();
+                });
             }
-            getAllUsersForThisRestaurant();
         }));
     }
 
