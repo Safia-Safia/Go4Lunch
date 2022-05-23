@@ -46,7 +46,7 @@ import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.activity.DetailActivity;
 import com.safia.go4lunch.model.Restaurant;
 
-import com.safia.go4lunch.viewmodel.RestaurantViewModel;
+import com.safia.go4lunch.viewmodel.RestaurantAndUserViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +56,7 @@ import java.util.Map;
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private RestaurantViewModel restaurantViewModel;
+    private RestaurantAndUserViewModel viewModel;
     List<Restaurant> restaurantsList = new ArrayList<>();
     private static final String TAG = "MapActivity";
     public static final String KEY_RESTAURANT = "KEY_RESTAURANT";
@@ -72,7 +72,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        this.configureViewModel();
+        configureViewModel();
         this.getActivity().setTitle("I'm Hungry!");
         setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_maps, container, false);
@@ -114,7 +114,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     public void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(getActivity());
-        this.restaurantViewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantViewModel.class);
+        this.viewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantAndUserViewModel.class);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void getRestaurant(LatLng location) {
-        restaurantViewModel.getRestaurants(location).observe(this, nearbyRestaurantList -> {
+        viewModel.getRestaurants(location).observe(this, nearbyRestaurantList -> {
             if (nearbyRestaurantList != null) {
                 restaurantsList = nearbyRestaurantList;
                 setUpMarker(restaurantsList);

@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,14 +21,15 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.safia.go4lunch.Injection.Injection;
+import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.fragment.workmates.WorkmatesPickedList;
 import com.safia.go4lunch.databinding.ActivityDetailBinding;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
-import com.safia.go4lunch.viewmodel.RestaurantViewModel;
-import com.safia.go4lunch.viewmodel.UserViewModel;
+import com.safia.go4lunch.viewmodel.RestaurantAndUserViewModel;
 
 import java.util.List;
 
@@ -37,8 +39,7 @@ public class DetailActivity extends AppCompatActivity {
     public  ImageButton phoneBtn, likeBtn, websiteBtn;
     public Restaurant mRestaurant;
     public static FloatingActionButton fab;
-    private final UserViewModel userViewModel = UserViewModel.getInstance();
-    private final RestaurantViewModel restaurantViewModel = RestaurantViewModel.getInstance();
+    private RestaurantAndUserViewModel viewModel;
     public static final double MAX_STAR = 3;
     public static final double MAX_RATING = 5;
     RatingBar ratingBar;
@@ -52,6 +53,7 @@ public class DetailActivity extends AppCompatActivity {
         com.safia.go4lunch.databinding.ActivityDetailBinding binding = ActivityDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setUpView();
+        configureViewModel();
         initFabButton();
         initView();
         initLikeBtn();
@@ -63,6 +65,11 @@ public class DetailActivity extends AppCompatActivity {
         getAllUsersForThisRestaurant();
     }
 
+
+    public void configureViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
+        this.viewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantAndUserViewModel.class);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -100,7 +107,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getAllUsersForThisRestaurant() {
-        restaurantViewModel.getAllUserForThisRestaurant(mRestaurant).observe(this, this::setUpRecyclerView);
+        viewModel.getAllUserForThisRestaurant(mRestaurant).observe(this, this::setUpRecyclerView);
     }
 
     private void initPhoneBtn() {
@@ -128,14 +135,14 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initFabButton() {
-        fab.setOnClickListener(view -> restaurantViewModel.getCurrentUserPickedStatus(mRestaurant).observe(this, isRestaurantPicked -> {
+        fab.setOnClickListener(view -> viewModel.getCurrentUserPickedStatus(mRestaurant).observe(this, isRestaurantPicked -> {
             if (isRestaurantPicked) {
-                userViewModel.removeRestaurantPicked().observe(this,aBoolean -> {
+                viewModel.removeRestaurantPicked().observe(this, aBoolean -> {
                     fab.setImageResource(R.drawable.circle_outline_24);
                     getAllUsersForThisRestaurant();
                 });
             } else {
-                userViewModel.addPickedRestaurant(mRestaurant).observe(this,aBoolean -> {
+                viewModel.addPickedRestaurant(mRestaurant).observe(this, aBoolean -> {
                     fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
                     getAllUsersForThisRestaurant();
                 });
@@ -144,7 +151,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void pickedStatus() {
-        restaurantViewModel.getCurrentUserPickedStatus(mRestaurant).observe(this, isRestaurantPicked -> {
+        viewModel.getCurrentUserPickedStatus(mRestaurant).observe(this, isRestaurantPicked -> {
             if (isRestaurantPicked) {
                 fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
             } else {
@@ -162,12 +169,12 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initLikeBtn() {
         likeBtn.setOnClickListener(view -> {
-            userViewModel.getCurrentUserLikeStatus(mRestaurant).observe(this, isRestaurantPicked -> {
+            viewModel.getCurrentUserLikeStatus(mRestaurant).observe(this, isRestaurantPicked -> {
                 if (isRestaurantPicked) {
-                    userViewModel.removeRestaurantLiked(mRestaurant);
+                    viewModel.removeRestaurantLiked(mRestaurant);
                     likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
                 } else {
-                    userViewModel.addLikeForThisRestaurant(mRestaurant);
+                    viewModel.addLikeForThisRestaurant(mRestaurant);
                     likeBtn.setImageResource(R.drawable.ic_star_yellow);
                 }
             });
@@ -176,7 +183,7 @@ public class DetailActivity extends AppCompatActivity {
 
 
     public void likeStatus() {
-        userViewModel.getCurrentUserLikeStatus(mRestaurant).observe(this, isRestaurantPicked -> {
+        viewModel.getCurrentUserLikeStatus(mRestaurant).observe(this, isRestaurantPicked -> {
             if (isRestaurantPicked) {
                 likeBtn.setImageResource(R.drawable.ic_star_yellow);
             } else {

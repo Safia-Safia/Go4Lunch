@@ -1,37 +1,25 @@
 package com.safia.go4lunch.controller.activity;
 
-import android.Manifest;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Image;
-import android.net.Uri;
+
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.preference.PreferenceFragmentCompat;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import com.safia.go4lunch.Injection.Injection;
+import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
-import com.safia.go4lunch.databinding.SettingsActivityBinding;
 import com.safia.go4lunch.repository.UserRepository;
-import com.safia.go4lunch.viewmodel.UserViewModel;
+import com.safia.go4lunch.viewmodel.RestaurantAndUserViewModel;
 
-import org.w3c.dom.Text;
-
-import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -39,8 +27,8 @@ public class SettingsActivity extends AppCompatActivity {
     ImageView userProfilePicture;
     Button updateBtn;
     TextView userName;
+    private RestaurantAndUserViewModel restaurantAndUserViewModel;
     private SharedPreferences mPreferences;
-    Switch switchBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
         updateBtn = findViewById(R.id.update_btn);
         userName = findViewById(R.id.username_settings);
         userProfilePicture = findViewById(R.id.profilePicture_setting);
-
+        configureViewModel();
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,13 +48,17 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         userName.setText(UserRepository.getInstance().getCurrentUser().getDisplayName());
-        String userPhotoUrl = (UserViewModel.getInstance().getCurrentUser().getPhotoUrl() != null) ? UserViewModel.getInstance().getCurrentUser().getPhotoUrl().toString() : null;
+        String userPhotoUrl = (restaurantAndUserViewModel.getCurrentUser().getPhotoUrl() != null) ? restaurantAndUserViewModel.getCurrentUser().getPhotoUrl().toString() : null;
         Glide.with(this)
                 .load(userPhotoUrl)
                 .circleCrop()
                 .into(userProfilePicture);
     }
 
+    public void configureViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
+        this.restaurantAndUserViewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantAndUserViewModel.class);
+    }
 
     @Override
     public void onBackPressed() {

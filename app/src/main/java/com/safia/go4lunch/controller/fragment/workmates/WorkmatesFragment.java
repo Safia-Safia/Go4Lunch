@@ -10,33 +10,39 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.safia.go4lunch.Injection.Injection;
+import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
 
 import com.safia.go4lunch.controller.activity.DetailActivity;
 import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
+import com.safia.go4lunch.viewmodel.RestaurantAndUserViewModel;
 
-import com.safia.go4lunch.viewmodel.UserViewModel;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class WorkmatesFragment extends Fragment implements WorkmatesAdapter2.onWorkmatesClickListener {
-    private List<User> userList = new ArrayList<>();
     private RecyclerView mRecyclerView;
-    private final UserViewModel userViewModel = UserViewModel.getInstance();
+    private RestaurantAndUserViewModel viewModel;
     WorkmatesAdapter2 mAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.getActivity().setTitle("Available Workmates");
         View view = inflater.inflate(R.layout.workmates, container, false);
         mRecyclerView = view.findViewById(R.id.recyclerview_userList);
+        configureViewModel();
         getAllUsers();
         return view;
+    }
+
+    public void configureViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(getActivity());
+        this.viewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantAndUserViewModel.class);
     }
 
     private void setUpRecyclerView(List<User> userList) {
@@ -46,7 +52,7 @@ public class WorkmatesFragment extends Fragment implements WorkmatesAdapter2.onW
     }
 
     private void getAllUsers(){
-        userViewModel.getAllUsers().observe(this.getActivity(),this::setUpRecyclerView);
+        viewModel.getAllUsers().observe(this.getActivity(),this::setUpRecyclerView);
 
     }
 

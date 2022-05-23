@@ -1,63 +1,40 @@
 package com.safia.go4lunch.controller.activity;
 
-import static com.safia.go4lunch.controller.fragment.maps.MapsFragment.KEY_RESTAURANT;
-
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import android.os.Parcelable;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.safia.go4lunch.Injection.Injection;
+import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
-import com.safia.go4lunch.controller.fragment.listview.ListViewFragment;
-import com.safia.go4lunch.controller.fragment.listview.RestaurantListAdapter;
-import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
-import com.safia.go4lunch.controller.fragment.workmates.WorkmatesFragment;
-import com.safia.go4lunch.model.Restaurant;
-import com.safia.go4lunch.model.User;
-import com.safia.go4lunch.repository.RestaurantRepository;
-import com.safia.go4lunch.repository.UserRepository;
-import com.safia.go4lunch.viewmodel.UserViewModel;
+import com.safia.go4lunch.viewmodel.RestaurantAndUserViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
-import androidx.core.widget.ListViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private final UserViewModel userViewModel = UserViewModel.getInstance();
+    private RestaurantAndUserViewModel viewModel;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -68,6 +45,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        this.configureViewModel();
         this.configureBottomView();
         this.configureToolBar();
         this.configureDrawerLayout();
@@ -80,19 +58,24 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    public void configureViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
+        this.viewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantAndUserViewModel.class);
+    }
+
     private void loadCurrentUserMail() {
         TextView userMail = headerView.findViewById(R.id.user_email_nav_header);
-        userMail.setText(userViewModel.getCurrentUser().getEmail());
+        userMail.setText(viewModel.getCurrentUser().getEmail());
     }
 
     private void loadUserName() {
         TextView userName = headerView.findViewById(R.id.user_name_nav_header);
-        userName.setText(userViewModel.getCurrentUser().getDisplayName());
+        userName.setText(viewModel.getCurrentUser().getDisplayName());
     }
 
     private void loadCurrentUserPicture() {
         ImageView userPicture = headerView.findViewById(R.id.nav_header_user_picture);
-        String userPhotoUrl = (userViewModel.getCurrentUser().getPhotoUrl() != null) ? userViewModel.getCurrentUser().getPhotoUrl().toString() : null;
+        String userPhotoUrl = (viewModel.getCurrentUser().getPhotoUrl() != null) ? viewModel.getCurrentUser().getPhotoUrl().toString() : null;
         Glide.with(this)
                 .load(userPhotoUrl)
                 .circleCrop()
@@ -156,7 +139,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             Toast.makeText(this, (R.string.parameters), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.activity_main_drawer_logout) {
-            userViewModel.signOut(this);
+            viewModel.signOut(this);
             finish();
         }
 

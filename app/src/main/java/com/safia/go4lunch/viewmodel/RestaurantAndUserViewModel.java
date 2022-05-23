@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseUser;
-import com.safia.go4lunch.controller.fragment.workmates.WorkmatesAdapter2;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.repository.RestaurantRepository;
@@ -15,27 +15,25 @@ import com.safia.go4lunch.repository.UserRepository;
 
 import java.util.List;
 
-public class UserViewModel extends ViewModel {
-    private static volatile UserViewModel instance;
+public class RestaurantAndUserViewModel extends ViewModel {
+   //-- REPOSITORIES
     private final UserRepository userRepository;
-    public UserViewModel() {
-        userRepository = UserRepository.getInstance();
-    }
+    private final RestaurantRepository repository;
 
-    public UserViewModel(UserRepository userRepository){
+    // CONSTRUCTOR
+    public RestaurantAndUserViewModel(RestaurantRepository restaurantRepository, UserRepository userRepository) {
+        this.repository = restaurantRepository;
         this.userRepository = userRepository;
     }
-    public static UserViewModel getInstance() {
-        UserViewModel result = instance;
-        if (result != null) {
-            return result;
-        }
-        synchronized (UserRepository.class) {
-            if (instance == null) {
-                instance = new UserViewModel();
-            }
-            return instance;
-        }
+
+    // -- RESTAURANT USER'S METHODS --
+
+    public LiveData <List<User>> getAllUserForThisRestaurant(Restaurant restaurant){
+        return repository.getAllUsersForThisRestaurant(restaurant);
+    }
+
+    public LiveData<Boolean> getCurrentUserPickedStatus(Restaurant restaurant){
+        return repository.getCurrentUserPickedStatus(restaurant);
     }
 
     public FirebaseUser getCurrentUser() {
@@ -48,6 +46,13 @@ public class UserViewModel extends ViewModel {
 
     public void signOut(Context context) {
         AuthUI.getInstance().signOut(context);
+    }
+
+
+    // -- RESTAURANT REPOSITORY'S METHODS --
+
+    public LiveData<List<Restaurant>> getRestaurants(LatLng location){
+        return repository.getRestaurant(location);
     }
 
     public void addLikeForThisRestaurant(Restaurant restaurant) {

@@ -2,6 +2,7 @@ package com.safia.go4lunch.controller.activity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,8 +13,10 @@ import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.safia.go4lunch.Injection.Injection;
+import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
-import com.safia.go4lunch.viewmodel.UserViewModel;
+import com.safia.go4lunch.viewmodel.RestaurantAndUserViewModel;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +25,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
-    private final UserViewModel userViewModel = UserViewModel.getInstance();
+    private  RestaurantAndUserViewModel viewModel;
     private Button facebookButton, googleButton, twitterButton;
     ProgressBar progressBar;
 
@@ -31,8 +34,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpView();
+        configureViewModel();
         isUserLogged();
         setupListeners();
+    }
+
+    public void configureViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
+        this.viewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantAndUserViewModel.class);
     }
 
     private void setUpView() {
@@ -89,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             // SUCCESS
             if (resultCode == RESULT_OK) {
-                userViewModel.createUser();
+                viewModel.createUser();
                 showToast("Connecté.");
                 startHomeActivity();
                 progressBar.setVisibility(View.INVISIBLE);
@@ -101,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void isUserLogged() {
-        if (userViewModel.isCurrentUserLogged()) {
+        if (viewModel.isCurrentUserLogged()) {
             startHomeActivity();
         } else {
             startActivity(this.getIntent());

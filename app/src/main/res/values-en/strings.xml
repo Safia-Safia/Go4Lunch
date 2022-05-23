@@ -3,11 +3,10 @@
 
     <!-- Main Activity strings -->
     <string name="txt_view_title">GO4LUNCH</string>
-    <string name="txt_view_subtitle">Trouve un restaurant afin de manger avec tes collègues !</string>
-    <string name="button_facebook_text">Continuer avec Facebook</string>
-    <string name="button_google_text">Continuer avec Google</string>
-    <string name="sign_in_with_twitter">Continuer avecTwitter</string>
-
+    <string name="txt_view_subtitle">Find a nice restaurant and invite your co-workers for lunch!</string>
+    <string name="button_facebook_text">Sign in with Facebook</string>
+    <string name="button_google_text">Sign in with Google</string>
+    <string name="sign_in_with_twitter">Sign in with Twitter</string>
 
     <!-- Facebook strings -->
     <string name="facebook_application_id">917570229105855</string>
@@ -15,12 +14,12 @@
 
     <!-- Bottom View strings -->
     <string name="title_activity_home">HomeActivity</string>
-    <string name="title_listview">Liste Restraurant</string>
-    <string name="title_workmates">Collègues</string>
-    <string name="title_maps">Carte</string>
-    <string name="list_view">Liste Restaurant</string>
-    <string name="workmates">Collègues</string>
-    <string name="card_view">Carte</string>
+    <string name="title_listview">List View</string>
+    <string name="title_workmates">WorkMates</string>
+    <string name="title_maps">Card View</string>
+    <string name="list_view">List View</string>
+    <string name="workmates">WorkMates</string>
+    <string name="card_view">Card View</string>
 
     <!-- Menu -->
     <string name="menu_hamburger">menu hamburger</string>
@@ -36,11 +35,11 @@
     <string name="title_activity_detail">DetailActivity</string>
     <string name="large_text">"Material is the metaphor.\n\n"</string>
 
-    <string name="action_settings">Paramètres</string>
+    <string name="action_settings">Settings</string>
     <string name="close">Closed</string>
     <string name="closing_soon">Closing Soon</string>
     <string name="open">Open</string>
-    <string name="unavailable">Indisponible</string>
+    <string name="unavailable">Unavailable</string>
     <string name="title_activity_menu">MenuActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -53,10 +52,10 @@
     <string name="menu_slideshow">Slideshow</string>
 
     <!-- Workmates -->
-    <string name="isJoining"> %s se joint ! </string>
+    <string name="isJoining"> %s is joining </string>
     <string name="restaurant_type_detail">restaurant_type</string>
-    <string name="parameters">Paramètres</string>
-    <string name="your_lunch">Ton restaurant</string>
+    <string name="parameters">Parameters</string>
+    <string name="your_lunch">Your Lunch</string>
 
     <string name="notificationChannel" translatable="false">notificationChannel</string>
     <string name="title_activity_settings">SettingsActivity</string>
@@ -75,7 +74,8 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
-    <string name="display_text_user_list_not_decided">%s n\'a pas encore décidé.</string>
-    <string name="display_text_user_list">%s mange " %s " !</string>
+    <!--WORKMATES FRAGMENT -->
+    <string name="display_text_user_list_not_decided">%s hasn\'t decided yet.</string>
+    <string name="display_text_user_list">%s is eating at %s !</string>
 
 </resources>
