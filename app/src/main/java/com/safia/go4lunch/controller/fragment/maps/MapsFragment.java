@@ -46,7 +46,8 @@ import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.activity.DetailActivity;
 import com.safia.go4lunch.model.Restaurant;
 
-import com.safia.go4lunch.viewmodel.RestaurantAndUserViewModel;
+import com.safia.go4lunch.viewmodel.RestaurantViewModel;
+import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +57,7 @@ import java.util.Map;
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private RestaurantAndUserViewModel viewModel;
+    private RestaurantViewModel viewModel;
     List<Restaurant> restaurantsList = new ArrayList<>();
     private static final String TAG = "MapActivity";
     public static final String KEY_RESTAURANT = "KEY_RESTAURANT";
@@ -73,7 +74,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         configureViewModel();
-        this.getActivity().setTitle("I'm Hungry!");
+        this.getActivity().setTitle(R.string.toolbarTitle);
         setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
@@ -114,7 +115,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     public void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(getActivity());
-        this.viewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantAndUserViewModel.class);
+        this.viewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantViewModel.class);
     }
 
     @Override

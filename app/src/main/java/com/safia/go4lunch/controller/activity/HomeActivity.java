@@ -18,7 +18,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
-import com.safia.go4lunch.viewmodel.RestaurantAndUserViewModel;
+import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -34,7 +34,7 @@ import androidx.navigation.ui.NavigationUI;
 
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private RestaurantAndUserViewModel viewModel;
+    private UserViewModel viewModel;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -60,7 +60,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     public void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.viewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantAndUserViewModel.class);
+        this.viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
     }
 
     private void loadCurrentUserMail() {
@@ -133,7 +133,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.activity_main_drawer_your_lunch) {
-
+            Toast.makeText(this,R.string.parameters,Toast.LENGTH_LONG).show();
         } else if (id == R.id.activity_main_drawer_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);

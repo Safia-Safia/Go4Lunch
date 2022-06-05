@@ -22,17 +22,17 @@ import com.safia.go4lunch.controller.activity.DetailActivity;
 import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
-import com.safia.go4lunch.viewmodel.RestaurantAndUserViewModel;
+import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import java.util.List;
 
 public class WorkmatesFragment extends Fragment implements WorkmatesAdapter2.onWorkmatesClickListener {
     private RecyclerView mRecyclerView;
-    private RestaurantAndUserViewModel viewModel;
+    private UserViewModel viewModel;
     WorkmatesAdapter2 mAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.getActivity().setTitle("Available Workmates");
+        this.getActivity().setTitle(R.string.toolbarTitleWorkmates);
         View view = inflater.inflate(R.layout.workmates, container, false);
         mRecyclerView = view.findViewById(R.id.recyclerview_userList);
         configureViewModel();
@@ -42,7 +42,7 @@ public class WorkmatesFragment extends Fragment implements WorkmatesAdapter2.onW
 
     public void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(getActivity());
-        this.viewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantAndUserViewModel.class);
+        this.viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
     }
 
     private void setUpRecyclerView(List<User> userList) {

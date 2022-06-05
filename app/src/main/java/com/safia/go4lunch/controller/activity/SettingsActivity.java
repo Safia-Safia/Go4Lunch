@@ -18,7 +18,7 @@ import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.repository.UserRepository;
-import com.safia.go4lunch.viewmodel.RestaurantAndUserViewModel;
+import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -27,15 +27,13 @@ public class SettingsActivity extends AppCompatActivity {
     ImageView userProfilePicture;
     Button updateBtn;
     TextView userName;
-    private RestaurantAndUserViewModel restaurantAndUserViewModel;
+    private UserViewModel restaurantAndUserViewModel;
     private SharedPreferences mPreferences;
-
-    @Override
+@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
         mPreferences = getSharedPreferences(PREFERENCE_APP_NAME, MODE_PRIVATE);
-//        switchBtn.findViewById(R.id.switchBtn);
         updateBtn = findViewById(R.id.update_btn);
         userName = findViewById(R.id.username_settings);
         userProfilePicture = findViewById(R.id.profilePicture_setting);
@@ -47,6 +45,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+
         userName.setText(UserRepository.getInstance().getCurrentUser().getDisplayName());
         String userPhotoUrl = (restaurantAndUserViewModel.getCurrentUser().getPhotoUrl() != null) ? restaurantAndUserViewModel.getCurrentUser().getPhotoUrl().toString() : null;
         Glide.with(this)
@@ -57,7 +56,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.restaurantAndUserViewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantAndUserViewModel.class);
+        this.restaurantAndUserViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
     }
 
     @Override

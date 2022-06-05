@@ -16,20 +16,20 @@ import com.safia.go4lunch.model.User;
 import java.util.List;
 
 
-public class WorkmatesPickedList extends RecyclerView.Adapter<WorkmatesPickedList.WorkmatesViewHolder> {
+public class WorkmatesPickedListAdapter extends RecyclerView.Adapter<WorkmatesPickedListAdapter.WorkmatesViewHolder> {
 
     private final List<User> mUser;
 
-    public WorkmatesPickedList(List<User> mUser) {
+    public WorkmatesPickedListAdapter(List<User> mUser) {
         this.mUser = mUser;
     }
 
     @NonNull
     @Override
-    public WorkmatesPickedList.WorkmatesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public WorkmatesPickedListAdapter.WorkmatesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recyclerview_user_list, parent, false);
-        return new WorkmatesPickedList.WorkmatesViewHolder(view);
+        return new WorkmatesPickedListAdapter.WorkmatesViewHolder(view);
     }
 
     @Override

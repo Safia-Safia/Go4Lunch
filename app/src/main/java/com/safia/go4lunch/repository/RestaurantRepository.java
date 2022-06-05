@@ -57,7 +57,7 @@ public class RestaurantRepository {
         }
     }
 
-    public Retrofit createRetrofit() {
+    private Retrofit createRetrofit() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         // set your desired log level
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -165,7 +165,7 @@ public class RestaurantRepository {
         return users;
     }
 
-    public PlaceDetail getRestaurantDetail(Result result) {
+    private PlaceDetail getRestaurantDetail(Result result) {
         Retrofit retrofit = createRetrofit();
         // Get a Retrofit instance and the related endpoints
         MapService mapService2 = retrofit.create(MapService.class);

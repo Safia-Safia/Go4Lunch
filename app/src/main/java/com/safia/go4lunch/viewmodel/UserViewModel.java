@@ -15,26 +15,17 @@ import com.safia.go4lunch.repository.UserRepository;
 
 import java.util.List;
 
-public class RestaurantAndUserViewModel extends ViewModel {
+public class UserViewModel extends ViewModel {
    //-- REPOSITORIES
     private final UserRepository userRepository;
-    private final RestaurantRepository repository;
 
     // CONSTRUCTOR
-    public RestaurantAndUserViewModel(RestaurantRepository restaurantRepository, UserRepository userRepository) {
-        this.repository = restaurantRepository;
+    public UserViewModel(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     // -- RESTAURANT USER'S METHODS --
 
-    public LiveData <List<User>> getAllUserForThisRestaurant(Restaurant restaurant){
-        return repository.getAllUsersForThisRestaurant(restaurant);
-    }
-
-    public LiveData<Boolean> getCurrentUserPickedStatus(Restaurant restaurant){
-        return repository.getCurrentUserPickedStatus(restaurant);
-    }
 
     public FirebaseUser getCurrentUser() {
         return userRepository.getCurrentUser();
@@ -48,12 +39,6 @@ public class RestaurantAndUserViewModel extends ViewModel {
         AuthUI.getInstance().signOut(context);
     }
 
-
-    // -- RESTAURANT REPOSITORY'S METHODS --
-
-    public LiveData<List<Restaurant>> getRestaurants(LatLng location){
-        return repository.getRestaurant(location);
-    }
 
     public void addLikeForThisRestaurant(Restaurant restaurant) {
         userRepository.addRestaurantLike(restaurant);
@@ -82,5 +67,4 @@ public class RestaurantAndUserViewModel extends ViewModel {
     public LiveData<Boolean> getCurrentUserLikeStatus(Restaurant restaurant){
         return userRepository.getLikeStatus(restaurant);
     }
-
 }

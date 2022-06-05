@@ -2,80 +2,47 @@
     <string name="app_name">Go4Lunch</string>
 
     <!-- Main Activity strings -->
-    <string name="txt_view_title">GO4LUNCH</string>
-    <string name="txt_view_subtitle">Find a nice restaurant and invite your co-workers for lunch!</string>
-    <string name="button_facebook_text">Sign in with Facebook</string>
-    <string name="button_google_text">Sign in with Google</string>
-    <string name="sign_in_with_twitter">Sign in with Twitter</string>
+    <string name="txt_view_subtitle">Find a restaurant and eat with your workmates !</string>
+    <string name="button_facebook_text">Sign in Facebook</string>
+    <string name="button_google_text">Sign in Google</string>
+    <string name="sign_in_with_twitter">Sign in Twitter</string>
 
-    <!-- Facebook strings -->
-    <string name="facebook_application_id">917570229105855</string>
-    <string name="fb_login_protocol_scheme">fb917570229105855</string>
 
     <!-- Bottom View strings -->
-    <string name="title_activity_home">HomeActivity</string>
-    <string name="title_listview">List View</string>
-    <string name="title_workmates">WorkMates</string>
-    <string name="title_maps">Card View</string>
-    <string name="list_view">List View</string>
-    <string name="workmates">WorkMates</string>
-    <string name="card_view">Card View</string>
+    <string name="title_listview">List Restaurant</string>
+    <string name="title_workmates">Workmates</string>
+    <string name="title_maps">CardView</string>
 
     <!-- Menu -->
-    <string name="menu_hamburger">menu hamburger</string>
     <string name="sign_out">Sign Out</string>
-    <string name="search">Search</string>
 
-    <!-- Map -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDho4ut-Xsxg7efCchEwhcJe7uKqJANJnM</string>
-    <string name="restaurant_distance">120m</string>
-    <string name="restaurant_name">restaurantName</string>
-    <string name="restaurant_address">restaurant_address</string>
-    <string name="opening_hour">opening_hour</string>
-    <string name="title_activity_detail">DetailActivity</string>
-    <string name="large_text">"Material is the metaphor.\n\n"</string>
+    <!--TOOLBAR-->
+    <string name="toolbarTitle">"I'm Hungry!"</string>
+    <string name="toolbarTitleWorkmates">"Available Workmates"</string>
 
-    <string name="action_settings">Settings</string>
+
+    <!-- Restaurant status -->
     <string name="close">Closed</string>
     <string name="closing_soon">Closing Soon</string>
     <string name="open">Open</string>
     <string name="unavailable">Unavailable</string>
-    <string name="title_activity_menu">MenuActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
 
     <!-- Workmates -->
-    <string name="isJoining"> %s is joining </string>
-    <string name="restaurant_type_detail">restaurant_type</string>
-    <string name="parameters">Parameters</string>
-    <string name="your_lunch">Your Lunch</string>
-
-    <string name="notificationChannel" translatable="false">notificationChannel</string>
+    <string name="isJoining"> %s is joining! </string>
+    <string name="parameters">Settings</string>
+    <string name="your_lunch">Your restaurant</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
-
-    <!--WORKMATES FRAGMENT -->
     <string name="display_text_user_list_not_decided">%s hasn\'t decided yet.</string>
-    <string name="display_text_user_list">%s is eating at %s !</string>
+    <string name="display_text_user_list">%s eating " %s " !</string>
+
+    <!--NOTIFICATION -->
+    <string name="nowherePlace"> "nowhere."</string>
+    <string name="eatingPlace">"You're eating at ""</string>
+    <string name="get_notifications">Receive notification :</string>
+    <string name="call">Call</string>
+    <string name="like">LIKE</string>
+    <string name="website">WEBSITE</string>
+    <string name="update">Update</string>
 
 </resources>

@@ -2,7 +2,7 @@
     <string name="app_name">Go4Lunch</string>
 
     <!-- Main Activity strings -->
-    <string name="txt_view_title">GO4LUNCH</string>
+    <string name="txt_view_title" translatable="false">GO4LUNCH</string>
     <string name="txt_view_subtitle">Trouve un restaurant afin de manger avec tes collègues !</string>
     <string name="button_facebook_text">Continuer avec Facebook</string>
     <string name="button_google_text">Continuer avec Google</string>
@@ -10,51 +10,50 @@
 
 
     <!-- Facebook strings -->
-    <string name="facebook_application_id">917570229105855</string>
-    <string name="fb_login_protocol_scheme">fb917570229105855</string>
+    <string name="facebook_application_id" translatable="false">917570229105855</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb917570229105855</string>
 
     <!-- Bottom View strings -->
-    <string name="title_activity_home">HomeActivity</string>
-    <string name="title_listview">Liste Restraurant</string>
+    <string name="title_activity_home" translatable="false">HomeActivity</string>
+    <string name="title_listview">Liste Restaurant</string>
     <string name="title_workmates">Collègues</string>
     <string name="title_maps">Carte</string>
-    <string name="list_view">Liste Restaurant</string>
-    <string name="workmates">Collègues</string>
-    <string name="card_view">Carte</string>
 
     <!-- Menu -->
-    <string name="menu_hamburger">menu hamburger</string>
+    <string name="menu_hamburger" translatable="false">menu hamburger</string>
     <string name="sign_out">Sign Out</string>
-    <string name="search">Search</string>
+    <string name="search" translatable="false">Search</string>
+    <string name="action_settings" translatable="false">Paramètres</string>
 
     <!-- Map -->
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDho4ut-Xsxg7efCchEwhcJe7uKqJANJnM</string>
-    <string name="restaurant_distance">120m</string>
-    <string name="restaurant_name">restaurantName</string>
-    <string name="restaurant_address">restaurant_address</string>
-    <string name="opening_hour">opening_hour</string>
-    <string name="title_activity_detail">DetailActivity</string>
-    <string name="large_text">"Material is the metaphor.\n\n"</string>
+    <string name="title_activity_detail" translatable="false">DetailActivity</string>
+    <string name="large_text" translatable="false">"Material is the metaphor.\n\n"</string>
 
-    <string name="action_settings">Paramètres</string>
-    <string name="close">Closed</string>
-    <string name="closing_soon">Closing Soon</string>
-    <string name="open">Open</string>
+    <!--TOOLBAR-->
+    <string name="toolbarTitle">"J'ai faim !"</string>
+    <string name="toolbarTitleWorkmates">"Collègues disponibles"</string>
+
+
+    <!-- Restaurant status -->
+    <string name="close">Fermé </string>
+    <string name="closing_soon">Ferme bientôt </string>
+    <string name="open">Ouvert</string>
     <string name="unavailable">Indisponible</string>
-    <string name="title_activity_menu">MenuActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="title_activity_menu" translatable="false">MenuActivity</string>
+    <string name="navigation_drawer_open"  translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="nav_header_title" translatable="false">Android Studio</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc" translatable="false">Navigation header</string>
+
+    <string name="menu_home" translatable="false">Home</string>
+    <string name="menu_gallery" translatable="false">Gallery</string>
+    <string name="menu_slideshow" translatable="false">Slideshow</string>
 
     <!-- Workmates -->
     <string name="isJoining"> %s se joint ! </string>
-    <string name="restaurant_type_detail">restaurant_type</string>
     <string name="parameters">Paramètres</string>
     <string name="your_lunch">Ton restaurant</string>
 
@@ -62,20 +61,19 @@
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="messages_header" translatable="false">Messages</string>
+    <string name="sync_header" translatable="false">Sync</string>
 
     <string name="display_text_user_list_not_decided">%s n\'a pas encore décidé.</string>
     <string name="display_text_user_list">%s mange " %s " !</string>
+
+    <!--NOTIFICATION -->
+    <string name="nowherePlace"> "nul part."</string>
+    <string name="eatingPlace">"Vous manger au "</string>
+    <string name="get_notifications">Recevoir les notifications :</string>
+    <string name="call">Appeler</string>
+    <string name="like">J\'aime</string>
+    <string name="website">Site Web</string>
+    <string name="update">Valider.</string>
 
 </resources>

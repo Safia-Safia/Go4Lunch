@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="10dp">
 
     <ImageView
@@ -20,7 +21,8 @@
         app:layout_constraintEnd_toStartOf="@+id/restaurant_imageView"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginEnd="5dp"
-        android:text="@string/restaurant_distance"/>
+        tools:text="120m"
+        />
 
     <TextView
         android:id="@+id/restaurantName_textView"
@@ -33,7 +35,7 @@
         android:textStyle="bold"
         android:textSize="15sp"
         android:textColor="@color/black"
-        android:text="@string/restaurant_name"/>
+        tools:text="Le Paradis du fruit"/>
 
     <TextView
         android:id="@+id/restaurantAddress_textView"
@@ -43,7 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/restaurantName_textView"
         android:layout_marginTop="10dp"
-        android:text="@string/restaurant_address"/>
+        tools:text="3 place de la bastille"/>
 
     <TextView
         android:id="@+id/restaurant_openings_hour_textView"
@@ -70,7 +72,7 @@
         android:id="@+id/workmates_eating_here_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="()"
+        tools:text="()"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="5dp"
         app:layout_constraintEnd_toStartOf="@+id/restaurant_imageView"

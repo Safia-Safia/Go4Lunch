@@ -28,8 +28,6 @@ public class NotificationService extends FirebaseMessagingService {
     public static final String NOTIFICATION_TAG = "GO4LUNCH_NOTIFICATION_TAG";
     UserRepository userRepository = UserRepository.getInstance();
     String restaurantName;
-    Switch switchBtn ;
-
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
@@ -49,7 +47,7 @@ public class NotificationService extends FirebaseMessagingService {
             User user = task.getResult().toObject(User.class);
             if (user.getRestaurantPicked() != null) {
                 restaurantName = user.getRestaurantPicked().getName();
-            } else restaurantName = "nowhere";
+            } else restaurantName = getString(R.string.nowherePlace);
             createNotification(notification);
         });
     }
@@ -59,9 +57,8 @@ public class NotificationService extends FirebaseMessagingService {
         Intent intent = new Intent(this, DetailActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        // Create a Channel (Android 8)
         String channelId = getString(R.string.notificationChannel);
-        String message = "You are eating at " + restaurantName + ".";
+        String message = getString(R.string.eatingPlace) + restaurantName + ".";
 
         // Build a Notification object
         NotificationCompat.Builder notificationBuilder =
@@ -83,8 +80,6 @@ public class NotificationService extends FirebaseMessagingService {
 
     private void sendVisualNotification(RemoteMessage.Notification notification) {
         fetchUsers(notification);
-
-
     }
 
     @Override

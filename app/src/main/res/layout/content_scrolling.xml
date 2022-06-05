@@ -40,7 +40,7 @@
                         android:id="@+id/restaurant_name_details"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="restaurant_Name"
+                        tools:text="Le Paradis du fruit"
                         android:textColor="@color/white" />
 
                     <androidx.appcompat.widget.AppCompatRatingBar
@@ -58,25 +58,25 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/restaurant_name_details"
                         android:maxLines="1"
-                        android:text="@string/restaurant_type_detail"
+                        tools:text="fruit"
                         android:textColor="@color/white" />
                     <TextView
                         android:id="@+id/tiret"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/restaurant_name_details"
-                        android:layout_toRightOf="@+id/restaurant_type_detail"
+                        android:layout_toEndOf="@+id/restaurant_type_detail"
                         android:maxLines="1"
-                        android:text=" - "
+                        tools:text=" - "
                         android:textColor="@color/white" />
                     <TextView
                         android:id="@+id/restaurant_adress_detail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/restaurant_name_details"
-                        android:layout_toRightOf="@+id/tiret"
+                        android:layout_toEndOf="@+id/tiret"
                         android:maxLines="1"
-                        android:text="@string/restaurant_address"
+                        tools:text="3 Place de la Bastille"
                         android:textColor="@color/white" />
 
                 </RelativeLayout>
@@ -113,7 +113,7 @@
                             android:id="@+id/phone_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Call"
+                            android:text="@string/call"
                             android:textColor="#D65637"
                             android:layout_below="@id/phone_button"
                             android:layout_marginTop="15dp"/>
@@ -139,10 +139,10 @@
                             android:id="@+id/like_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="LIKE"
                             android:layout_below="@id/like_button"
-                            android:textColor="#D65637"
-                            android:layout_marginTop="15dp"/>
+                            android:layout_marginTop="15dp"
+                            android:text="@string/like"
+                            android:textColor="#D65637" />
 
                     </RelativeLayout>
 
@@ -165,7 +165,7 @@
                             android:id="@+id/website_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="WEBSITE"
+                            android:text="@string/website"
                             android:textColor="#D65637"
                             android:layout_below="@id/website_button"
                             android:layout_marginTop="15dp"/>

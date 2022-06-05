@@ -24,12 +24,13 @@ import android.widget.Toast;
 import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
-import com.safia.go4lunch.controller.fragment.workmates.WorkmatesPickedList;
+import com.safia.go4lunch.controller.fragment.workmates.WorkmatesPickedListAdapter;
 import com.safia.go4lunch.databinding.ActivityDetailBinding;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
-import com.safia.go4lunch.viewmodel.RestaurantAndUserViewModel;
+import com.safia.go4lunch.viewmodel.RestaurantViewModel;
+import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import java.util.List;
 
@@ -39,11 +40,12 @@ public class DetailActivity extends AppCompatActivity {
     public  ImageButton phoneBtn, likeBtn, websiteBtn;
     public Restaurant mRestaurant;
     public static FloatingActionButton fab;
-    private RestaurantAndUserViewModel viewModel;
+    private RestaurantViewModel restaurantViewModel;
+    private UserViewModel userViewModel;
     public static final double MAX_STAR = 3;
     public static final double MAX_RATING = 5;
     RatingBar ratingBar;
-    WorkmatesPickedList adapter;
+    WorkmatesPickedListAdapter adapter;
     private RecyclerView mRecyclerView;
 
     @Override
@@ -68,7 +70,8 @@ public class DetailActivity extends AppCompatActivity {
 
     public void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.viewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantAndUserViewModel.class);
+        this.restaurantViewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantViewModel.class);
+        this.userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
     }
 
     @Override
@@ -101,13 +104,13 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setUpRecyclerView(List<User> userList) {
-        adapter = new WorkmatesPickedList(userList);
+        adapter = new WorkmatesPickedListAdapter(userList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(adapter);
     }
 
     private void getAllUsersForThisRestaurant() {
-        viewModel.getAllUserForThisRestaurant(mRestaurant).observe(this, this::setUpRecyclerView);
+        restaurantViewModel.getAllUserForThisRestaurant(mRestaurant).observe(this, this::setUpRecyclerView);
     }
 
     private void initPhoneBtn() {
@@ -135,14 +138,14 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initFabButton() {
-        fab.setOnClickListener(view -> viewModel.getCurrentUserPickedStatus(mRestaurant).observe(this, isRestaurantPicked -> {
+        fab.setOnClickListener(view -> restaurantViewModel.getCurrentUserPickedStatus(mRestaurant).observe(this, isRestaurantPicked -> {
             if (isRestaurantPicked) {
-                viewModel.removeRestaurantPicked().observe(this, aBoolean -> {
+                userViewModel.removeRestaurantPicked().observe(this, aBoolean -> {
                     fab.setImageResource(R.drawable.circle_outline_24);
                     getAllUsersForThisRestaurant();
                 });
             } else {
-                viewModel.addPickedRestaurant(mRestaurant).observe(this, aBoolean -> {
+                userViewModel.addPickedRestaurant(mRestaurant).observe(this, aBoolean -> {
                     fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
                     getAllUsersForThisRestaurant();
                 });
@@ -151,7 +154,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void pickedStatus() {
-        viewModel.getCurrentUserPickedStatus(mRestaurant).observe(this, isRestaurantPicked -> {
+        restaurantViewModel.getCurrentUserPickedStatus(mRestaurant).observe(this, isRestaurantPicked -> {
             if (isRestaurantPicked) {
                 fab.setImageResource(R.drawable.ic_baseline_check_circle_24);
             } else {
@@ -168,22 +171,20 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initLikeBtn() {
-        likeBtn.setOnClickListener(view -> {
-            viewModel.getCurrentUserLikeStatus(mRestaurant).observe(this, isRestaurantPicked -> {
-                if (isRestaurantPicked) {
-                    viewModel.removeRestaurantLiked(mRestaurant);
-                    likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
-                } else {
-                    viewModel.addLikeForThisRestaurant(mRestaurant);
-                    likeBtn.setImageResource(R.drawable.ic_star_yellow);
-                }
-            });
-        });
+        likeBtn.setOnClickListener(view -> userViewModel.getCurrentUserLikeStatus(mRestaurant).observe(this, isRestaurantPicked -> {
+            if (isRestaurantPicked) {
+                userViewModel.removeRestaurantLiked(mRestaurant);
+                likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
+            } else {
+                userViewModel.addLikeForThisRestaurant(mRestaurant);
+                likeBtn.setImageResource(R.drawable.ic_star_yellow);
+            }
+        }));
     }
 
 
     public void likeStatus() {
-        viewModel.getCurrentUserLikeStatus(mRestaurant).observe(this, isRestaurantPicked -> {
+        userViewModel.getCurrentUserLikeStatus(mRestaurant).observe(this, isRestaurantPicked -> {
             if (isRestaurantPicked) {
                 likeBtn.setImageResource(R.drawable.ic_star_yellow);
             } else {

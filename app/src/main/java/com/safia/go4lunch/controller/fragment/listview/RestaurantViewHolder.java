@@ -4,7 +4,6 @@ import static com.safia.go4lunch.controller.fragment.listview.RestaurantListAdap
 import static com.safia.go4lunch.controller.fragment.listview.RestaurantListAdapter.MAX_STAR;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -17,7 +16,6 @@ import com.safia.go4lunch.R;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.placeDetailResult.OpeningHours;
 import com.safia.go4lunch.model.placeDetailResult.Period;
-import com.safia.go4lunch.viewmodel.RestaurantViewModel;
 
 import java.text.MessageFormat;
 import java.text.ParseException;

@@ -16,7 +16,7 @@ import com.firebase.ui.auth.IdpResponse;
 import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
-import com.safia.go4lunch.viewmodel.RestaurantAndUserViewModel;
+import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +25,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
-    private  RestaurantAndUserViewModel viewModel;
+    private UserViewModel viewModel;
     private Button facebookButton, googleButton, twitterButton;
     ProgressBar progressBar;
 
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.viewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantAndUserViewModel.class);
+        this.viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
     }
 
     private void setUpView() {
@@ -64,9 +64,7 @@ public class MainActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.VISIBLE);
                 }
         );
-        twitterButton.setOnClickListener(view -> {
-                    signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.TwitterBuilder().build()));
-                }
+        twitterButton.setOnClickListener(view -> signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.TwitterBuilder().build()))
         );
     }
 
