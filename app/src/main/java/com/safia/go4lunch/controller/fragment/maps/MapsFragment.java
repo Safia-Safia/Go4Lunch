@@ -59,7 +59,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private RestaurantViewModel viewModel;
     List<Restaurant> restaurantsList = new ArrayList<>();
-    private static final String TAG = "MapActivity";
+    public static final String TAG = "MapActivity";
     public static final String KEY_RESTAURANT = "KEY_RESTAURANT";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;

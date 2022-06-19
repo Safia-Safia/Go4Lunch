@@ -171,8 +171,8 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initLikeBtn() {
-        likeBtn.setOnClickListener(view -> userViewModel.getCurrentUserLikeStatus(mRestaurant).observe(this, isRestaurantPicked -> {
-            if (isRestaurantPicked) {
+        likeBtn.setOnClickListener(view -> userViewModel.getCurrentUserLikeStatus(mRestaurant).observe(this, isRestaurantLiked -> {
+            if (isRestaurantLiked) {
                 userViewModel.removeRestaurantLiked(mRestaurant);
                 likeBtn.setImageResource(R.drawable.ic_baseline_star_border_24);
             } else {

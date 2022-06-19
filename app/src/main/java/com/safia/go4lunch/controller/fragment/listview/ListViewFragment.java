@@ -67,7 +67,6 @@ public class ListViewFragment extends Fragment implements RestaurantListAdapter.
         this.viewModel = ViewModelProviders.of(this, viewModelFactory).get(RestaurantViewModel.class);
     }
 
-    private static final String TAG = "MapActivity";
     FusedLocationProviderClient fusedLocationProviderClient;
 
     public void getDeviceLocation() {
@@ -83,7 +82,7 @@ public class ListViewFragment extends Fragment implements RestaurantListAdapter.
                 }
             });
         } catch (SecurityException e) {
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
+            Log.e(MapsFragment.TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
     }
 

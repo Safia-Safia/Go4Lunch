@@ -18,6 +18,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
+import com.safia.go4lunch.notification.WorkManager;
 import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import androidx.annotation.NonNull;
@@ -54,8 +55,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         this.loadCurrentUserMail();
         this.loadUserName();
         this.loadCurrentUserPicture();
-
-
     }
 
     public void configureViewModel() {
@@ -104,7 +103,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     // 2 - Configure Drawer Layout
     private void configureDrawerLayout() {
-        this.drawerLayout = (DrawerLayout) findViewById(R.id.container);
+        this.drawerLayout = findViewById(R.id.container);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();

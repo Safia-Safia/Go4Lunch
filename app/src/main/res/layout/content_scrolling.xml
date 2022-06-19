@@ -40,8 +40,8 @@
                         android:id="@+id/restaurant_name_details"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Le Paradis du fruit"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/white"
+                        tools:text="Le Paradis du fruit" />
 
                     <androidx.appcompat.widget.AppCompatRatingBar
                         android:id="@+id/rating_detail"
@@ -49,7 +49,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/restaurant_name_details"
-                        android:numStars="3"
+                        tools:numStars="3"
                         app:tint="#FFD53B" />
 
                     <TextView

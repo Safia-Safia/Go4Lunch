@@ -16,6 +16,7 @@ import com.firebase.ui.auth.IdpResponse;
 import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
+import com.safia.go4lunch.notification.WorkManager;
 import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import java.util.Collections;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         configureViewModel();
         isUserLogged();
         setupListeners();
+        WorkManager.scheduleWork();
     }
 
     public void configureViewModel() {

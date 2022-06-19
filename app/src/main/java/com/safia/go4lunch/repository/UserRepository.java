@@ -1,13 +1,17 @@
 package com.safia.go4lunch.repository;
 
 
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -132,7 +136,7 @@ public class UserRepository {
             getUsersCollection().document(user.getUid()).set(user);
             result.postValue(true);
         });
-        return  result;
+        return result;
     }
 
     //- ALL USERS IN THE APP --
@@ -152,8 +156,17 @@ public class UserRepository {
     }
 
     //HomeActivity
-    public boolean getUserRestaurant() {
-        return true;
+    public LiveData<Restaurant> getUserRestaurant() {
+        MutableLiveData<Restaurant> result = new MutableLiveData<>();
+        getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
+            User user = task.getResult().toObject(User.class);
+            if (user.getRestaurantPicked() != null) {
+                result.postValue(user.getRestaurantPicked());
+            }
+            Log.e("RESULT", user.getRestaurantPicked() +"");
+
+        });
+        return result;
     }
 
 }

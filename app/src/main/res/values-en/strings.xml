@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Go4Lunch</string>
 
     <!-- Main Activity strings -->
     <string name="txt_view_subtitle">Find a restaurant and eat with your workmates !</string>
@@ -12,9 +11,6 @@
     <string name="title_listview">List Restaurant</string>
     <string name="title_workmates">Workmates</string>
     <string name="title_maps">CardView</string>
-
-    <!-- Menu -->
-    <string name="sign_out">Sign Out</string>
 
     <!--TOOLBAR-->
     <string name="toolbarTitle">"I'm Hungry!"</string>
@@ -39,6 +35,7 @@
     <!--NOTIFICATION -->
     <string name="nowherePlace"> "nowhere."</string>
     <string name="eatingPlace">"You're eating at ""</string>
+    <string name="notification_title">Today lunch :</string>
     <string name="get_notifications">Receive notification :</string>
     <string name="call">Call</string>
     <string name="like">LIKE</string>
