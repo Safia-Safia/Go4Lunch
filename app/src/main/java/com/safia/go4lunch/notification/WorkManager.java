@@ -1,77 +1,68 @@
 package com.safia.go4lunch.notification;
 
 
+import static com.safia.go4lunch.repository.RestaurantRepository.USER_PICKED;
+import static com.safia.go4lunch.repository.UserRepository.COLLECTION_USERS;
 import static com.safia.go4lunch.repository.UserRepository.getInstance;
 
-import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.work.Constraints;
-import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkRequest;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.google.firebase.messaging.RemoteMessage;
-import com.google.gson.Gson;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.activity.DetailActivity;
-import com.safia.go4lunch.controller.fragment.listview.ListViewFragment;
+import com.safia.go4lunch.controller.activity.HomeActivity;
 import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
+import com.safia.go4lunch.repository.RestaurantRepository;
 import com.safia.go4lunch.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class WorkManager extends Worker {
-    private final static String WORK_NAME = "WORK_NAME";
     public static final int NOTIFICATION_ID = 7;
     public static final String NOTIFICATION_TAG = "GO4LUNCH_NOTIFICATION_TAG";
     private static final String NOTIFICATION_CHANNEL = "NOTIFICATION_CHANNEL";
+    public static final String GO_4_LUNCH_MESSAGES = "GO4LUNCH MESSAGES";
     UserRepository userRepository = UserRepository.getInstance();
-    String restaurantName, restaurantAddress;
-    public Restaurant mRestaurant;
-    private SharedPreferences mPreferences;
+    RestaurantRepository restaurantRepository = RestaurantRepository.getInstance();
+    String message, users;
+    Intent intent;
+    Context context;
+
 
     public WorkManager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 
-    private void createNotification(Restaurant restaurant) {
-
-        if (mRestaurant != null){
-            // Create an Intent that will be shown when user will click on the WorkManager
-            Intent intent = new Intent(this.getApplicationContext(), DetailActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
-        }else {
-            Intent intent = new Intent(this.getApplicationContext(), ListViewFragment.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
-            Toast.makeText(this.getApplicationContext(), "Où manger ce midi ?", Toast.LENGTH_SHORT).show();
-        }
+    public void createNotification(String message, Intent intent) {
+        PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
 
         String channelId = NOTIFICATION_CHANNEL;
-        String message = getApplicationContext().getString(R.string.eatingPlace) + restaurantName + ", \n" + restaurantAddress+ ".";
 
         // Build a WorkManager object
         NotificationCompat.Builder notificationBuilder =
@@ -87,12 +78,11 @@ public class WorkManager extends Worker {
         Log.e("Notification message ", message);
 
 
-
         // Support Version >= Android 8
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence channelName = "GO4LUNCH MESSAGES";
+            CharSequence channelName = GO_4_LUNCH_MESSAGES;
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel mChannel = new NotificationChannel(channelId, channelName, importance);
             notificationManager.createNotificationChannel(mChannel);
@@ -106,29 +96,70 @@ public class WorkManager extends Worker {
         userRepository.getUsersCollection().document(Objects.requireNonNull(getInstance()
                 .getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
-            if (user.getRestaurantPicked() != null) {
-                // marchepasuserRepository.getUserRestaurant().observe((LifecycleOwner) this.getApplicationContext(), restaurant -> mRestaurant = restaurant);
-
-                Log.e("Restaurant picked " ,mRestaurant +"" );
-                restaurantName = user.getRestaurantPicked().getName();
-                restaurantAddress = user.getRestaurantPicked().getAddress();
-            } else restaurantName = getApplicationContext().getString(R.string.nowherePlace);
-            createNotification(mRestaurant);
+            if (user.getRestaurantPicked() == null) {
+                intent = new Intent(this.getApplicationContext(), HomeActivity.class);
+                message = getApplicationContext().getString(R.string.nowherePlace);
+                createNotification(message, intent);
+            } else {
+                if (user.getRestaurantPicked() != null) {
+                    restaurantRepository.getRestaurantCollection().document(user.getRestaurantPicked().getRestaurantId()).collection(USER_PICKED).get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                List<String> userList = new ArrayList<>();
+                                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
+                                    User userJoining = documentSnapshot.toObject(User.class);
+                                    userList.add(userJoining.getUsername());
+                                    userList.remove(userRepository.getCurrentUser().getDisplayName());
+                                    users = TextUtils.join(", ", userList.toArray());
+                                }
+                                middayNotification(user.getRestaurantPicked(), users);
+                            });
+                }
+            }
         });
     }
 
-    //Dans le MainActivity appeler la methode scheduleWork
+    private void middayNotification(@Nullable Restaurant restaurant, @Nullable String usersJoining) {
+        // Create an Intent that will be shown when user will click on the WorkManager
+        intent = new Intent(this.getApplicationContext(), DetailActivity.class);
+        intent.putExtra(MapsFragment.KEY_RESTAURANT, restaurant);
+
+        if (usersJoining.length() == 0) {
+            message =  String.format(getApplicationContext().getString(R.string.eatingWithNobody),restaurant.getName(), restaurant.getAddress());
+        } else {
+            message = String.format(getApplicationContext().getString(R.string.eatingWithSomebody), restaurant.getName(),restaurant.getAddress(),usersJoining);
+        }
+        createNotification(message, intent);
+    }
+
     public static void scheduleWork() {
+        // -- Time now --
+        Calendar timeNow = Calendar.getInstance();
+        int hourNow = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        int minuteNow = Calendar.getInstance().get(Calendar.MINUTE);
+        long scheduleTime;
+        Calendar midday = Calendar.getInstance();
+        //-- Set time needed --
+        midday.set(Calendar.HOUR_OF_DAY, 23);
+        midday.set(Calendar.MINUTE, 42);
+        midday.set(Calendar.SECOND, 30);
+        //-- If it's midday start notification --
+        if (hourNow >= 23 && minuteNow > 50) {
+            midday.add(Calendar.DATE, 1);
+        }
+        //-- Else calculate the delay between currentHour and next midday --
+        scheduleTime = midday.getTimeInMillis() - timeNow.getTimeInMillis();
+
         Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .setRequiredNetworkType(NetworkType.UNMETERED)
+                .setRequiresCharging(true)
                 .build();
 
-        Date currentTime = Calendar.getInstance().getTime();
-      //  Date midday =
+        //-- Delay work request --
         WorkRequest request
                 = new OneTimeWorkRequest
                 .Builder(WorkManager.class)
                 .setConstraints(constraints)
+              //  .setInitialDelay(scheduleTime, TimeUnit.MILLISECONDS)
                 .build();
 
         androidx.work.WorkManager.getInstance()
@@ -138,7 +169,6 @@ public class WorkManager extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        //fetchUser, les infos du restaurant choisit et lancer la notification
         fetchUsers();
         return Result.success();
     }

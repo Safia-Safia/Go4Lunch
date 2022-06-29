@@ -6,6 +6,8 @@
     <string name="button_google_text">Sign in Google</string>
     <string name="sign_in_with_twitter">Sign in Twitter</string>
 
+    <!--HOME ACTIVITY -->
+    <string name="hasnt_decided">Hasn\'t decided yet</string>
 
     <!-- Bottom View strings -->
     <string name="title_listview">List Restaurant</string>
@@ -33,8 +35,9 @@
     <string name="display_text_user_list">%s eating " %s " !</string>
 
     <!--NOTIFICATION -->
-    <string name="nowherePlace"> "nowhere."</string>
-    <string name="eatingPlace">"You're eating at ""</string>
+    <string name="nowherePlace"> "It's time for lunch, where are you going ?"</string>
+    <string name="eatingWithSomebody">"You're eating at " %1s", %1s with %1s. </string>
+    <string name="eatingWithNobody">"You're eating at " %1s ", %1s with nobody.</string>
     <string name="notification_title">Today lunch :</string>
     <string name="get_notifications">Receive notification :</string>
     <string name="call">Call</string>

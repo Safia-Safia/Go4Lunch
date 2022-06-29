@@ -1,5 +1,7 @@
 package com.safia.go4lunch.controller.activity;
 
+import static com.safia.go4lunch.repository.UserRepository.getInstance;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,7 +20,11 @@ import com.google.android.material.navigation.NavigationView;
 import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
+import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
+import com.safia.go4lunch.model.Restaurant;
+import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.notification.WorkManager;
+import com.safia.go4lunch.repository.UserRepository;
 import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import androidx.annotation.NonNull;
@@ -33,6 +39,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import java.util.Objects;
+
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private UserViewModel viewModel;
@@ -40,6 +48,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private View headerView;
+    UserRepository userRepository = UserRepository.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +142,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.activity_main_drawer_your_lunch) {
-            Toast.makeText(this,R.string.parameters,Toast.LENGTH_LONG).show();
+            getLunch();
         } else if (id == R.id.activity_main_drawer_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
@@ -141,10 +151,23 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             viewModel.signOut(this);
             finish();
         }
-
         this.drawerLayout.closeDrawer(GravityCompat.START);
-
         return true;
+    }
+
+    private void getLunch() {
+        userRepository.getUsersCollection().document(Objects.requireNonNull(getInstance()
+                .getCurrentUserUID())).get().addOnCompleteListener(task -> {
+            User user = task.getResult().toObject(User.class);
+            Restaurant restaurant = user.getRestaurantPicked();
+            if (user.getRestaurantPicked() != null) {
+                Intent intent = new Intent(this.getApplicationContext(), DetailActivity.class);
+                intent.putExtra(MapsFragment.KEY_RESTAURANT, restaurant);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, R.string.hasnt_decided, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 

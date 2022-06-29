@@ -130,11 +130,13 @@ public class UserRepository {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
         getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
-            RestaurantRepository.getInstance().getRestaurantCollection().document(user.getRestaurantPicked()
-                    .getRestaurantId()).collection(RestaurantRepository.USER_PICKED).document(user.uid).delete();
-            user.setRestaurantPicked(null);
-            getUsersCollection().document(user.getUid()).set(user);
-            result.postValue(true);
+            if (user != null && user.getRestaurantPicked() != null){
+                RestaurantRepository.getInstance().getRestaurantCollection().document(user.getRestaurantPicked()
+                        .getRestaurantId()).collection(RestaurantRepository.USER_PICKED).document(user.uid).delete();
+                user.setRestaurantPicked(null);
+                getUsersCollection().document(user.getUid()).set(user);
+                result.postValue(true);
+            }
         });
         return result;
     }
@@ -153,20 +155,6 @@ public class UserRepository {
             }
         });
         return users;
-    }
-
-    //HomeActivity
-    public LiveData<Restaurant> getUserRestaurant() {
-        MutableLiveData<Restaurant> result = new MutableLiveData<>();
-        getUsersCollection().document(Objects.requireNonNull(getInstance().getCurrentUserUID())).get().addOnCompleteListener(task -> {
-            User user = task.getResult().toObject(User.class);
-            if (user.getRestaurantPicked() != null) {
-                result.postValue(user.getRestaurantPicked());
-            }
-            Log.e("RESULT", user.getRestaurantPicked() +"");
-
-        });
-        return result;
     }
 
 }

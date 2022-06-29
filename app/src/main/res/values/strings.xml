@@ -31,6 +31,8 @@
     <!-- HOME ACTIVITY -->
     <string name="navigation_drawer_open"  translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="large_text" translatable="false"> </string>
+    <string name="hasnt_decided">Pas encore choisi</string>
 
     <!-- Workmates -->
     <string name="isJoining"> %s se joint ! </string>
@@ -43,8 +45,9 @@
     <string name="display_text_user_list">%s mange " %s " !</string>
 
     <!--NOTIFICATION -->
-    <string name="nowherePlace"> "nul part."</string>
-    <string name="eatingPlace">"Vous manger au "</string>
+    <string name="nowherePlace"> "Il est midi ! Où allez vous ? "</string>
+    <string name="eatingWithNobody">"Vous manger seul au %1s, %1s. "</string>
+    <string name="eatingWithSomebody">"Vous manger au " %1s ", 1%s avec %1s.</string>
     <string name="notification_title">Repas du jour :</string>
     <string name="get_notifications">Recevoir les notifications :</string>
     <string name="call">Appeler</string>
