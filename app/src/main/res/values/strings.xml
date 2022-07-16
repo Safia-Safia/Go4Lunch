@@ -17,6 +17,10 @@
     <string name="title_listview">Liste Restaurant</string>
     <string name="title_workmates">Collègues</string>
     <string name="title_maps">Carte</string>
+    <string name="open_until">"Ouvert jusqu'à %d:%d "</string>
+    <string name="always_open">Ouvert 24/24h</string>
+    <string name="opening_soon">Ouvre bientôt </string>
+    <string name="distance_meters" translatable="false"> "%d m"</string>
 
     <!--TOOLBAR-->
     <string name="toolbarTitle">"J'ai faim !"</string>

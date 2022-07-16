@@ -37,12 +37,17 @@
     <!--NOTIFICATION -->
     <string name="nowherePlace"> "It's time for lunch, where are you going ?"</string>
     <string name="eatingWithSomebody">"You're eating at " %1s", %1s with %1s. </string>
-    <string name="eatingWithNobody">"You're eating at " %1s ", %1s with nobody.</string>
+    <string name="eatingWithNobody">"You're eating alone at " %1s ", %1s.</string>
     <string name="notification_title">Today lunch :</string>
     <string name="get_notifications">Receive notification :</string>
     <string name="call">Call</string>
     <string name="like">LIKE</string>
     <string name="website">WEBSITE</string>
     <string name="update">Update</string>
+
+    <!--VIEW HOLDER -->
+    <string name="open_until">"Open Until %02d:%02d "</string>
+    <string name="always_open">Open day &amp; night</string>
+    <string name="opening_soon">opening soon</string>
 
 </resources>

@@ -1,8 +1,8 @@
 package com.safia.go4lunch.notification;
 
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.safia.go4lunch.repository.RestaurantRepository.USER_PICKED;
-import static com.safia.go4lunch.repository.UserRepository.COLLECTION_USERS;
 import static com.safia.go4lunch.repository.UserRepository.getInstance;
 
 import android.app.NotificationChannel;
@@ -10,6 +10,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.text.TextUtils;
@@ -37,7 +38,6 @@ import com.safia.go4lunch.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -47,11 +47,9 @@ public class WorkManager extends Worker {
     public static final String NOTIFICATION_TAG = "GO4LUNCH_NOTIFICATION_TAG";
     private static final String NOTIFICATION_CHANNEL = "NOTIFICATION_CHANNEL";
     public static final String GO_4_LUNCH_MESSAGES = "GO4LUNCH MESSAGES";
+
     UserRepository userRepository = UserRepository.getInstance();
     RestaurantRepository restaurantRepository = RestaurantRepository.getInstance();
-    String message, users;
-    Intent intent;
-    Context context;
 
 
     public WorkManager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
@@ -97,8 +95,8 @@ public class WorkManager extends Worker {
                 .getCurrentUserUID())).get().addOnCompleteListener(task -> {
             User user = task.getResult().toObject(User.class);
             if (user.getRestaurantPicked() == null) {
-                intent = new Intent(this.getApplicationContext(), HomeActivity.class);
-                message = getApplicationContext().getString(R.string.nowherePlace);
+                Intent intent = new Intent(this.getApplicationContext(), HomeActivity.class);
+                String message = getApplicationContext().getString(R.string.nowherePlace);
                 createNotification(message, intent);
             } else {
                 if (user.getRestaurantPicked() != null) {
@@ -108,9 +106,9 @@ public class WorkManager extends Worker {
                                 for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
                                     User userJoining = documentSnapshot.toObject(User.class);
                                     userList.add(userJoining.getUsername());
-                                    userList.remove(userRepository.getCurrentUser().getDisplayName());
-                                    users = TextUtils.join(", ", userList.toArray());
                                 }
+                                userList.remove(userRepository.getCurrentUser().getDisplayName());
+                                String users = TextUtils.join(", ", userList.toArray());
                                 middayNotification(user.getRestaurantPicked(), users);
                             });
                 }
@@ -118,10 +116,11 @@ public class WorkManager extends Worker {
         });
     }
 
-    private void middayNotification(@Nullable Restaurant restaurant, @Nullable String usersJoining) {
+    private void middayNotification(Restaurant restaurant, String usersJoining) {
         // Create an Intent that will be shown when user will click on the WorkManager
-        intent = new Intent(this.getApplicationContext(), DetailActivity.class);
+        Intent intent = new Intent(this.getApplicationContext(), DetailActivity.class);
         intent.putExtra(MapsFragment.KEY_RESTAURANT, restaurant);
+        String message;
 
         if (usersJoining.length() == 0) {
             message =  String.format(getApplicationContext().getString(R.string.eatingWithNobody),restaurant.getName(), restaurant.getAddress());
@@ -139,9 +138,9 @@ public class WorkManager extends Worker {
         long scheduleTime;
         Calendar midday = Calendar.getInstance();
         //-- Set time needed --
-        midday.set(Calendar.HOUR_OF_DAY, 23);
-        midday.set(Calendar.MINUTE, 42);
-        midday.set(Calendar.SECOND, 30);
+        midday.set(Calendar.HOUR_OF_DAY, 14);
+        midday.set(Calendar.MINUTE, 34);
+        midday.set(Calendar.SECOND, 0);
         //-- If it's midday start notification --
         if (hourNow >= 23 && minuteNow > 50) {
             midday.add(Calendar.DATE, 1);
@@ -149,18 +148,12 @@ public class WorkManager extends Worker {
         //-- Else calculate the delay between currentHour and next midday --
         scheduleTime = midday.getTimeInMillis() - timeNow.getTimeInMillis();
 
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.UNMETERED)
-                .setRequiresCharging(true)
-                .build();
-
-        //-- Delay work request --
-        WorkRequest request
-                = new OneTimeWorkRequest
-                .Builder(WorkManager.class)
-                .setConstraints(constraints)
-              //  .setInitialDelay(scheduleTime, TimeUnit.MILLISECONDS)
-                .build();
+            //-- Delay work request --
+            WorkRequest request
+                    = new OneTimeWorkRequest
+                    .Builder(WorkManager.class)
+                    .setInitialDelay(scheduleTime, TimeUnit.MILLISECONDS)
+                    .build();
 
         androidx.work.WorkManager.getInstance()
                 .enqueue(request);

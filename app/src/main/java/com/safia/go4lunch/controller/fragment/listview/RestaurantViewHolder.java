@@ -52,7 +52,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
     public void display(Restaurant restaurant, OpeningHours openingHours) {
         this.restaurantName.setText(restaurant.getName());
         this.restaurantAddress.setText(restaurant.getAddress());
-        this.restaurantDistance.setText(restaurant.getDistance() + " m");
+        this.restaurantDistance.setText(String.format(String.valueOf(R.string.distance_meters), restaurant.getDistance()));
 
         if (restaurant.getUsers().isEmpty()) {
             matesText.setText("");
@@ -99,14 +99,14 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
                     }
 
                     if (currentTime.after(openingSoon) && currentTime.before(openingTime)) {
-                        restaurantOpeningHour.setText("opening soon");
+                        restaurantOpeningHour.setText(R.string.opening_soon);
                         restaurantOpeningHour.setTextColor(Color.MAGENTA);
                     }
                 }
             }
 
         } else if (openingHours.getPeriods().size() == 1) {
-            restaurantOpeningHour.setText("Ouvert 24/24h");
+            restaurantOpeningHour.setText(R.string.always_open);
             restaurantOpeningHour.setTextColor(Color.GREEN);
         } else {
             for (Period period : openingHours.getPeriods()) {
@@ -151,7 +151,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
             restaurantOpeningHour.setText(R.string.closing_soon);
             restaurantOpeningHour.setTextColor(Color.RED);
         } else {
-            restaurantOpeningHour.setText(String.format("Open Until %02d:%02d ", closingHour, closingMinute));
+            restaurantOpeningHour.setText(String.format(String.valueOf(R.string.open_until), closingHour, closingMinute));
             restaurantOpeningHour.setTextColor(Color.GREEN);
         }
     }
