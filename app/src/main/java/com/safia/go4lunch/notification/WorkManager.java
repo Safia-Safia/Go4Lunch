@@ -138,11 +138,11 @@ public class WorkManager extends Worker {
         long scheduleTime;
         Calendar midday = Calendar.getInstance();
         //-- Set time needed --
-        midday.set(Calendar.HOUR_OF_DAY, 14);
-        midday.set(Calendar.MINUTE, 34);
+        midday.set(Calendar.HOUR_OF_DAY, 12);
+        midday.set(Calendar.MINUTE, 0);
         midday.set(Calendar.SECOND, 0);
         //-- If it's midday start notification --
-        if (hourNow >= 23 && minuteNow > 50) {
+        if (hourNow >= 12 && minuteNow > 0) {
             midday.add(Calendar.DATE, 1);
         }
         //-- Else calculate the delay between currentHour and next midday --
@@ -155,8 +155,7 @@ public class WorkManager extends Worker {
                     .setInitialDelay(scheduleTime, TimeUnit.MILLISECONDS)
                     .build();
 
-        androidx.work.WorkManager.getInstance()
-                .enqueue(request);
+        androidx.work.WorkManager.getInstance().enqueue(request);
     }
 
     @NonNull

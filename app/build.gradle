@@ -67,10 +67,10 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
     //FIREBASE
-    implementation 'com.google.firebase:firebase-analytics:20.0.0'
+    implementation 'com.google.firebase:firebase-analytics:21.1.0'
     implementation 'com.firebaseui:firebase-ui-storage:7.1.1'
-    implementation 'com.google.firebase:firebase-messaging:23.0.0'
-    implementation 'com.google.android.gms:play-services-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-messaging:23.0.6'
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
 
     //FACEBOOK
     implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
@@ -80,13 +80,14 @@ dependencies {
     implementation 'pub.devrel:easypermissions:3.0.0'
 
     //FIREBASE UI
+    implementation 'com.firebaseui:firebase-ui-auth:8.0.1'
+    implementation 'com.google.firebase:firebase-auth'
     implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
     implementation 'com.firebaseui:firebase-ui-firestore:7.1.1'
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-messaging'
-
-    //EASY PERMISSIONS
-    implementation 'pub.devrel:easypermissions:3.0.0'
+    implementation platform('com.google.firebase:firebase-bom:30.3.0')
+    implementation 'com.google.firebase:firebase-auth'
 
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -96,5 +97,12 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    //ESPRESSO
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test:rules:1.4.0'
+    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
+
 
 }
+apply plugin: 'com.google.gms.google-services'

@@ -1,9 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/recyclerview_restaurant"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".controller.fragment.listview.ListViewFragment"
-    tools:listitem="@layout/restaurant_recyclerview">
-</androidx.recyclerview.widget.RecyclerView>
+    tools:listitem="@layout/restaurant_recyclerview"
+    android:orientation="horizontal">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_restaurant"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/restaurant_recyclerview">
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/dede"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/ic_search_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="HardcodedText">
+
+        <!-- This will be the parent Floating Action Button -->
+        <!-- After the implementation the Floating Action Button
+            at the bottom right corner -->
+        <!-- After clicking the above button the following two buttons
+            will pop up. So this button is considered as parent FAB -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/open_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Floating action button for add alarm -->
+        <!-- Make sure that you are constraining this
+            button to the parent button -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/sortByRating_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toTopOf="@+id/open_fab"
+            app:layout_constraintEnd_toEndOf="@+id/open_fab"
+            app:layout_constraintStart_toStartOf="@+id/open_fab"
+            />
+
+        <!-- Action name text for the add alarm button -->
+        <!-- Make sure that you are constraining this Text to
+            the add Alarm FAB button -->
+        <TextView
+            android:id="@+id/sortbyRating_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Add Alarm"
+            app:layout_constraintBottom_toBottomOf="@+id/sortByRating_btn"
+            app:layout_constraintEnd_toStartOf="@+id/sortByRating_btn"
+            app:layout_constraintTop_toTopOf="@+id/sortByRating_btn" />
+
+        <!-- Floating action button for add person -->
+        <!-- Make sure that you are constraining this
+            button to the add Alarm FAB button -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/sortByDistance_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toTopOf="@+id/sortByRating_btn"
+            app:layout_constraintEnd_toEndOf="@+id/sortByRating_btn"
+            app:layout_constraintStart_toStartOf="@+id/sortByRating_btn"
+            />
+
+        <!-- Action name text for the add person button -->
+        <!-- Make sure that you are constraining this Text
+            to the add Person FAB button -->
+        <TextView
+            android:id="@+id/sortByDistance_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Add Person"
+            app:layout_constraintBottom_toBottomOf="@+id/sortByDistance_btn"
+            app:layout_constraintEnd_toStartOf="@+id/sortByDistance_btn"
+            app:layout_constraintTop_toTopOf="@+id/sortByDistance_btn" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

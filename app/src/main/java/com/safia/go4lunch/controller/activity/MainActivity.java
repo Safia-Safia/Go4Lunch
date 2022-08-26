@@ -11,11 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
-import com.facebook.login.LoginManager;
+import com.facebook.FacebookSdk;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+
 import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
@@ -28,6 +28,7 @@ import java.util.List;
 import static android.widget.Toast.LENGTH_SHORT;
 import static com.safia.go4lunch.controller.activity.SettingsActivity.NOTIFICATIONS_PREFERENCES;
 import static com.safia.go4lunch.controller.activity.SettingsActivity.PREFERENCES_VALUE;
+import static com.safia.go4lunch.controller.fragment.maps.MapsFragment.TAG;
 
 public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
@@ -35,10 +36,10 @@ public class MainActivity extends AppCompatActivity {
     private Button facebookButton, googleButton, twitterButton;
     ProgressBar progressBar;
     SharedPreferences sharedPreferences;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(this);
         setContentView(R.layout.activity_main);
         setUpView();
         configureViewModel();
@@ -66,17 +67,14 @@ public class MainActivity extends AppCompatActivity {
     private void setupListeners() {
         progressBar.setVisibility(View.INVISIBLE);
 
-        facebookButton.setOnClickListener(view -> {
-                    signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.FacebookBuilder().build()));
-                    progressBar.setVisibility(View.VISIBLE);
-                }
+        facebookButton.setOnClickListener(view ->
+                signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.FacebookBuilder().build()))
         );
-        googleButton.setOnClickListener(view -> {
-                    signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.GoogleBuilder().build()));
-                    progressBar.setVisibility(View.VISIBLE);
-                }
+        googleButton.setOnClickListener(view ->
+                signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.GoogleBuilder().build()))
         );
-        twitterButton.setOnClickListener(view -> signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.TwitterBuilder().build()))
+        twitterButton.setOnClickListener(view ->
+                signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.TwitterBuilder().build()))
         );
     }
 
@@ -85,10 +83,10 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
+                        .setIsSmartLockEnabled(false)
                         .setAvailableProviders(providers)
-                        .setIsSmartLockEnabled(false, true)
                         .build(),
-                RC_SIGN_IN);
+                RC_SIGN_IN );
     }
 
     @Override
@@ -109,11 +107,11 @@ public class MainActivity extends AppCompatActivity {
             // SUCCESS
             if (resultCode == RESULT_OK) {
                 viewModel.createUser();
-                showToast("Connecté.");
+                showToast(String.valueOf(R.string.connected));
                 startHomeActivity();
                 progressBar.setVisibility(View.INVISIBLE);
             } else if (response == null) {
-                showToast(("Vous ne vous êtes pas connecté."));
+                showToast(String.valueOf(R.string.notConnected));
             }
         }
 

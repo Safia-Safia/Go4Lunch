@@ -6,12 +6,15 @@
     <string name="button_facebook_text">Continuer avec Facebook</string>
     <string name="button_google_text">Continuer avec Google</string>
     <string name="sign_in_with_twitter">Continuer avec Twitter</string>
+    <string name="notConnected">Vous ne vous êtes pas connecté.</string>
+    <string name="connected">Connecté.</string>
 
     <!-- Map -->
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDho4ut-Xsxg7efCchEwhcJe7uKqJANJnM</string>
     <!-- Facebook strings -->
-    <string name="facebook_application_id" translatable="false">917570229105855</string>
-    <string name="fb_login_protocol_scheme" translatable="false">fb917570229105855</string>
+    <string name="facebook_application_id" translatable="false">765046641613881</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb765046641613881</string>
+    <string name="facebook_client_token" translatable="false">e93b4561964c72e6b4623536b820f39f</string>
 
     <!-- Bottom View strings -->
     <string name="title_listview">Liste Restaurant</string>

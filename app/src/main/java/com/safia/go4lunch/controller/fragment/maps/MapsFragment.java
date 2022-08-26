@@ -53,6 +53,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
@@ -164,7 +165,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-    public void setUpMarker(List<Restaurant> restaurants){
+    public void setUpMarker(List<Restaurant> restaurants) {
         mMap.clear();
         for (Restaurant restaurant : restaurants) {
             if (restaurant.getUsers().isEmpty()) {
@@ -186,15 +187,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void getDeviceLocation() { //TODO appeler cette methode dans l'activité HomeActivity
         try {
             if (mLocationPermissionsGranted) {
-                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
+                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireActivity());
 
                 final Task location = fusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Location currentLocation = (Location) task.getResult();
-                        LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                        moveCamera(latLng);
-                        getRestaurant(latLng);
+                        if (currentLocation != null) {
+                            LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                            moveCamera(latLng);
+                            getRestaurant(latLng);
+                        }
                     }
                 });
             }
@@ -248,12 +251,5 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 initMap();
             }
         }
-    }
-
-    public static Restaurant getEatingAtPlace(Context context) {
-        SharedPreferences sp = context.getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sp.getString(KEY_RESTAURANT, "RESTAURANT");
-        return gson.fromJson(json, Restaurant.class);
     }
 }

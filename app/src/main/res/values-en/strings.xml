@@ -5,7 +5,8 @@
     <string name="button_facebook_text">Sign in Facebook</string>
     <string name="button_google_text">Sign in Google</string>
     <string name="sign_in_with_twitter">Sign in Twitter</string>
-
+    <string name="notConnected">You\'re not connected.</string>
+    <string name="connected">Connected.</string>
     <!--HOME ACTIVITY -->
     <string name="hasnt_decided">Hasn\'t decided yet</string>
 

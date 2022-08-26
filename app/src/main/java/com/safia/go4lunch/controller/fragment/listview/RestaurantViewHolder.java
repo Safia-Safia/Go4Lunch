@@ -52,7 +52,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
     public void display(Restaurant restaurant, OpeningHours openingHours) {
         this.restaurantName.setText(restaurant.getName());
         this.restaurantAddress.setText(restaurant.getAddress());
-        this.restaurantDistance.setText(String.format(String.valueOf(R.string.distance_meters), restaurant.getDistance()));
+        this.restaurantDistance.setText(restaurant.getDistance()+ "m");
 
         if (restaurant.getUsers().isEmpty()) {
             matesText.setText("");
