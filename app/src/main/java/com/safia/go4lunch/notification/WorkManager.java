@@ -1,7 +1,5 @@
 package com.safia.go4lunch.notification;
 
-
-import static android.content.Context.MODE_PRIVATE;
 import static com.safia.go4lunch.repository.RestaurantRepository.USER_PICKED;
 import static com.safia.go4lunch.repository.UserRepository.getInstance;
 
@@ -10,17 +8,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.work.Constraints;
-import androidx.work.NetworkType;
+
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkRequest;
 import androidx.work.Worker;
@@ -73,8 +67,6 @@ public class WorkManager extends Worker {
                         .setAutoCancel(true)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setContentIntent(pendingIntent);
-        Log.e("Notification message ", message);
-
 
         // Support Version >= Android 8
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);

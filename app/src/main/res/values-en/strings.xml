@@ -28,10 +28,10 @@
 
     <!-- Workmates -->
     <string name="isJoining"> %s is joining! </string>
-    <string name="parameters">Settings</string>
-    <string name="your_lunch">Your restaurant</string>
-    <string name="title_activity_settings">SettingsActivity</string>
-
+    <string name="parameters">SETTINGS</string>
+    <string name="your_lunch">YOUR LUNCH</string>
+    <string name="signOut">LOGOUT</string>
+    <string name="title_activity_settings">Notification\'s Settings</string>
     <string name="display_text_user_list_not_decided">%s hasn\'t decided yet.</string>
     <string name="display_text_user_list">%s eating " %s " !</string>
 

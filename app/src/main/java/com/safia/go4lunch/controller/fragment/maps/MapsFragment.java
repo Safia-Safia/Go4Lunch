@@ -9,9 +9,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.Manifest;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import android.location.Location;
@@ -39,7 +37,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
-import com.google.gson.Gson;
 import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
@@ -47,13 +44,11 @@ import com.safia.go4lunch.controller.activity.DetailActivity;
 import com.safia.go4lunch.model.Restaurant;
 
 import com.safia.go4lunch.viewmodel.RestaurantViewModel;
-import com.safia.go4lunch.viewmodel.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
@@ -184,7 +179,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    public void getDeviceLocation() { //TODO appeler cette methode dans l'activité HomeActivity
+    public void getDeviceLocation() {
         try {
             if (mLocationPermissionsGranted) {
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireActivity());

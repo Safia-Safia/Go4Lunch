@@ -36,6 +36,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestaurantRepository {
+
     private static final String COLLECTION_RESTAURANT = "restaurants";
     private static volatile RestaurantRepository instance;
     public static final String USER_PICKED = "user picked";
@@ -124,12 +125,10 @@ public class RestaurantRepository {
                                             restaurantList.add(restaurant);
 
                                             RestaurantRepository.this.getRestaurantCollection().document(restaurant.getRestaurantId()).set(restaurant);
-
                                         }
                                         result.postValue(restaurantList);
                                     }
                                 }
-
                                 @Override
                                 public void onFailure(@NonNull Call<NearbyPlace> call1, @NonNull Throwable t) {
                                     Log.e("onFailure", "true" + t.getMessage());

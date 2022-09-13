@@ -2,12 +2,8 @@ package com.safia.go4lunch.Injection;
 
 import android.content.Context;
 
-import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.repository.RestaurantRepository;
 import com.safia.go4lunch.repository.UserRepository;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class Injection {
 

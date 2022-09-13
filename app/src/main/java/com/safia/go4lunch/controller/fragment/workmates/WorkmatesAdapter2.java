@@ -1,7 +1,6 @@
 package com.safia.go4lunch.controller.fragment.workmates;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.safia.go4lunch.R;
-import com.safia.go4lunch.controller.fragment.listview.RestaurantListAdapter;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
-import com.safia.go4lunch.repository.RestaurantRepository;
 
 import java.util.List;
 

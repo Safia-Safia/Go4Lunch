@@ -25,13 +25,12 @@ import com.safia.go4lunch.Injection.Injection;
 import com.safia.go4lunch.Injection.ViewModelFactory;
 import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.fragment.workmates.WorkmatesPickedListAdapter;
-import com.safia.go4lunch.databinding.ActivityDetailBinding;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
 import com.safia.go4lunch.viewmodel.RestaurantViewModel;
 import com.safia.go4lunch.viewmodel.UserViewModel;
-
+import com.safia.go4lunch.databinding.ActivityDetailBinding;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
@@ -52,7 +51,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        com.safia.go4lunch.databinding.ActivityDetailBinding binding = ActivityDetailBinding.inflate(getLayoutInflater());
+        ActivityDetailBinding binding = ActivityDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setUpView();
         configureViewModel();

@@ -151,7 +151,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
             restaurantOpeningHour.setText(R.string.closing_soon);
             restaurantOpeningHour.setTextColor(Color.RED);
         } else {
-            restaurantOpeningHour.setText(String.format(String.valueOf(R.string.open_until), closingHour, closingMinute));
+            restaurantOpeningHour.setText(restaurantOpeningHour.getContext().getString(R.string.open_until, closingHour, closingMinute));
             restaurantOpeningHour.setTextColor(Color.GREEN);
         }
     }

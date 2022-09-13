@@ -6,11 +6,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseUser;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
-import com.safia.go4lunch.repository.RestaurantRepository;
 import com.safia.go4lunch.repository.UserRepository;
 
 import java.util.List;

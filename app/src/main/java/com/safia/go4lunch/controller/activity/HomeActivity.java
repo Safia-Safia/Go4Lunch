@@ -3,9 +3,11 @@ package com.safia.go4lunch.controller.activity;
 import static com.safia.go4lunch.repository.UserRepository.getInstance;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -141,6 +143,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
+        navigationView.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
+        navigationView.setItemIconTintList(ColorStateList.valueOf(Color.WHITE));
         if (id == R.id.activity_main_drawer_your_lunch) {
             getLunch();
         } else if (id == R.id.activity_main_drawer_settings) {
@@ -150,6 +154,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.activity_main_drawer_logout) {
             viewModel.signOut(this);
             finish();
+            Intent mainActivityIntent = new Intent(this, MainActivity.class);
+            startActivity(mainActivityIntent);
         }
         this.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
@@ -169,7 +175,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

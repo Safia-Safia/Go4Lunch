@@ -3,6 +3,9 @@ package com.safia.go4lunch;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
@@ -11,6 +14,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -61,9 +66,9 @@ public class ExampleInstrumentedTest {
 
     @Test
     public void selectFragment() {
-        onView(ViewMatchers.withId( R.id.list_view)).perform(click());
-        onView(ViewMatchers.withId( R.id.workmates)).perform(click());
-        onView(ViewMatchers.withId( R.id.card_view)).perform(click());
+        onView(withId( R.id.list_view)).perform(click());
+        onView(withId( R.id.workmates)).perform(click());
+        onView(withId( R.id.card_view)).perform(click());
     }
 
     @Test
@@ -81,26 +86,36 @@ public class ExampleInstrumentedTest {
     @Test
     public void addToFavorite () throws UiObjectNotFoundException {
         openRestaurantDetail();
-        onView(ViewMatchers.withId( R.id.like_button)).perform(click());
+        onView(withId( R.id.like_button)).perform(click());
     }
 
     @Test
     public void callRestaurant () throws UiObjectNotFoundException {
         openRestaurantDetail();
-        onView(ViewMatchers.withId( R.id.phone_button)).perform(click());
+        onView(withId( R.id.phone_button)).perform(click());
     }
 
     @Test
     public void getWebsite () throws UiObjectNotFoundException {
         openRestaurantDetail();
-        onView(ViewMatchers.withId( R.id.website_button)).perform(click());
+        onView(withId( R.id.website_button)).perform(click());
     }
     @Test
     public void selectRestaurant () throws UiObjectNotFoundException {
         openRestaurantDetail();
-        onView(ViewMatchers.withId( R.id.fav)).perform(click());
+        onView(withId( R.id.fav)).perform(click());
     }
 
     @Test
-    public void openNavigation (){}
+    public void openNavigation (){
+        // Open Drawer to click on navigation.
+        onView(withId(R.id.container))
+                .check(matches(isClosed(Gravity.LEFT))) // Left Drawer should be closed.
+                .perform(DrawerActions.open()); // Open Drawer
+
+        // Start the screen of your activity.
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_settings));
+    }
+
 }

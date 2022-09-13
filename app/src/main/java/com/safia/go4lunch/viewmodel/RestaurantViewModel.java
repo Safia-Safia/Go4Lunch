@@ -7,7 +7,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
 import com.safia.go4lunch.repository.RestaurantRepository;
-import com.safia.go4lunch.repository.UserRepository;
 
 import java.util.List;
 

@@ -41,16 +41,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
-                        tools:text="Le Paradis du fruit" />
+                        tools:text="Le Paradis du fruit " />
 
                     <androidx.appcompat.widget.AppCompatRatingBar
                         android:id="@+id/rating_detail"
                         style="@style/Widget.AppCompat.RatingBar.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+
                         android:layout_toEndOf="@id/restaurant_name_details"
-                        tools:numStars="3"
-                        app:tint="#FFD53B" />
+                        app:tint="#FFD53B"
+                        tools:numStars="3" />
 
                     <TextView
                         android:id="@+id/restaurant_type_detail"
@@ -58,8 +60,9 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/restaurant_name_details"
                         android:maxLines="1"
-                        tools:text="fruit"
-                        android:textColor="@color/white" />
+                        android:layout_marginEnd="1dp"
+                        android:textColor="@color/white"
+                        tools:text="fruit" />
                     <TextView
                         android:id="@+id/tiret"
                         android:layout_width="wrap_content"
@@ -69,6 +72,7 @@
                         android:maxLines="1"
                         tools:text=" - "
                         android:textColor="@color/white" />
+
                     <TextView
                         android:id="@+id/restaurant_adress_detail"
                         android:layout_width="wrap_content"
@@ -76,8 +80,9 @@
                         android:layout_below="@id/restaurant_name_details"
                         android:layout_toEndOf="@+id/tiret"
                         android:maxLines="1"
-                        tools:text="3 Place de la Bastille"
-                        android:textColor="@color/white" />
+                        android:layout_marginStart="1dp"
+                        android:textColor="@color/white"
+                        tools:text="3 Place de la Bastille" />
 
                 </RelativeLayout>
 

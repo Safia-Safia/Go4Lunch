@@ -31,6 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
     private UserViewModel restaurantAndUserViewModel;
     public static final String NOTIFICATIONS_PREFERENCES = "Notifications preferences";
     public static final String PREFERENCES_VALUE = "PREFERENCES_VALUE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,18 +63,11 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Log.e("backpressed", "clicked");
-        this.finish();
-    }
-
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
+
     public  void setUpToggleBtn(){
         SharedPreferences sharedPreferences = getSharedPreferences(NOTIFICATIONS_PREFERENCES, MODE_PRIVATE);
         btnSwitch.setChecked(sharedPreferences.getBoolean(PREFERENCES_VALUE,true));

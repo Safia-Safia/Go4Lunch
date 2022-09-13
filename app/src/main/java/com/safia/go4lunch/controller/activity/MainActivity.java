@@ -28,12 +28,11 @@ import java.util.List;
 import static android.widget.Toast.LENGTH_SHORT;
 import static com.safia.go4lunch.controller.activity.SettingsActivity.NOTIFICATIONS_PREFERENCES;
 import static com.safia.go4lunch.controller.activity.SettingsActivity.PREFERENCES_VALUE;
-import static com.safia.go4lunch.controller.fragment.maps.MapsFragment.TAG;
 
 public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
     private UserViewModel viewModel;
-    private Button facebookButton, googleButton, twitterButton;
+    private Button facebookButton, googleButton;
     ProgressBar progressBar;
     SharedPreferences sharedPreferences;
     @Override
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         isUserLogged();
         setupListeners();
 
+        //Get the preferences of the user to receive notification
         sharedPreferences = this.getSharedPreferences(NOTIFICATIONS_PREFERENCES, MODE_PRIVATE);
         if (sharedPreferences.getBoolean(PREFERENCES_VALUE,true)){
             WorkManager.scheduleWork();
@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
     private void setUpView() {
         googleButton = findViewById(R.id.login_button_google);
         facebookButton = findViewById(R.id.login_button_facebook);
-        twitterButton = findViewById(R.id.login_button_twitter);
         progressBar = findViewById(R.id.progressBar);
     }
 
@@ -72,9 +71,6 @@ public class MainActivity extends AppCompatActivity {
         );
         googleButton.setOnClickListener(view ->
                 signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.GoogleBuilder().build()))
-        );
-        twitterButton.setOnClickListener(view ->
-                signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.TwitterBuilder().build()))
         );
     }
 
@@ -107,14 +103,13 @@ public class MainActivity extends AppCompatActivity {
             // SUCCESS
             if (resultCode == RESULT_OK) {
                 viewModel.createUser();
-                showToast(String.valueOf(R.string.connected));
+                showToast(String.valueOf(getString(R.string.connected)));
                 startHomeActivity();
                 progressBar.setVisibility(View.INVISIBLE);
             } else if (response == null) {
-                showToast(String.valueOf(R.string.notConnected));
+                showToast(String.valueOf(getString(R.string.notConnected)));
             }
         }
-
     }
 
     public void isUserLogged() {
