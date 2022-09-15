@@ -74,7 +74,6 @@ public class UserRepository {
         return (user != null) ? user.getUid() : null;
     }
 
-
     // -- LIKE --
     public void addRestaurantLike(Restaurant restaurant) {
         getLikedCollection().document(restaurant.getRestaurantId()).set(restaurant);

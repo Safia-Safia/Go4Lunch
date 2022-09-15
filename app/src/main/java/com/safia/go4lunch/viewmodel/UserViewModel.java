@@ -37,7 +37,6 @@ public class UserViewModel extends ViewModel {
         AuthUI.getInstance().signOut(context);
     }
 
-
     public void addLikeForThisRestaurant(Restaurant restaurant) {
         userRepository.addRestaurantLike(restaurant);
     }
