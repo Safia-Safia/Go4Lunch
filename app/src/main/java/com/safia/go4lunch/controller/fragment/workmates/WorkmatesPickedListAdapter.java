@@ -1,5 +1,6 @@
 package com.safia.go4lunch.controller.fragment.workmates;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import java.util.List;
 public class WorkmatesPickedListAdapter extends RecyclerView.Adapter<WorkmatesPickedListAdapter.WorkmatesViewHolder> {
 
     private final List<User> mUser;
+    Context context;
 
     public WorkmatesPickedListAdapter(List<User> mUser) {
         this.mUser = mUser;
@@ -59,7 +61,7 @@ public class WorkmatesPickedListAdapter extends RecyclerView.Adapter<WorkmatesPi
                         .load( user.getUrlPicture())
                         .circleCrop()
                         .into(userPicture); }
-            isJoining.setText(String.format(user.getUsername() + " is joining ! "));
+            isJoining.setText( isJoining.getContext().getString(R.string.isJoining, user.getUsername()));
 
         }
     }

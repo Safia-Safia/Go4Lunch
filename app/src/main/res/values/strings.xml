@@ -49,7 +49,7 @@
     <string name="title_activity_settings">Paramètres de notification</string>
 
     <string name="display_text_user_list_not_decided">%s n\'a pas encore décidé.</string>
-    <string name="display_text_user_list">%s mange " %s " !</string>
+    <string name="display_text_user_list">%s mange au " %s " !</string>
 
     <!--NOTIFICATION -->
     <string name="nowherePlace"> "Il est midi ! Où allez vous manger ? "</string>
@@ -60,6 +60,9 @@
     <string name="call">Appeler</string>
     <string name="like">J\'aime</string>
     <string name="website">Site Web</string>
-    <string name="update">Valider.</string>
+    <string name="update">Valider</string>
+    <string name="rating">Par note</string>
+    <string name="distance">Par distance</string>
+    <string name="NotChooseYet">Aucun restaurant a été selectionner.</string>
 
 </resources>

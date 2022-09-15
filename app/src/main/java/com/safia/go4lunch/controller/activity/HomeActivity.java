@@ -7,7 +7,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +24,6 @@ import com.safia.go4lunch.R;
 import com.safia.go4lunch.controller.fragment.maps.MapsFragment;
 import com.safia.go4lunch.model.Restaurant;
 import com.safia.go4lunch.model.User;
-import com.safia.go4lunch.notification.WorkManager;
 import com.safia.go4lunch.repository.UserRepository;
 import com.safia.go4lunch.viewmodel.UserViewModel;
 
@@ -150,7 +148,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.activity_main_drawer_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
-            Toast.makeText(this, (R.string.parameters), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getString (R.string.parameters), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.activity_main_drawer_logout) {
             viewModel.signOut(this);
             finish();
@@ -171,7 +169,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 intent.putExtra(MapsFragment.KEY_RESTAURANT, restaurant);
                 startActivity(intent);
             } else {
-                Toast.makeText(this, R.string.hasnt_decided, Toast.LENGTH_LONG).show();
+                Toast.makeText(this,getString( R.string.hasnt_decided), Toast.LENGTH_LONG).show();
             }
         });
     }

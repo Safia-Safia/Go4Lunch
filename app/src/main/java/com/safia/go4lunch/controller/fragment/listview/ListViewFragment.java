@@ -188,7 +188,7 @@ public class ListViewFragment extends Fragment implements RestaurantListAdapter.
         mSortByRating.setOnClickListener(v -> {
             compareRestaurant(new SortByRating());
             setUpRecyclerView(mRestaurant);
-            Toast.makeText(this.getContext(), "Rating", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getContext(), getString( R.string.rating ), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -196,7 +196,7 @@ public class ListViewFragment extends Fragment implements RestaurantListAdapter.
         mSortByDistance.setOnClickListener(v -> {
             compareRestaurant(new SortByDistance());
             setUpRecyclerView(mRestaurant);
-            Toast.makeText(this.getContext(), "Distance", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getContext(), getString(R.string.distance), Toast.LENGTH_SHORT).show();
         });
     }
 

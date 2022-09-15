@@ -129,7 +129,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onQueryTextChange(String newText) {
                 Log.e("mapsFragment", newText);
-                //Avoir une nouvelle liste de restaurant restaurantAll
+                //Creating a new list showing the restaurant corresponding to the text
                 List<Restaurant> result = new ArrayList<>();
                 String searchStr = newText.toLowerCase();
                 for (Restaurant item : restaurantsList) {

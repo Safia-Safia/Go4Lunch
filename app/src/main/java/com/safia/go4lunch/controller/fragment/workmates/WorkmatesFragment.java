@@ -53,18 +53,17 @@ public class WorkmatesFragment extends Fragment implements WorkmatesAdapter2.onW
 
     private void getAllUsers(){
         viewModel.getAllUsers().observe(this.getActivity(),this::setUpRecyclerView);
-
     }
 
     @Override
     public void onWorkmatesClick(Restaurant restaurant) {
         Intent intent = new Intent(WorkmatesFragment.this.getContext(), DetailActivity.class);
-
         intent.putExtra(MapsFragment.KEY_RESTAURANT, restaurant);
+
         if (restaurant != null){
             startActivity(intent);
         }
         else
-            Toast.makeText(this.getActivity(), "Aucun restaurant a été selectionner.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getActivity(), getString(R.string.NotChooseYet), Toast.LENGTH_LONG).show();
     }
 }

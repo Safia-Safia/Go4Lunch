@@ -33,7 +33,7 @@
     <string name="signOut">LOGOUT</string>
     <string name="title_activity_settings">Notification\'s Settings</string>
     <string name="display_text_user_list_not_decided">%s hasn\'t decided yet.</string>
-    <string name="display_text_user_list">%s eating " %s " !</string>
+    <string name="display_text_user_list">%s eating at " %s " !</string>
 
     <!--NOTIFICATION -->
     <string name="nowherePlace"> "It's time for lunch, where are you going ?"</string>
@@ -50,5 +50,8 @@
     <string name="open_until">"Open Until %02d:%02d "</string>
     <string name="always_open">Open day &amp; night</string>
     <string name="opening_soon">opening soon</string>
+    <string name="rating">By rating</string>
+    <string name="distance">By distance</string>
+    <string name="NotChooseYet">You didn\'t choose yet !</string>
 
 </resources>

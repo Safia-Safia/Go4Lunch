@@ -69,11 +69,11 @@ public class WorkmatesAdapter2 extends RecyclerView.Adapter<WorkmatesAdapter2.Wo
             this.user =user;
             String textToDisplay;
             if (user.getRestaurantPicked() != null) {
-                textToDisplay = String.format(context.getString(R.string.display_text_user_list),
+                textToDisplay = context.getString(R.string.display_text_user_list,
                         user.getUsername(), user.getRestaurantPicked().getName());
                 isJoining.setTextColor(Color.BLACK);
             } else {
-                textToDisplay = String.format(context.getString(R.string.display_text_user_list_not_decided), user.getUsername());
+                textToDisplay = context.getString(R.string.display_text_user_list_not_decided, user.getUsername());
                 isJoining.setTextColor(Color.GRAY);
             }
 
