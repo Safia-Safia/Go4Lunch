@@ -142,6 +142,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
+        navigationView.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
+        navigationView.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
         if (id == R.id.activity_main_drawer_your_lunch) {
             getLunch();
         } else if (id == R.id.activity_main_drawer_settings) {
